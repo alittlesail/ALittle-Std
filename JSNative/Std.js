@@ -3,48 +3,48 @@
 
 window.RequireStd = function(base_path) {
 	return new Promise(async function(___COROUTINE, ___) {
-		await Require(base_path, "Std/Reflect/ReflectCmd");
-		await Require(base_path, "Std/Reflect/ReflectCsv");
-		await Require(base_path, "Std/Reflect/ReflectMessage");
-		await Require(base_path, "Std/Loop/LoopObject");
-		await Require(base_path, "Std/Loop/ILoopSystem");
-		await Require(base_path, "Std/Loop/LoopFrame");
-		await Require(base_path, "Std/Loop/LoopFunction");
-		await Require(base_path, "Std/Loop/LoopGroup");
-		await Require(base_path, "Std/Loop/LoopList");
-		await Require(base_path, "Std/Loop/LoopTimer");
-		await Require(base_path, "Std/Utility/Bit");
-		await Require(base_path, "Std/Utility/WeakRef");
-		await Require(base_path, "Std/Utility/IHeapTimer");
-		await Require(base_path, "Std/Utility/ISchedule");
-		await Require(base_path, "Std/Utility/CsvConfig");
-		await Require(base_path, "Std/Utility/EventDispatcher");
-		await Require(base_path, "Std/Utility/SafeIDCreator");
-		await Require(base_path, "Std/Utility/String");
-		await Require(base_path, "Std/Utility/File");
-		await Require(base_path, "Std/Utility/JsonConfig");
-		await Require(base_path, "Std/Net/HttpFileReceiverTemplate");
-		await Require(base_path, "Std/Net/HttpFileSenderTemplate");
-		await Require(base_path, "Std/Net/HttpReceiverTemplate");
-		await Require(base_path, "Std/Net/HttpSenderTemplate");
-		await Require(base_path, "Std/Net/MsgCommonTemplate");
-		await Require(base_path, "Std/Net/MsgReceiverTemplate");
-		await Require(base_path, "Std/Net/MsgSenderTemplate");
-		await Require(base_path, "Std/Net/MsgSessionTemplate");
-		await Require(base_path, "Adapter/JavaScript/Timer");
-		await Require(base_path, "Adapter/JavaScript/FileSystem");
-		await Require(base_path, "Adapter/JavaScript/JHttpFileInterface");
-		await Require(base_path, "Adapter/JavaScript/JHttpFileWxInterface");
-		await Require(base_path, "Adapter/JavaScript/JHttpInterface");
-		await Require(base_path, "Adapter/JavaScript/JHttpWxInterface");
-		await Require(base_path, "Adapter/JavaScript/JMessageFactory");
-		await Require(base_path, "Adapter/JavaScript/JMsgInterface");
-		await Require(base_path, "Adapter/JavaScript/JSchedule");
-		await Require(base_path, "Adapter/JavaScript/JCsvFile");
+		await Require(base_path, "Cmd/ReflectCmd");
+		await Require(base_path, "Config/ReflectCsv");
+		await Require(base_path, "Net/ReflectMessage");
+		await Require(base_path, "Loop/LoopObject");
+		await Require(base_path, "Loop/ILoopSystem");
+		await Require(base_path, "Loop/LoopFrame");
+		await Require(base_path, "Loop/LoopFunction");
+		await Require(base_path, "Loop/LoopGroup");
+		await Require(base_path, "Loop/LoopList");
+		await Require(base_path, "Loop/LoopTimer");
+		await Require(base_path, "Config/CsvConfig");
+		await Require(base_path, "Config/JsonConfig");
+		await Require(base_path, "Bit/Bit");
+		await Require(base_path, "WeakRef/WeakRef");
+		await Require(base_path, "Loop/IHeapTimer");
+		await Require(base_path, "Schedule/ISchedule");
+		await Require(base_path, "Utility/EventDispatcher");
+		await Require(base_path, "Utility/SafeIDCreator");
+		await Require(base_path, "String/String");
+		await Require(base_path, "File/File");
+		await Require(base_path, "Net/HttpFileReceiverTemplate");
+		await Require(base_path, "Net/HttpFileSenderTemplate");
+		await Require(base_path, "Net/HttpReceiverTemplate");
+		await Require(base_path, "Net/HttpSenderTemplate");
+		await Require(base_path, "Net/MsgCommonTemplate");
+		await Require(base_path, "Net/MsgReceiverTemplate");
+		await Require(base_path, "Net/MsgSenderTemplate");
+		await Require(base_path, "Net/MsgSessionTemplate");
+		await Require(base_path, "Loop/JavaScript/JHeapTimer");
+		await Require(base_path, "File/JavaScript/JFileSystem");
+		await Require(base_path, "Net/JavaScript/JHttpFileInterface");
+		await Require(base_path, "Net/JavaScript/JHttpFileWxInterface");
+		await Require(base_path, "Net/JavaScript/JHttpInterface");
+		await Require(base_path, "Net/JavaScript/JHttpWxInterface");
+		await Require(base_path, "Net/JavaScript/JMessageFactory");
+		await Require(base_path, "Net/JavaScript/JMsgInterface");
+		await Require(base_path, "Schedule/JavaScript/JSchedule");
+		await Require(base_path, "Config/JavaScript/JCsvFile");
 		await Require(base_path, "../JSNative/md5.min");
 		await Require(base_path, "../JSNative/native");
-		await Require(base_path, "Std/Singleton/LoopSystem");
-		await Require(base_path, "Std/Singleton/Schedule");
+		await Require(base_path, "Loop/LoopSystem");
+		await Require(base_path, "Schedule/Schedule");
 		___COROUTINE();
 	});
 }
@@ -1447,19 +1447,6 @@ ALittle.LoopTimer = JavaScript.Class(ALittle.LoopObject, {
 }
 {
 if (typeof ALittle === "undefined") window.ALittle = {};
-
-
-ALittle.BitAnd = function(x, y) {
-	return bit.band(x, y);
-}
-
-ALittle.BitOr = function(x, y) {
-	return bit.bor(x, y);
-}
-
-}
-{
-if (typeof ALittle === "undefined") window.ALittle = {};
 let ___all_struct = ALittle.GetAllStruct();
 
 ALittle.RegStruct(115253948, "ALittle.KeyValueInfo", {
@@ -1751,296 +1738,6 @@ ALittle.DoubleKeyTableConfig = JavaScript.Class(ALittle.CsvTableConfig, {
 {
 if (typeof ALittle === "undefined") window.ALittle = {};
 
-ALittle.RegStruct(1715346212, "ALittle.Event", {
-name : "ALittle.Event", ns_name : "ALittle", rl_name : "Event", hash_code : 1715346212,
-name_list : ["target"],
-type_list : ["ALittle.EventDispatcher"],
-option_map : {}
-})
-
-ALittle.EventDispatcher = JavaScript.Class(undefined, {
-	Ctor : function() {
-		this._listeners = new Map();
-		this._abs_disabled = false;
-	},
-	AddEventListener : function(T, object, callback) {
-		if (object === undefined) {
-			return false;
-		}
-		if (callback === undefined) {
-			return false;
-		}
-		let rflt = T;
-		let callback_table = this._listeners.get(rflt.hash_code);
-		if (callback_table === undefined) {
-			callback_table = ALittle.CreateKeyWeakMap();
-			this._listeners.set(rflt.hash_code, callback_table);
-		}
-		let callback_value = callback_table.get(object);
-		if (callback_value === undefined) {
-			callback_value = new Map();
-			callback_table.set(object, callback_value);
-		}
-		callback_value.set(callback, true);
-		return true;
-	},
-	RemoveEventListener : function(T, object, callback) {
-		let rflt = T;
-		let callback_table = this._listeners.get(rflt.hash_code);
-		if (callback_table === undefined) {
-			return;
-		}
-		if (callback === undefined) {
-			callback_table.delete(object);
-		} else {
-			let callback_value = callback_table.get(object);
-			if (callback_value === undefined) {
-				return;
-			}
-			callback_value.delete(callback);
-		}
-	},
-	ClearEventListener : function() {
-		this._listeners = new Map();
-	},
-	DispatchEvent : function(T, event) {
-		let rflt = T;
-		if (event.target === undefined) {
-			event.target = this;
-		}
-		let callback_table = this._listeners.get(rflt.hash_code);
-		if (callback_table === undefined) {
-			return;
-		}
-		for (let [object, callback_value] of callback_table) {
-			if (callback_value === undefined) continue;
-			for (let [func, _] of callback_value) {
-				if (_ === undefined) continue;
-				func.call(object, event);
-			}
-		}
-	},
-}, "ALittle.EventDispatcher");
-
-}
-{
-if (typeof ALittle === "undefined") window.ALittle = {};
-
-
-ALittle.IFileLoader = JavaScript.Class(undefined, {
-	Load : function(file_path) {
-		return undefined;
-	},
-}, "ALittle.IFileLoader");
-
-if (ALittle.IFileLoader === undefined) throw new Error(" extends class:ALittle.IFileLoader is undefined");
-ALittle.JFileLoader = JavaScript.Class(ALittle.IFileLoader, {
-	Load : function(file_path) {
-		let [content, buffer] = JavaScript.File_LoadFile(file_path);
-		return content;
-	},
-}, "ALittle.JFileLoader");
-
-ALittle.IFileSaver = JavaScript.Class(undefined, {
-	Save : function(file_path, content) {
-		return false;
-	},
-}, "ALittle.IFileSaver");
-
-if (ALittle.IFileSaver === undefined) throw new Error(" extends class:ALittle.IFileSaver is undefined");
-ALittle.JFileSaver = JavaScript.Class(ALittle.IFileSaver, {
-	Save : function(file_path, content) {
-		return JavaScript.File_SaveFile(file_path, content, undefined);
-	},
-}, "ALittle.JFileSaver");
-
-ALittle.File_GetCurrentPath = function() {
-	return JavaScript.File_GetCurrentPath();
-}
-
-ALittle.File_SetCurrentPath = function(path) {
-	return JavaScript.File_SetCurrentPath(path);
-}
-
-ALittle.File_RenameFile = function(path, new_path) {
-	return JavaScript.File_RenameFile(path, new_path);
-}
-
-ALittle.File_DeleteFile = function(path) {
-	return JavaScript.File_DeleteFile(path);
-}
-
-ALittle.File_GetFileAttr = function(path) {
-	return JavaScript.File_GetFileAttr(path);
-}
-
-ALittle.File_GetFileAttrByDir = function(path, file_map) {
-	return JavaScript.File_GetFileAttrByDir(path, file_map);
-}
-
-ALittle.File_GetFileListByDir = function(path, file_list) {
-	return JavaScript.File_GetFileListByDir(path, file_list);
-}
-
-ALittle.File_GetFileNameListByDir = function(path, file_map) {
-	return JavaScript.File_GetFileNameListByDir(path, file_map);
-}
-
-ALittle.File_DeleteDir = function(path) {
-	return JavaScript.File_DeleteDir(path);
-}
-
-ALittle.File_DeleteDeepDir = function(path, log_path) {
-	JavaScript.File_DeleteDeepDir(path, log_path);
-}
-
-ALittle.File_MakeDir = function(path) {
-	return JavaScript.File_MakeDir(path);
-}
-
-ALittle.File_MakeDeepDir = function(path) {
-	let path_list = ALittle.String_SplitSepList(path, ["/", "\\"]);
-	let cur_path = "";
-	let ___OBJECT_1 = path_list;
-	for (let index = 1; index <= ___OBJECT_1.length; ++index) {
-		let sub_path = ___OBJECT_1[index - 1];
-		if (sub_path === undefined) break;
-		cur_path = cur_path + sub_path;
-		ALittle.File_MakeDir(cur_path);
-		cur_path = cur_path + "/";
-	}
-}
-
-ALittle.File_PathEndWithSplit = function(file_path) {
-	let len = ALittle.String_Len(file_path);
-	if (len === 0) {
-		return file_path;
-	}
-	let byte = ALittle.String_Byte(file_path, len);
-	if (byte === 47 || byte === 92) {
-		return file_path;
-	}
-	if (ALittle.String_Find(file_path, "\\") !== undefined) {
-		return file_path + "\\";
-	}
-	return file_path + "/";
-}
-
-ALittle.File_GetFileNameByPath = function(file_path) {
-	let list = ALittle.String_SplitSepList(file_path, ["/", "\\"]);
-	let l = ALittle.List_MaxN(list);
-	if (l <= 0) {
-		return file_path;
-	}
-	return list[l - 1];
-}
-
-ALittle.File_GetFilePathByPath = function(file_path) {
-	let new_file_path = ALittle.File_GetFileNameByPath(file_path);
-	return ALittle.String_Sub(file_path, 1, -ALittle.String_Len(new_file_path) - 2);
-}
-
-ALittle.File_GetFileExtByPath = function(file_path) {
-	let list = ALittle.String_Split(file_path, ".");
-	let l = ALittle.List_MaxN(list);
-	if (l <= 0) {
-		return file_path;
-	}
-	return list[l - 1];
-}
-
-ALittle.File_ChangeFileExtByPath = function(file_path, ext) {
-	let list = ALittle.String_Split(file_path, ".");
-	let l = ALittle.List_MaxN(list);
-	if (l <= 0) {
-		return file_path + "." + ext;
-	}
-	list[l - 1] = ext;
-	return ALittle.String_Join(list, ".");
-}
-
-ALittle.File_GetFileExtByPathAndUpper = function(file_path) {
-	return ALittle.String_Upper(ALittle.File_GetFileExtByPath(file_path));
-}
-
-ALittle.File_GetJustFileNameByPath = function(file_path) {
-	let new_file_path = ALittle.File_GetFileNameByPath(file_path);
-	let list = ALittle.String_Split(new_file_path, ".");
-	let l = ALittle.List_MaxN(list);
-	if (l <= 1) {
-		return new_file_path;
-	}
-	return list[l - 1 - 1];
-}
-
-ALittle.File_ReadJsonFromStdFile = function(file_path) {
-	{
-		let [content] = JavaScript.File_LoadFile(file_path);
-		if (content === undefined) {
-			return [undefined, file_path + " load failed"];
-		}
-		let [error, new_content] = (function() { try { let ___VALUE = JSON.parse.call(undefined, content); return [undefined, ___VALUE]; } catch (___ERROR) { return [___ERROR.message]; } })();
-		if (error === undefined) {
-			return [new_content, content];
-		}
-		return [undefined, new_content];
-	}
-}
-
-ALittle.File_WriteJsonFromStdFile = function(content, file_path) {
-	{
-		return JavaScript.File_SaveFile(file_path, JSON.stringify(content), undefined);
-	}
-}
-
-ALittle.File_ReadTextFromStdFile = function(file_path) {
-	{
-		let [content, buffer] = JavaScript.File_LoadFile(file_path);
-		return content;
-	}
-}
-
-ALittle.File_WriteTextFromStdFile = function(content, file_path) {
-	{
-		return JavaScript.File_SaveFile(file_path, content, undefined);
-	}
-}
-
-}
-{
-if (typeof ALittle === "undefined") window.ALittle = {};
-
-
-ALittle.IHeapTimer = JavaScript.Class(undefined, {
-	Add : function(delay_ms, loop, interval_ms) {
-		return 0;
-	},
-	Remove : function(id) {
-		return false;
-	},
-	Update : function(ms) {
-	},
-	Poll : function() {
-		return 0;
-	},
-}, "ALittle.IHeapTimer");
-
-}
-{
-if (typeof ALittle === "undefined") window.ALittle = {};
-
-
-ALittle.ISchedule = JavaScript.Class(undefined, {
-	Run : function() {
-	},
-	RunInFrame : function() {
-	},
-}, "ALittle.ISchedule");
-
-}
-{
-if (typeof ALittle === "undefined") window.ALittle = {};
-
 
 ALittle.IJsonConfig = JavaScript.Class(undefined, {
 	GetConfig : function(key, defaultv) {
@@ -2146,6 +1843,138 @@ ALittle.JsonConfig = JavaScript.Class(ALittle.IJsonConfig, {
 ALittle.CreateJsonConfig = function(file_path, print_error) {
 	return ALittle.NewObject(JavaScript.Template(ALittle.JsonConfig, "ALittle.JsonConfig<ALittle.JFileLoader, ALittle.JFileSaver>", ALittle.JFileLoader, ALittle.JFileSaver), file_path, print_error);
 }
+
+}
+{
+if (typeof ALittle === "undefined") window.ALittle = {};
+
+
+ALittle.BitAnd = function(x, y) {
+	return bit.band(x, y);
+}
+
+ALittle.BitOr = function(x, y) {
+	return bit.bor(x, y);
+}
+
+}
+{
+if (typeof ALittle === "undefined") window.ALittle = {};
+
+
+ALittle.CreateKeyWeakMap = function() {
+	return new jkeyweakmap();
+}
+
+ALittle.CreateValueWeakMap = function() {
+	return new jvalueweakmap();
+}
+
+}
+{
+if (typeof ALittle === "undefined") window.ALittle = {};
+
+
+ALittle.IHeapTimer = JavaScript.Class(undefined, {
+	Add : function(delay_ms, loop, interval_ms) {
+		return 0;
+	},
+	Remove : function(id) {
+		return false;
+	},
+	Update : function(ms) {
+	},
+	Poll : function() {
+		return 0;
+	},
+}, "ALittle.IHeapTimer");
+
+}
+{
+if (typeof ALittle === "undefined") window.ALittle = {};
+
+
+ALittle.ISchedule = JavaScript.Class(undefined, {
+	Run : function() {
+	},
+	RunInFrame : function() {
+	},
+}, "ALittle.ISchedule");
+
+}
+{
+if (typeof ALittle === "undefined") window.ALittle = {};
+
+ALittle.RegStruct(1715346212, "ALittle.Event", {
+name : "ALittle.Event", ns_name : "ALittle", rl_name : "Event", hash_code : 1715346212,
+name_list : ["target"],
+type_list : ["ALittle.EventDispatcher"],
+option_map : {}
+})
+
+ALittle.EventDispatcher = JavaScript.Class(undefined, {
+	Ctor : function() {
+		this._listeners = new Map();
+		this._abs_disabled = false;
+	},
+	AddEventListener : function(T, object, callback) {
+		if (object === undefined) {
+			return false;
+		}
+		if (callback === undefined) {
+			return false;
+		}
+		let rflt = T;
+		let callback_table = this._listeners.get(rflt.hash_code);
+		if (callback_table === undefined) {
+			callback_table = ALittle.CreateKeyWeakMap();
+			this._listeners.set(rflt.hash_code, callback_table);
+		}
+		let callback_value = callback_table.get(object);
+		if (callback_value === undefined) {
+			callback_value = new Map();
+			callback_table.set(object, callback_value);
+		}
+		callback_value.set(callback, true);
+		return true;
+	},
+	RemoveEventListener : function(T, object, callback) {
+		let rflt = T;
+		let callback_table = this._listeners.get(rflt.hash_code);
+		if (callback_table === undefined) {
+			return;
+		}
+		if (callback === undefined) {
+			callback_table.delete(object);
+		} else {
+			let callback_value = callback_table.get(object);
+			if (callback_value === undefined) {
+				return;
+			}
+			callback_value.delete(callback);
+		}
+	},
+	ClearEventListener : function() {
+		this._listeners = new Map();
+	},
+	DispatchEvent : function(T, event) {
+		let rflt = T;
+		if (event.target === undefined) {
+			event.target = this;
+		}
+		let callback_table = this._listeners.get(rflt.hash_code);
+		if (callback_table === undefined) {
+			return;
+		}
+		for (let [object, callback_value] of callback_table) {
+			if (callback_value === undefined) continue;
+			for (let [func, _] of callback_value) {
+				if (_ === undefined) continue;
+				func.call(object, event);
+			}
+		}
+	},
+}, "ALittle.EventDispatcher");
 
 }
 {
@@ -2339,12 +2168,183 @@ ALittle.String_SplitUTF8 = function(content) {
 if (typeof ALittle === "undefined") window.ALittle = {};
 
 
-ALittle.CreateKeyWeakMap = function() {
-	return new jkeyweakmap();
+ALittle.IFileLoader = JavaScript.Class(undefined, {
+	Load : function(file_path) {
+		return undefined;
+	},
+}, "ALittle.IFileLoader");
+
+if (ALittle.IFileLoader === undefined) throw new Error(" extends class:ALittle.IFileLoader is undefined");
+ALittle.JFileLoader = JavaScript.Class(ALittle.IFileLoader, {
+	Load : function(file_path) {
+		let [content, buffer] = JavaScript.File_LoadFile(file_path);
+		return content;
+	},
+}, "ALittle.JFileLoader");
+
+ALittle.IFileSaver = JavaScript.Class(undefined, {
+	Save : function(file_path, content) {
+		return false;
+	},
+}, "ALittle.IFileSaver");
+
+if (ALittle.IFileSaver === undefined) throw new Error(" extends class:ALittle.IFileSaver is undefined");
+ALittle.JFileSaver = JavaScript.Class(ALittle.IFileSaver, {
+	Save : function(file_path, content) {
+		return JavaScript.File_SaveFile(file_path, content, undefined);
+	},
+}, "ALittle.JFileSaver");
+
+ALittle.File_GetCurrentPath = function() {
+	return JavaScript.File_GetCurrentPath();
 }
 
-ALittle.CreateValueWeakMap = function() {
-	return new jvalueweakmap();
+ALittle.File_SetCurrentPath = function(path) {
+	return JavaScript.File_SetCurrentPath(path);
+}
+
+ALittle.File_RenameFile = function(path, new_path) {
+	return JavaScript.File_RenameFile(path, new_path);
+}
+
+ALittle.File_DeleteFile = function(path) {
+	return JavaScript.File_DeleteFile(path);
+}
+
+ALittle.File_GetFileAttr = function(path) {
+	return JavaScript.File_GetFileAttr(path);
+}
+
+ALittle.File_GetFileAttrByDir = function(path, file_map) {
+	return JavaScript.File_GetFileAttrByDir(path, file_map);
+}
+
+ALittle.File_GetFileListByDir = function(path, file_list) {
+	return JavaScript.File_GetFileListByDir(path, file_list);
+}
+
+ALittle.File_GetFileNameListByDir = function(path, file_map) {
+	return JavaScript.File_GetFileNameListByDir(path, file_map);
+}
+
+ALittle.File_DeleteDir = function(path) {
+	return JavaScript.File_DeleteDir(path);
+}
+
+ALittle.File_DeleteDeepDir = function(path, log_path) {
+	JavaScript.File_DeleteDeepDir(path, log_path);
+}
+
+ALittle.File_MakeDir = function(path) {
+	return JavaScript.File_MakeDir(path);
+}
+
+ALittle.File_MakeDeepDir = function(path) {
+	let path_list = ALittle.String_SplitSepList(path, ["/", "\\"]);
+	let cur_path = "";
+	let ___OBJECT_1 = path_list;
+	for (let index = 1; index <= ___OBJECT_1.length; ++index) {
+		let sub_path = ___OBJECT_1[index - 1];
+		if (sub_path === undefined) break;
+		cur_path = cur_path + sub_path;
+		ALittle.File_MakeDir(cur_path);
+		cur_path = cur_path + "/";
+	}
+}
+
+ALittle.File_PathEndWithSplit = function(file_path) {
+	let len = ALittle.String_Len(file_path);
+	if (len === 0) {
+		return file_path;
+	}
+	let byte = ALittle.String_Byte(file_path, len);
+	if (byte === 47 || byte === 92) {
+		return file_path;
+	}
+	if (ALittle.String_Find(file_path, "\\") !== undefined) {
+		return file_path + "\\";
+	}
+	return file_path + "/";
+}
+
+ALittle.File_GetFileNameByPath = function(file_path) {
+	let list = ALittle.String_SplitSepList(file_path, ["/", "\\"]);
+	let l = ALittle.List_MaxN(list);
+	if (l <= 0) {
+		return file_path;
+	}
+	return list[l - 1];
+}
+
+ALittle.File_GetFilePathByPath = function(file_path) {
+	let new_file_path = ALittle.File_GetFileNameByPath(file_path);
+	return ALittle.String_Sub(file_path, 1, -ALittle.String_Len(new_file_path) - 2);
+}
+
+ALittle.File_GetFileExtByPath = function(file_path) {
+	let list = ALittle.String_Split(file_path, ".");
+	let l = ALittle.List_MaxN(list);
+	if (l <= 0) {
+		return file_path;
+	}
+	return list[l - 1];
+}
+
+ALittle.File_ChangeFileExtByPath = function(file_path, ext) {
+	let list = ALittle.String_Split(file_path, ".");
+	let l = ALittle.List_MaxN(list);
+	if (l <= 0) {
+		return file_path + "." + ext;
+	}
+	list[l - 1] = ext;
+	return ALittle.String_Join(list, ".");
+}
+
+ALittle.File_GetFileExtByPathAndUpper = function(file_path) {
+	return ALittle.String_Upper(ALittle.File_GetFileExtByPath(file_path));
+}
+
+ALittle.File_GetJustFileNameByPath = function(file_path) {
+	let new_file_path = ALittle.File_GetFileNameByPath(file_path);
+	let list = ALittle.String_Split(new_file_path, ".");
+	let l = ALittle.List_MaxN(list);
+	if (l <= 1) {
+		return new_file_path;
+	}
+	return list[l - 1 - 1];
+}
+
+ALittle.File_ReadJsonFromStdFile = function(file_path) {
+	{
+		let [content] = JavaScript.File_LoadFile(file_path);
+		if (content === undefined) {
+			return [undefined, file_path + " load failed"];
+		}
+		let [error, new_content] = (function() { try { let ___VALUE = JSON.parse.call(undefined, content); return [undefined, ___VALUE]; } catch (___ERROR) { return [___ERROR.message]; } })();
+		if (error === undefined) {
+			return [new_content, content];
+		}
+		return [undefined, new_content];
+	}
+}
+
+ALittle.File_WriteJsonFromStdFile = function(content, file_path) {
+	{
+		return JavaScript.File_SaveFile(file_path, JSON.stringify(content), undefined);
+	}
+}
+
+ALittle.File_ReadTextFromStdFile = function(file_path) {
+	{
+		let [content, buffer] = JavaScript.File_LoadFile(file_path);
+		return content;
+	}
+}
+
+ALittle.File_WriteTextFromStdFile = function(content, file_path) {
+	{
+		return JavaScript.File_SaveFile(file_path, content, undefined);
+	}
 }
 
 }
@@ -3173,6 +3173,228 @@ ALittle.MsgSessionTemplate = JavaScript.Class(ALittle.IMsgCommonTemplate, {
 }
 {
 if (typeof JavaScript === "undefined") window.JavaScript = {};
+let ___all_struct = ALittle.GetAllStruct();
+
+ALittle.RegStruct(1961635951, "JavaScript.MiniHeapNodeInfo", {
+name : "JavaScript.MiniHeapNodeInfo", ns_name : "JavaScript", rl_name : "MiniHeapNodeInfo", hash_code : 1961635951,
+name_list : ["heap_index","end_time"],
+type_list : ["int","int"],
+option_map : {}
+})
+ALittle.RegStruct(979480799, "JavaScript.TimerInfo", {
+name : "JavaScript.TimerInfo", ns_name : "JavaScript", rl_name : "TimerInfo", hash_code : 979480799,
+name_list : ["heap_index","end_time","id","loop","interval_ms"],
+type_list : ["int","int","int","int","int"],
+option_map : {}
+})
+
+let Math_Floor = Math.floor;
+JavaScript.MiniHeap = JavaScript.Class(undefined, {
+	Ctor : function() {
+		this._nodes = [];
+		this._size = 0;
+		this._capacity = 0;
+	},
+	get size() {
+		return this._size;
+	},
+	get empty() {
+		return this._size === 0;
+	},
+	GetTop : function() {
+		if (this._size === 0) {
+			return undefined;
+		}
+		return this._nodes[0 /*因为使用了Native修饰，下标从0开始，不做减1处理*/];
+	},
+	Push : function(node) {
+		if (this._capacity < this._size + 1) {
+			this._capacity = this._capacity + (1);
+			this._nodes[this._capacity /*因为使用了Native修饰，下标从0开始，不做减1处理*/] = undefined;
+		}
+		this.ShiftUp(this._size, node);
+		++ this._size;
+		return true;
+	},
+	Pop : function() {
+		if (this._size === 0) {
+			return undefined;
+		}
+		let node = this._nodes[0 /*因为使用了Native修饰，下标从0开始，不做减1处理*/];
+		this.ShiftDown(0, this._nodes[this._size - 1 /*因为使用了Native修饰，下标从0开始，不做减1处理*/]);
+		this._size = this._size - (1);
+		node.heap_index = -1;
+		return node;
+	},
+	Adjust : function(node) {
+		if (node.heap_index === -1) {
+			return this.Push(node);
+		}
+		if (node.heap_index > 0 && this._nodes[Math_Floor((node.heap_index - 1) / 2) /*因为使用了Native修饰，下标从0开始，不做减1处理*/].end_time > node.end_time) {
+			this.ShiftUpUnconditional(node.heap_index, node);
+		} else {
+			this.ShiftDown(node.heap_index, node);
+		}
+		return true;
+	},
+	Erase : function(node) {
+		if (node.heap_index < 0) {
+			return false;
+		}
+		let last = this._nodes[this._size - 1 /*因为使用了Native修饰，下标从0开始，不做减1处理*/];
+		this._size = this._size - (1);
+		if (node.heap_index > 0 && this._nodes[Math_Floor((node.heap_index - 1) / 2) /*因为使用了Native修饰，下标从0开始，不做减1处理*/].end_time > last.end_time) {
+			this.ShiftUpUnconditional(node.heap_index, last);
+		} else {
+			this.ShiftDown(node.heap_index, last);
+		}
+		node.heap_index = -1;
+		return true;
+	},
+	ShiftUp : function(index, node) {
+		let parent = Math_Floor((index - 1) / 2);
+		while (index > 0 && this._nodes[parent /*因为使用了Native修饰，下标从0开始，不做减1处理*/].end_time > node.end_time) {
+			this._nodes[index /*因为使用了Native修饰，下标从0开始，不做减1处理*/] = this._nodes[parent /*因为使用了Native修饰，下标从0开始，不做减1处理*/];
+			this._nodes[index /*因为使用了Native修饰，下标从0开始，不做减1处理*/].heap_index = index;
+			index = parent;
+			parent = Math_Floor((index - 1) / 2);
+		}
+		this._nodes[index /*因为使用了Native修饰，下标从0开始，不做减1处理*/] = node;
+		node.heap_index = index;
+	},
+	ShiftUpUnconditional : function(index, node) {
+		let parent = Math_Floor((index - 1) / 2);
+		do {
+			this._nodes[index /*因为使用了Native修饰，下标从0开始，不做减1处理*/] = this._nodes[parent /*因为使用了Native修饰，下标从0开始，不做减1处理*/];
+			this._nodes[index /*因为使用了Native修饰，下标从0开始，不做减1处理*/].heap_index = index;
+			index = parent;
+			parent = Math_Floor((index - 1) / 2);
+		} while (index > 0 && this._nodes[parent /*因为使用了Native修饰，下标从0开始，不做减1处理*/].end_time > node.end_time);
+		this._nodes[index /*因为使用了Native修饰，下标从0开始，不做减1处理*/] = node;
+		node.heap_index = index;
+	},
+	ShiftDown : function(index, node) {
+		let min_child = 2 * (index + 1);
+		while (min_child <= this._size) {
+			if (min_child === this._size || this._nodes[min_child /*因为使用了Native修饰，下标从0开始，不做减1处理*/].end_time > this._nodes[min_child - 1 /*因为使用了Native修饰，下标从0开始，不做减1处理*/].end_time) {
+				min_child = min_child - (1);
+			}
+			if (!(node.end_time > this._nodes[min_child /*因为使用了Native修饰，下标从0开始，不做减1处理*/].end_time)) {
+				break;
+			}
+			this._nodes[index /*因为使用了Native修饰，下标从0开始，不做减1处理*/] = this._nodes[min_child /*因为使用了Native修饰，下标从0开始，不做减1处理*/];
+			this._nodes[index /*因为使用了Native修饰，下标从0开始，不做减1处理*/].heap_index = index;
+			index = min_child;
+			min_child = 2 * (index + 1);
+		}
+		this._nodes[index /*因为使用了Native修饰，下标从0开始，不做减1处理*/] = node;
+		node.heap_index = index;
+	},
+}, "JavaScript.MiniHeap");
+
+if (ALittle.IHeapTimer === undefined) throw new Error(" extends class:ALittle.IHeapTimer is undefined");
+JavaScript.JHeapTimer = JavaScript.Class(ALittle.IHeapTimer, {
+	Ctor : function() {
+		this._max_id = 0;
+		this._cur_time = 0;
+		this._heap = ALittle.NewObject(JavaScript.Template(JavaScript.MiniHeap, "JavaScript.MiniHeap<JavaScript.TimerInfo>", ___all_struct.get(979480799)));
+		this._map = new Map();
+		this._pool = [];
+		this._pool_count = 0;
+	},
+	Create : function() {
+		if (this._pool_count === 0) {
+			return {};
+		}
+		let info = this._pool[this._pool_count - 1];
+		this._pool[this._pool_count - 1] = undefined;
+		this._pool_count = this._pool_count - (1);
+		return info;
+	},
+	Release : function(info) {
+		if (this._pool_count >= 1000) {
+			return;
+		}
+		this._pool_count = this._pool_count + (1);
+		this._pool[this._pool_count - 1] = info;
+	},
+	Add : function(delay_ms, loop, interval_ms) {
+		let info = this.Create();
+		info.heap_index = -1;
+		if (delay_ms < 0) {
+			delay_ms = 0;
+		}
+		info.end_time = this._cur_time + delay_ms;
+		if (loop <= 0) {
+			info.loop = -1;
+		} else {
+			info.loop = loop;
+		}
+		info.interval_ms = interval_ms;
+		if (info.interval_ms <= 0) {
+			info.interval_ms = 1;
+		}
+		let find_count = 1000000;
+		while (find_count > 0) {
+			this._max_id = this._max_id + (1);
+			if (this._max_id === 0x7FFFFFFF) {
+				this._max_id = 1;
+			}
+			if (this._map.get(this._max_id) === undefined) {
+				info.id = this._max_id;
+				break;
+			}
+			-- find_count;
+		}
+		if (!this._heap.Push(info)) {
+			this.Release(info);
+			return 0;
+		}
+		this._map.set(info.id, info);
+		return info.id;
+	},
+	Remove : function(id) {
+		let info = this._map.get(id);
+		if (info === undefined) {
+			return false;
+		}
+		this._heap.Erase(info);
+		this.Release(info);
+		this._map.delete(id);
+		return true;
+	},
+	Update : function(frame_ms) {
+		this._cur_time = this._cur_time + (frame_ms);
+	},
+	Poll : function() {
+		let info = this._heap.GetTop();
+		if (info === undefined) {
+			return 0;
+		}
+		if (info.end_time > this._cur_time) {
+			return 0;
+		}
+		this._heap.Pop();
+		if (info.loop < 0) {
+			info.end_time = info.end_time + info.interval_ms;
+			this._heap.Push(info);
+			return info.id;
+		}
+		if (info.loop > 1) {
+			-- info.loop;
+			info.end_time = info.end_time + info.interval_ms;
+			this._heap.Push(info);
+			return info.id;
+		}
+		this._map.delete(info.id);
+		this.Release(info);
+		return -info.id;
+	},
+}, "JavaScript.JHeapTimer");
+
+}
+{
+if (typeof JavaScript === "undefined") window.JavaScript = {};
 
 ALittle.RegStruct(-1393456776, "JavaScript.FileInfo", {
 name : "JavaScript.FileInfo", ns_name : "JavaScript", rl_name : "FileInfo", hash_code : -1393456776,
@@ -3458,7 +3680,7 @@ JavaScript.File_GetFileNameListByDir = function(path, file_map) {
 	for (let name in ___OBJECT_8) {
 		let value = ___OBJECT_8[name];
 		if (value === undefined) continue;
-		let file_path = cur_dir + name;
+		let file_path = path + "/" + name;
 		if (value.is_directory) {
 			let attr = {};
 			attr.mode = "directory";
@@ -3682,189 +3904,6 @@ JavaScript.File_CopyDeepDir = function(src_path, dest_path, ext, log) {
 		}
 	}
 }
-
-}
-{
-if (typeof JavaScript === "undefined") window.JavaScript = {};
-
-
-if (ALittle.ICsvFile === undefined) throw new Error(" extends class:ALittle.ICsvFile is undefined");
-JavaScript.JCsvFile = JavaScript.Class(ALittle.ICsvFile, {
-	Ctor : function() {
-		this._row_count = 0;
-		this._col_count = 0;
-		this._file_path = "";
-	},
-	addRow : function(row) {
-		if (this._col_count === 0) {
-			++ this._row_count;
-			this._data[this._row_count - 1] = row;
-			this._col_count = row.length;
-			return true;
-		}
-		if (row.length !== this._col_count) {
-			ALittle.Error("row(" + ((this._row_count + 1)) + ") col: " + row.length + " != " + this._col_count);
-			return false;
-		}
-		++ this._row_count;
-		this._data[this._row_count - 1] = row;
-		return true;
-	},
-	Load : function(path) {
-		let [content] = JavaScript.File_LoadFile(path);
-		if (content === undefined) {
-			ALittle.Error("file load failed:" + path);
-			return false;
-		}
-		this._file_path = path;
-		this._data = [];
-		let data_index = 1;
-		let char_index = 0;
-		if (char_index >= content.length) {
-			ALittle.Error("file is empty:" + this._file_path);
-			return false;
-		}
-		let cur_char = content.charCodeAt(char_index);
-		++ char_index;
-		if (char_index >= content.length) {
-			this._data[1 - 1] = [];
-			this._data[1 - 1][1 - 1] = String.fromCharCode(cur_char);
-			return true;
-		}
-		let next_char = content.charCodeAt(char_index);
-		let in_quote = false;
-		let row = [];
-		let row_index = 0;
-		let cell = "";
-		while (true) {
-			if (cur_char === 44) {
-				if (in_quote) {
-					cell = cell + ",";
-					if (next_char === undefined) {
-						ALittle.Error("row(" + this._row_count + ") have no close quote");
-						return false;
-					}
-				} else {
-					++ row_index;
-					row[row_index - 1] = cell;
-					cell = "";
-					if (next_char === undefined) {
-						++ row_index;
-						row[row_index - 1] = "";
-						if (!this.addRow(row)) {
-							return false;
-						}
-						row_index = 0;
-						row = [];
-					}
-				}
-			} else if (cur_char === 10) {
-				if (in_quote) {
-					cell = cell + "\n";
-					if (next_char === undefined) {
-						ALittle.Error("row(" + this._row_count + ") have no close quote");
-						return false;
-					}
-				} else {
-					++ row_index;
-					row[row_index - 1] = cell;
-					cell = "";
-					if (!this.addRow(row)) {
-						return false;
-					}
-					row_index = 0;
-					row = [];
-				}
-			} else if (cur_char === 34) {
-				if (in_quote) {
-					if (next_char === 34) {
-						cell = cell + "\"";
-						next_char = undefined;
-						if (char_index + 1 < content.length) {
-							++ char_index;
-							next_char = content.charCodeAt(char_index);
-						}
-						if (next_char === undefined) {
-							ALittle.Error("row(" + this._row_count + ") have no close quote");
-							return false;
-						}
-					} else {
-						in_quote = false;
-						if (next_char === undefined) {
-							++ row_index;
-							row[row_index - 1] = cell;
-							cell = "";
-							if (!this.addRow(row)) {
-								return false;
-							}
-							row_index = 0;
-							row = [];
-						}
-					}
-				} else {
-					if (cell.length === 0) {
-						in_quote = true;
-					} else {
-						cell = cell + "\"";
-					}
-					if (next_char === undefined) {
-						ALittle.Error("row(" + this._row_count + ") have no close quote");
-						return false;
-					}
-				}
-			} else {
-				if (in_quote) {
-					cell = cell + String.fromCharCode(cur_char);
-					if (next_char === undefined) {
-						ALittle.Error("row(" + this._row_count + ") have no close quote");
-						return false;
-					}
-				} else {
-					if (!(cur_char === 13 && next_char === 10)) {
-						cell = cell + String.fromCharCode(cur_char);
-					}
-					if (next_char === undefined) {
-						++ row_index;
-						row[row_index - 1] = cell;
-						cell = "";
-						if (!this.addRow(row)) {
-							return false;
-						}
-						row_index = 0;
-						row = [];
-					}
-				}
-			}
-			if (next_char === undefined) {
-				break;
-			}
-			cur_char = next_char;
-			next_char = undefined;
-			if (char_index + 1 < content.length) {
-				++ char_index;
-				next_char = content.charCodeAt(char_index);
-			}
-		}
-		return true;
-	},
-	Close : function() {
-		this._data = undefined;
-		this._row_count = 0;
-		this._col_count = 0;
-	},
-	GetPath : function() {
-		return this._file_path;
-	},
-	ReadCell : function(row, col) {
-		return this._data[row - 1][col - 1];
-	},
-	GetRowCount : function() {
-		return this._row_count;
-	},
-	GetColCount : function() {
-		return this._col_count;
-	},
-}, "JavaScript.JCsvFile");
 
 }
 {
@@ -4549,224 +4588,185 @@ window.A_JSchedule = ALittle.NewObject(JavaScript.JSchedule);
 }
 {
 if (typeof JavaScript === "undefined") window.JavaScript = {};
-let ___all_struct = ALittle.GetAllStruct();
 
-ALittle.RegStruct(1961635951, "JavaScript.MiniHeapNodeInfo", {
-name : "JavaScript.MiniHeapNodeInfo", ns_name : "JavaScript", rl_name : "MiniHeapNodeInfo", hash_code : 1961635951,
-name_list : ["heap_index","end_time"],
-type_list : ["int","int"],
-option_map : {}
-})
-ALittle.RegStruct(979480799, "JavaScript.TimerInfo", {
-name : "JavaScript.TimerInfo", ns_name : "JavaScript", rl_name : "TimerInfo", hash_code : 979480799,
-name_list : ["heap_index","end_time","id","loop","interval_ms"],
-type_list : ["int","int","int","int","int"],
-option_map : {}
-})
 
-let Math_Floor = Math.floor;
-JavaScript.MiniHeap = JavaScript.Class(undefined, {
+if (ALittle.ICsvFile === undefined) throw new Error(" extends class:ALittle.ICsvFile is undefined");
+JavaScript.JCsvFile = JavaScript.Class(ALittle.ICsvFile, {
 	Ctor : function() {
-		this._nodes = [];
-		this._size = 0;
-		this._capacity = 0;
+		this._row_count = 0;
+		this._col_count = 0;
+		this._file_path = "";
 	},
-	get size() {
-		return this._size;
-	},
-	get empty() {
-		return this._size === 0;
-	},
-	GetTop : function() {
-		if (this._size === 0) {
-			return undefined;
+	addRow : function(row) {
+		if (this._col_count === 0) {
+			++ this._row_count;
+			this._data[this._row_count - 1] = row;
+			this._col_count = row.length;
+			return true;
 		}
-		return this._nodes[0 /*因为使用了Native修饰，下标从0开始，不做减1处理*/];
-	},
-	Push : function(node) {
-		if (this._capacity < this._size + 1) {
-			this._capacity = this._capacity + (1);
-			this._nodes[this._capacity /*因为使用了Native修饰，下标从0开始，不做减1处理*/] = undefined;
-		}
-		this.ShiftUp(this._size, node);
-		++ this._size;
-		return true;
-	},
-	Pop : function() {
-		if (this._size === 0) {
-			return undefined;
-		}
-		let node = this._nodes[0 /*因为使用了Native修饰，下标从0开始，不做减1处理*/];
-		this.ShiftDown(0, this._nodes[this._size - 1 /*因为使用了Native修饰，下标从0开始，不做减1处理*/]);
-		this._size = this._size - (1);
-		node.heap_index = -1;
-		return node;
-	},
-	Adjust : function(node) {
-		if (node.heap_index === -1) {
-			return this.Push(node);
-		}
-		if (node.heap_index > 0 && this._nodes[Math_Floor((node.heap_index - 1) / 2) /*因为使用了Native修饰，下标从0开始，不做减1处理*/].end_time > node.end_time) {
-			this.ShiftUpUnconditional(node.heap_index, node);
-		} else {
-			this.ShiftDown(node.heap_index, node);
-		}
-		return true;
-	},
-	Erase : function(node) {
-		if (node.heap_index < 0) {
+		if (row.length !== this._col_count) {
+			ALittle.Error("row(" + ((this._row_count + 1)) + ") col: " + row.length + " != " + this._col_count);
 			return false;
 		}
-		let last = this._nodes[this._size - 1 /*因为使用了Native修饰，下标从0开始，不做减1处理*/];
-		this._size = this._size - (1);
-		if (node.heap_index > 0 && this._nodes[Math_Floor((node.heap_index - 1) / 2) /*因为使用了Native修饰，下标从0开始，不做减1处理*/].end_time > last.end_time) {
-			this.ShiftUpUnconditional(node.heap_index, last);
-		} else {
-			this.ShiftDown(node.heap_index, last);
-		}
-		node.heap_index = -1;
+		++ this._row_count;
+		this._data[this._row_count - 1] = row;
 		return true;
 	},
-	ShiftUp : function(index, node) {
-		let parent = Math_Floor((index - 1) / 2);
-		while (index > 0 && this._nodes[parent /*因为使用了Native修饰，下标从0开始，不做减1处理*/].end_time > node.end_time) {
-			this._nodes[index /*因为使用了Native修饰，下标从0开始，不做减1处理*/] = this._nodes[parent /*因为使用了Native修饰，下标从0开始，不做减1处理*/];
-			this._nodes[index /*因为使用了Native修饰，下标从0开始，不做减1处理*/].heap_index = index;
-			index = parent;
-			parent = Math_Floor((index - 1) / 2);
-		}
-		this._nodes[index /*因为使用了Native修饰，下标从0开始，不做减1处理*/] = node;
-		node.heap_index = index;
-	},
-	ShiftUpUnconditional : function(index, node) {
-		let parent = Math_Floor((index - 1) / 2);
-		do {
-			this._nodes[index /*因为使用了Native修饰，下标从0开始，不做减1处理*/] = this._nodes[parent /*因为使用了Native修饰，下标从0开始，不做减1处理*/];
-			this._nodes[index /*因为使用了Native修饰，下标从0开始，不做减1处理*/].heap_index = index;
-			index = parent;
-			parent = Math_Floor((index - 1) / 2);
-		} while (index > 0 && this._nodes[parent /*因为使用了Native修饰，下标从0开始，不做减1处理*/].end_time > node.end_time);
-		this._nodes[index /*因为使用了Native修饰，下标从0开始，不做减1处理*/] = node;
-		node.heap_index = index;
-	},
-	ShiftDown : function(index, node) {
-		let min_child = 2 * (index + 1);
-		while (min_child <= this._size) {
-			if (min_child === this._size || this._nodes[min_child /*因为使用了Native修饰，下标从0开始，不做减1处理*/].end_time > this._nodes[min_child - 1 /*因为使用了Native修饰，下标从0开始，不做减1处理*/].end_time) {
-				min_child = min_child - (1);
-			}
-			if (!(node.end_time > this._nodes[min_child /*因为使用了Native修饰，下标从0开始，不做减1处理*/].end_time)) {
-				break;
-			}
-			this._nodes[index /*因为使用了Native修饰，下标从0开始，不做减1处理*/] = this._nodes[min_child /*因为使用了Native修饰，下标从0开始，不做减1处理*/];
-			this._nodes[index /*因为使用了Native修饰，下标从0开始，不做减1处理*/].heap_index = index;
-			index = min_child;
-			min_child = 2 * (index + 1);
-		}
-		this._nodes[index /*因为使用了Native修饰，下标从0开始，不做减1处理*/] = node;
-		node.heap_index = index;
-	},
-}, "JavaScript.MiniHeap");
-
-if (ALittle.IHeapTimer === undefined) throw new Error(" extends class:ALittle.IHeapTimer is undefined");
-JavaScript.JHeapTimer = JavaScript.Class(ALittle.IHeapTimer, {
-	Ctor : function() {
-		this._max_id = 0;
-		this._cur_time = 0;
-		this._heap = ALittle.NewObject(JavaScript.Template(JavaScript.MiniHeap, "JavaScript.MiniHeap<JavaScript.TimerInfo>", ___all_struct.get(979480799)));
-		this._map = new Map();
-		this._pool = [];
-		this._pool_count = 0;
-	},
-	Create : function() {
-		if (this._pool_count === 0) {
-			return {};
-		}
-		let info = this._pool[this._pool_count - 1];
-		this._pool[this._pool_count - 1] = undefined;
-		this._pool_count = this._pool_count - (1);
-		return info;
-	},
-	Release : function(info) {
-		if (this._pool_count >= 1000) {
-			return;
-		}
-		this._pool_count = this._pool_count + (1);
-		this._pool[this._pool_count - 1] = info;
-	},
-	Add : function(delay_ms, loop, interval_ms) {
-		let info = this.Create();
-		info.heap_index = -1;
-		if (delay_ms < 0) {
-			delay_ms = 0;
-		}
-		info.end_time = this._cur_time + delay_ms;
-		if (loop <= 0) {
-			info.loop = -1;
-		} else {
-			info.loop = loop;
-		}
-		info.interval_ms = interval_ms;
-		if (info.interval_ms <= 0) {
-			info.interval_ms = 1;
-		}
-		let find_count = 1000000;
-		while (find_count > 0) {
-			this._max_id = this._max_id + (1);
-			if (this._max_id === 0x7FFFFFFF) {
-				this._max_id = 1;
-			}
-			if (this._map.get(this._max_id) === undefined) {
-				info.id = this._max_id;
-				break;
-			}
-			-- find_count;
-		}
-		if (!this._heap.Push(info)) {
-			this.Release(info);
-			return 0;
-		}
-		this._map.set(info.id, info);
-		return info.id;
-	},
-	Remove : function(id) {
-		let info = this._map.get(id);
-		if (info === undefined) {
+	Load : function(path) {
+		let [content] = JavaScript.File_LoadFile(path);
+		if (content === undefined) {
+			ALittle.Error("file load failed:" + path);
 			return false;
 		}
-		this._heap.Erase(info);
-		this.Release(info);
-		this._map.delete(id);
+		this._file_path = path;
+		this._data = [];
+		let data_index = 1;
+		let char_index = 0;
+		if (char_index >= content.length) {
+			ALittle.Error("file is empty:" + this._file_path);
+			return false;
+		}
+		let cur_char = content.charCodeAt(char_index);
+		++ char_index;
+		if (char_index >= content.length) {
+			this._data[1 - 1] = [];
+			this._data[1 - 1][1 - 1] = String.fromCharCode(cur_char);
+			return true;
+		}
+		let next_char = content.charCodeAt(char_index);
+		let in_quote = false;
+		let row = [];
+		let row_index = 0;
+		let cell = "";
+		while (true) {
+			if (cur_char === 44) {
+				if (in_quote) {
+					cell = cell + ",";
+					if (next_char === undefined) {
+						ALittle.Error("row(" + this._row_count + ") have no close quote");
+						return false;
+					}
+				} else {
+					++ row_index;
+					row[row_index - 1] = cell;
+					cell = "";
+					if (next_char === undefined) {
+						++ row_index;
+						row[row_index - 1] = "";
+						if (!this.addRow(row)) {
+							return false;
+						}
+						row_index = 0;
+						row = [];
+					}
+				}
+			} else if (cur_char === 10) {
+				if (in_quote) {
+					cell = cell + "\n";
+					if (next_char === undefined) {
+						ALittle.Error("row(" + this._row_count + ") have no close quote");
+						return false;
+					}
+				} else {
+					++ row_index;
+					row[row_index - 1] = cell;
+					cell = "";
+					if (!this.addRow(row)) {
+						return false;
+					}
+					row_index = 0;
+					row = [];
+				}
+			} else if (cur_char === 34) {
+				if (in_quote) {
+					if (next_char === 34) {
+						cell = cell + "\"";
+						next_char = undefined;
+						if (char_index + 1 < content.length) {
+							++ char_index;
+							next_char = content.charCodeAt(char_index);
+						}
+						if (next_char === undefined) {
+							ALittle.Error("row(" + this._row_count + ") have no close quote");
+							return false;
+						}
+					} else {
+						in_quote = false;
+						if (next_char === undefined) {
+							++ row_index;
+							row[row_index - 1] = cell;
+							cell = "";
+							if (!this.addRow(row)) {
+								return false;
+							}
+							row_index = 0;
+							row = [];
+						}
+					}
+				} else {
+					if (cell.length === 0) {
+						in_quote = true;
+					} else {
+						cell = cell + "\"";
+					}
+					if (next_char === undefined) {
+						ALittle.Error("row(" + this._row_count + ") have no close quote");
+						return false;
+					}
+				}
+			} else {
+				if (in_quote) {
+					cell = cell + String.fromCharCode(cur_char);
+					if (next_char === undefined) {
+						ALittle.Error("row(" + this._row_count + ") have no close quote");
+						return false;
+					}
+				} else {
+					if (!(cur_char === 13 && next_char === 10)) {
+						cell = cell + String.fromCharCode(cur_char);
+					}
+					if (next_char === undefined) {
+						++ row_index;
+						row[row_index - 1] = cell;
+						cell = "";
+						if (!this.addRow(row)) {
+							return false;
+						}
+						row_index = 0;
+						row = [];
+					}
+				}
+			}
+			if (next_char === undefined) {
+				break;
+			}
+			cur_char = next_char;
+			next_char = undefined;
+			if (char_index + 1 < content.length) {
+				++ char_index;
+				next_char = content.charCodeAt(char_index);
+			}
+		}
 		return true;
 	},
-	Update : function(frame_ms) {
-		this._cur_time = this._cur_time + (frame_ms);
+	Close : function() {
+		this._data = undefined;
+		this._row_count = 0;
+		this._col_count = 0;
 	},
-	Poll : function() {
-		let info = this._heap.GetTop();
-		if (info === undefined) {
-			return 0;
-		}
-		if (info.end_time > this._cur_time) {
-			return 0;
-		}
-		this._heap.Pop();
-		if (info.loop < 0) {
-			info.end_time = info.end_time + info.interval_ms;
-			this._heap.Push(info);
-			return info.id;
-		}
-		if (info.loop > 1) {
-			-- info.loop;
-			info.end_time = info.end_time + info.interval_ms;
-			this._heap.Push(info);
-			return info.id;
-		}
-		this._map.delete(info.id);
-		this.Release(info);
-		return -info.id;
+	GetPath : function() {
+		return this._file_path;
 	},
-}, "JavaScript.JHeapTimer");
+	ReadCell : function(row, col) {
+		return this._data[row - 1][col - 1];
+	},
+	GetRowCount : function() {
+		return this._row_count;
+	},
+	GetColCount : function() {
+		return this._col_count;
+	},
+}, "JavaScript.JCsvFile");
 
 }
 {
