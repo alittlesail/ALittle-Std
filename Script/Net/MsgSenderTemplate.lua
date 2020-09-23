@@ -152,12 +152,12 @@ function ALittle.__ALITTLEAPI_ConnectSucceed(id)
 	client:HandleConnectSucceed()
 end
 
-function ALittle.__ALITTLEAPI_Disconnect(id)
+function ALittle.__ALITTLEAPI_Disconnected(id)
 	local client = __MsgSenderMap[id]
 	if client == nil then
 		return
 	end
-	client:HandleDisconnect()
+	client:HandleDisconnected()
 end
 
 function ALittle.__ALITTLEAPI_ConnectFailed(id)

@@ -96,7 +96,7 @@ public class LuaSchedule : ALittle.ISchedule
         elseif (event.type == net_type.MSG_CONNECT_FAILED)
             ALittle.__ALITTLEAPI_ConnectFailed(event.id);
         elseif (event.type == net_type.MSG_DISCONNECTED)
-            ALittle.__ALITTLEAPI_Disconnect(event.id);
+            ALittle.__ALITTLEAPI_Disconnected(event.id);
     }
 }
 

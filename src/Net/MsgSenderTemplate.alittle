@@ -202,11 +202,11 @@ public static __ALITTLEAPI_ConnectSucceed(int id)
 }
 
 // 断开连接
-public static __ALITTLEAPI_Disconnect(int id)
+public static __ALITTLEAPI_Disconnected(int id)
 {
     var client = __MsgSenderMap[id];
     if (client ==  null) return;
-    client.HandleDisconnect();
+    client.HandleDisconnected();
 }
 
 // 客户端链接服务端，失败

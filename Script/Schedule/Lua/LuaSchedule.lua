@@ -80,7 +80,7 @@ function Lua.LuaSchedule:HandleEvent(event)
 	elseif event.type == Lua.net_type.MSG_CONNECT_FAILED then
 		ALittle.__ALITTLEAPI_ConnectFailed(event.id)
 	elseif event.type == Lua.net_type.MSG_DISCONNECTED then
-		ALittle.__ALITTLEAPI_Disconnect(event.id)
+		ALittle.__ALITTLEAPI_Disconnected(event.id)
 	end
 end
 
