@@ -62,7 +62,6 @@ public await static RequireStd(string base_path)
 
     [Language(Lua)]
     {
-        Require(base_path, "Loop/Lua/LuaHeapTimer");
         Require(base_path, "Config/Lua/LuaCsvFile");
         Require(base_path, "Net/Lua/LuaHttpFileInterface");
         Require(base_path, "Net/Lua/LuaHttpInterface");

@@ -35,7 +35,6 @@ function _G.RequireStd(base_path)
 	Require(base_path, "Net/MsgSenderTemplate")
 	Require(base_path, "Net/MsgSessionTemplate")
 	do
-		Require(base_path, "Loop/Lua/LuaHeapTimer")
 		Require(base_path, "Config/Lua/LuaCsvFile")
 		Require(base_path, "Net/Lua/LuaHttpFileInterface")
 		Require(base_path, "Net/Lua/LuaHttpInterface")
