@@ -6,11 +6,11 @@ local ___ipairs = ipairs
 
 
 function ALittle.BitAnd(x, y)
-	return bit.band(x, y)
+	return carp.BitAnd(x, y)
 end
 
 function ALittle.BitOr(x, y)
-	return bit.bor(x, y)
+	return carp.BitOr(x, y)
 end
 
 end

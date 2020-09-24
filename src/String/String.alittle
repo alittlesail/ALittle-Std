@@ -22,7 +22,7 @@ public static String_JsonDecode(string text) : any
 public static String_MD5(string text) : string
 {
     [Language(Lua)]
-    return lua.md5.stringmd5(text);
+    return carp.StringMd5(text);
     
     [Language(JavaScript)]
     return javascript.md5(text);
@@ -31,7 +31,7 @@ public static String_MD5(string text) : string
 public static String_Base64Encode(string text) : string
 {
     [Language(Lua)]
-    return lua.base64.encode(text);
+    return carp.Base64Encode(text);
     
     [Language(JavaScript)]
     return javascript.btoa(text);
@@ -40,7 +40,7 @@ public static String_Base64Encode(string text) : string
 public static String_Base64Decode(string text) : string
 {
     [Language(Lua)]
-    return lua.base64.decode(text);
+    return carp.Base64Decode(text);
     
     [Language(JavaScript)]
     return javascript.atob(text);
@@ -49,7 +49,7 @@ public static String_Base64Decode(string text) : string
 public static String_GetWordCount(string text) : int
 {
     [Language(Lua)]
-    return lua.utf8.wordcount(text);
+    return carp.UTF8WordCount(text);
     
     [Language(JavaScript)]
     return cast<javascript.String>(text).length;
@@ -58,7 +58,7 @@ public static String_GetWordCount(string text) : int
 public static String_GetByteCount(string text, int word_count) : int
 {
     [Language(Lua)]
-    return lua.utf8.bytecount(text, 0, word_count);
+    return carp.UTF8ByteCount(text, 0, word_count);
     
     [Language(JavaScript)]
     if (cast<javascript.String>(text).length < word_count)
@@ -189,7 +189,7 @@ public static String_SplitUTF8(string content) : List<string>
     {
         [Language(Lua)]
         {
-            var byte_count = lua.utf8.bytecount(content, index - 1, 1);
+            var byte_count = carp.UTF8ByteCount(content, index - 1, 1);
             char_count += 1;
             char_list[char_count] = lua.String.sub(content, index, index + byte_count - 1);
             index += byte_count;

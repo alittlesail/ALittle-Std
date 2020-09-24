@@ -157,9 +157,9 @@ public class LoopSystem<HT : IHeapTimer> : ILoopSystem
 }
 
 [Language(Lua)]
-public var A_LuaLoopSystem = new LoopSystem<Lua.LuaHeapTimer>();
+public var A_LuaLoopSystem = new LoopSystem<carp.CarpTimer>();
 [Language(Lua)]
-public var A_LuaWeakLoopSystem = new LoopSystem<Lua.LuaHeapTimer>(true);
+public var A_LuaWeakLoopSystem = new LoopSystem<carp.CarpTimer>(true);
 
 [Language(JavaScript)]
 public var A_JLoopSystem = new LoopSystem<JavaScript.JHeapTimer>();

@@ -5,13 +5,13 @@ namespace Lua;
 public class LuaCsvFile : ALittle.ICsvFile
 {
     private string _path;
-    private lua.csv _csv;
+    private carp.CarpCsv _csv;
     
     public fun Load(string path) : bool
     {
         this._path = path;
-        this._csv = lua.csv.create();
-        var error = lua.csv.load(this._csv, path);
+        this._csv = new carp.CarpCsv();
+        var error = this._csv.Load(path);
         if (error != null) ALittle.Error(error);
         return error == null;
     }
@@ -19,23 +19,23 @@ public class LuaCsvFile : ALittle.ICsvFile
     {
         if (this._csv != null)
         {
-            lua.csv.clear(this._csv);
+            this._csv.Clear();
             this._csv = null;
         }
     }
     public fun ReadCell(int row, int col) : string
     {
-        if (this._csv == null) return "";
-        return lua.csv.readcell(this._csv, row, col);
+        if (this._csv == null) return null;
+        return this._csv.GetCell(row, col);
     }
     public fun GetRowCount() : int
     {
         if (this._csv == null) return 0;
-        return lua.csv.rowcount(this._csv);
+        return this._csv.GetRowCount();
     }
     public fun GetColCount() : int
     {
         if (this._csv == null) return 0;
-        return lua.csv.colcount(this._csv);
+        return this._csv.GetColCount();
     }
 }

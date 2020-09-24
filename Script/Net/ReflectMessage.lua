@@ -4,10 +4,10 @@ if _G.ALittle == nil then _G.ALittle = {} end
 local ___pairs = pairs
 local ___ipairs = ipairs
 
-ALittle.RegStruct(1847150134, "ALittle.StructInfo", {
-name = "ALittle.StructInfo", ns_name = "ALittle", rl_name = "StructInfo", hash_code = 1847150134,
-name_list = {"name","ns_name","rl_name","hash_code","name_list","type_list","option_map"},
-type_list = {"string","string","string","int","List<string>","List<string>","Map<string,string>"},
+ALittle.RegStruct(-1602043290, "ALittle.ProtocolInvokeInfo", {
+name = "ALittle.ProtocolInvokeInfo", ns_name = "ALittle", rl_name = "ProtocolInvokeInfo", hash_code = -1602043290,
+name_list = {"wfunc","rfunc","rflt","var_name","key_info","value_info","sub_info","handle"},
+type_list = {"Functor<(ALittle.IMessageWriteFactory,ALittle.ProtocolInvokeInfo,any,any):int>","Functor<(ALittle.IMessageReadFactory,ALittle.ProtocolInvokeInfo,any,int):any,int>","ALittle.StructInfo","string","ALittle.ProtocolInvokeInfo","ALittle.ProtocolInvokeInfo","ALittle.ProtocolInvokeInfo","List<ALittle.ProtocolInvokeInfo>"},
 option_map = {}
 })
 ALittle.RegStruct(1821069430, "ALittle.ProtocolAnyStruct", {
@@ -16,10 +16,10 @@ name_list = {"hash_code","value"},
 type_list = {"int","any"},
 option_map = {}
 })
-ALittle.RegStruct(-1602043290, "ALittle.ProtocolInvokeInfo", {
-name = "ALittle.ProtocolInvokeInfo", ns_name = "ALittle", rl_name = "ProtocolInvokeInfo", hash_code = -1602043290,
-name_list = {"wfunc","rfunc","rflt","var_name","key_info","value_info","sub_info","handle"},
-type_list = {"Functor<(ALittle.IMessageWriteFactory,ALittle.ProtocolInvokeInfo,any,any):int>","Functor<(ALittle.IMessageReadFactory,ALittle.ProtocolInvokeInfo,any,int):any,int>","ALittle.StructInfo","string","ALittle.ProtocolInvokeInfo","ALittle.ProtocolInvokeInfo","ALittle.ProtocolInvokeInfo","List<ALittle.ProtocolInvokeInfo>"},
+ALittle.RegStruct(1847150134, "ALittle.StructInfo", {
+name = "ALittle.StructInfo", ns_name = "ALittle", rl_name = "StructInfo", hash_code = 1847150134,
+name_list = {"name","ns_name","rl_name","hash_code","name_list","type_list","option_map"},
+type_list = {"string","string","string","int","List<string>","List<string>","Map<string,string>"},
 option_map = {}
 })
 

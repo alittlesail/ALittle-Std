@@ -15,23 +15,23 @@ function ALittle.String_JsonDecode(text)
 end
 
 function ALittle.String_MD5(text)
-	return md5.stringmd5(text)
+	return carp.StringMd5(text)
 end
 
 function ALittle.String_Base64Encode(text)
-	return base64.encode(text)
+	return carp.Base64Encode(text)
 end
 
 function ALittle.String_Base64Decode(text)
-	return base64.decode(text)
+	return carp.Base64Decode(text)
 end
 
 function ALittle.String_GetWordCount(text)
-	return utf8.wordcount(text)
+	return carp.UTF8WordCount(text)
 end
 
 function ALittle.String_GetByteCount(text, word_count)
-	return utf8.bytecount(text, 0, word_count)
+	return carp.UTF8ByteCount(text, 0, word_count)
 end
 
 ALittle.StringGenerateID = Lua.Class(nil, "ALittle.StringGenerateID")
@@ -136,7 +136,7 @@ function ALittle.String_SplitUTF8(content)
 	local char_count = 0
 	while index <= len do
 		do
-			local byte_count = utf8.bytecount(content, index - 1, 1)
+			local byte_count = carp.UTF8ByteCount(content, index - 1, 1)
 			char_count = char_count + (1)
 			char_list[char_count] = string.sub(content, index, index + byte_count - 1)
 			index = index + (byte_count)

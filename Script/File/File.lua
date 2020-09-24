@@ -4,16 +4,13 @@ if _G.ALittle == nil then _G.ALittle = {} end
 local ___pairs = pairs
 local ___ipairs = ipairs
 
+ALittle.RegStruct(839664979, "ALittle.PathAttribute", {
+name = "ALittle.PathAttribute", ns_name = "ALittle", rl_name = "PathAttribute", hash_code = 839664979,
+name_list = {"directory","size"},
+type_list = {"bool","int"},
+option_map = {}
+})
 
-local open = io.open
-local rename = os.rename
-local remove = os.remove
-local attributes = lfs.attributes
-local dir = lfs.dir
-local currentdir = lfs.currentdir
-local chdir = lfs.chdir
-local rmdir = lfs.rmdir
-local mkdir = lfs.mkdir
 ALittle.IFileLoader = Lua.Class(nil, "ALittle.IFileLoader")
 
 function ALittle.IFileLoader:Load(file_path)
@@ -24,7 +21,7 @@ assert(ALittle.IFileLoader, " extends class:ALittle.IFileLoader is nil")
 ALittle.LuaFileLoader = Lua.Class(ALittle.IFileLoader, "ALittle.LuaFileLoader")
 
 function ALittle.LuaFileLoader:Load(file_path)
-	local file = open(file_path, "r")
+	local file = io.open(file_path, "r")
 	if file == nil then
 		return nil
 	end
@@ -43,7 +40,7 @@ assert(ALittle.IFileSaver, " extends class:ALittle.IFileSaver is nil")
 ALittle.LuaFileSaver = Lua.Class(ALittle.IFileSaver, "ALittle.LuaFileSaver")
 
 function ALittle.LuaFileSaver:Save(file_path, content)
-	local file = open(file_path, "w")
+	local file = io.open(file_path, "w")
 	if file == nil then
 		return false
 	end
@@ -52,24 +49,16 @@ function ALittle.LuaFileSaver:Save(file_path, content)
 	return true
 end
 
-function ALittle.File_GetCurrentPath()
-	return currentdir()
-end
-
-function ALittle.File_SetCurrentPath(path)
-	return chdir(path)
-end
-
 function ALittle.File_RenameFile(path, new_path)
-	return rename(path, new_path)
+	return os.rename(path, new_path)
 end
 
 function ALittle.File_DeleteFile(path)
-	return remove(path)
+	return os.remove(path)
 end
 
 function ALittle.File_GetFileAttr(path)
-	return attributes(path)
+	return carp.GetPathAttribute(path)
 end
 
 function ALittle.File_GetFileAttrByDir(path, file_map)
@@ -77,58 +66,60 @@ function ALittle.File_GetFileAttrByDir(path, file_map)
 		if file_map == nil then
 			file_map = {}
 		end
-		for file in dir(path) do
-			if file ~= "." and file ~= ".." then
-				local file_path = path .. "/" .. file
-				local attr = attributes(file_path)
-				if attr.mode == "directory" then
-					ALittle.File_GetFileAttrByDir(file_path, file_map)
-				else
-					file_map[file_path] = attr
-				end
-			end
+		local file_list = carp.GetFileNameListInFolder(path)
+		for index, file in ___ipairs(file_list) do
+			local file_path = path .. "/" .. file
+			file_map[file_path] = carp.GetPathAttribute(file_path)
+		end
+		local folder_list = carp.GetFolderNameListInFolder(path)
+		for index, file in ___ipairs(folder_list) do
+			local file_path = path .. "/" .. file
+			ALittle.File_GetFileAttrByDir(file_path, file_map)
 		end
 		return file_map
 	end
 end
 
-function ALittle.File_GetFileListByDir(path, file_list)
+function ALittle.File_GetFileListByDir(path, out_list)
 	do
-		if file_list == nil then
-			file_list = {}
+		if out_list == nil then
+			out_list = {}
 		end
-		for file in dir(path) do
-			if file ~= "." and file ~= ".." then
-				local file_path = path .. "/" .. file
-				local attr = attributes(file_path)
-				if attr.mode == "directory" then
-					ALittle.File_GetFileListByDir(file_path, file_list)
-				else
-					ALittle.List_Push(file_list, file_path)
-				end
-			end
+		local file_list = carp.GetFileNameListInFolder(path)
+		for index, file in ___ipairs(file_list) do
+			local file_path = path .. "/" .. file
+			ALittle.List_Push(out_list, file_path)
 		end
-		return file_list
+		local folder_list = carp.GetFolderNameListInFolder(path)
+		for index, file in ___ipairs(folder_list) do
+			local file_path = path .. "/" .. file
+			ALittle.File_GetFileListByDir(file_path, out_list)
+		end
+		return out_list
 	end
 end
 
-function ALittle.File_GetFileNameListByDir(path, file_map)
+function ALittle.File_GetNameListByDir(path, file_map)
 	do
 		if file_map == nil then
 			file_map = {}
 		end
-		for file in dir(path) do
-			if file ~= "." and file ~= ".." then
-				local file_path = path .. "/" .. file
-				file_map[file] = attributes(file_path)
-			end
+		local file_list = carp.GetFileNameListInFolder(path)
+		for index, file in ___ipairs(file_list) do
+			local file_path = path .. "/" .. file
+			file_map[file] = carp.GetPathAttribute(file_path)
+		end
+		local folder_list = carp.GetFolderNameListInFolder(path)
+		for index, file in ___ipairs(folder_list) do
+			local file_path = path .. "/" .. file
+			file_map[file] = carp.GetPathAttribute(file_path)
 		end
 		return file_map
 	end
 end
 
 function ALittle.File_DeleteDir(path)
-	return rmdir(path)
+	carp.DeleteFolder(path)
 end
 
 function ALittle.File_DeleteDeepDir(path, log_path)
@@ -139,26 +130,25 @@ function ALittle.File_DeleteDeepDir(path, log_path)
 		if ALittle.File_GetFileAttr(path) == nil then
 			return
 		end
-		for file in dir(path) do
-			if file ~= "." and file ~= ".." then
-				local file_path = path .. "/" .. file
-				local attr = attributes(file_path)
-				if attr.mode == "directory" then
-					ALittle.File_DeleteDeepDir(file_path, log_path)
-				else
-					ALittle.File_DeleteFile(file_path)
-					if log_path then
-						ALittle.Log("delete file:", file_path)
-					end
-				end
+		local file_list = carp.GetFileNameListInFolder(path)
+		for index, file in ___ipairs(file_list) do
+			local file_path = path .. "/" .. file
+			ALittle.File_DeleteFile(file_path)
+			if log_path then
+				ALittle.Log("delete file:", file_path)
 			end
+		end
+		local folder_list = carp.GetFolderNameListInFolder(path)
+		for index, file in ___ipairs(folder_list) do
+			local file_path = path .. "/" .. file
+			ALittle.File_DeleteDeepDir(file_path, log_path)
 		end
 		ALittle.File_DeleteDir(path)
 	end
 end
 
 function ALittle.File_MakeDir(path)
-	return mkdir(path)
+	carp.CreateFolder(path)
 end
 
 function ALittle.File_MakeDeepDir(path)

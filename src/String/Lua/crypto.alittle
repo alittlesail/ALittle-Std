@@ -1,0 +1,10 @@
+
+register namespace carp;
+
+public static Base64Encode(string msg) : string {}
+public static Base64Decode(string msg) : string {}
+
+public static StringMd5(string msg) : string {}
+public static FileMd5(string file_path) : string {}
+
+public static JSHash(string msg) : int {}

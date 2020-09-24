@@ -1,0 +1,7 @@
+
+register namespace carp;
+
+// 计算utf8字符串的字的个数
+public static UTF8WordCount(string value) : int {}
+// 计算utf8字符串，在指定wordcount下的字节数，offset从0开始算
+public static UTF8ByteCount(string value, int offset, int word_count) : int {}

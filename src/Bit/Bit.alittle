@@ -4,7 +4,7 @@ namespace ALittle;
 public static BitAnd(int x, int y) : int
 {
     [Language(Lua)]
-    return lua.bit.band(x, y);
+    return carp.BitAnd(x, y);
 
     [Language(JavaScript)]
     return javascript.bit.band(x, y);
@@ -13,7 +13,7 @@ public static BitAnd(int x, int y) : int
 public static BitOr(int x, int y) : int
 {
     [Language(Lua)]
-    return lua.bit.bor(x, y);
+    return carp.BitOr(x, y);
 
     [Language(JavaScript)]
     return javascript.bit.bor(x, y);

@@ -1,25 +1,6 @@
 
 namespace ALittle;
 
-[Language(Lua)]
-private var open = lua.io.open;
-[Language(Lua)]
-private var rename = lua.os.rename;
-[Language(Lua)]
-private var remove = lua.os.remove;
-[Language(Lua)]
-private var attributes = lua.lfs.attributes;
-[Language(Lua)]
-private var dir = lua.lfs.dir;
-[Language(Lua)]
-private var currentdir = lua.lfs.currentdir;
-[Language(Lua)]
-private var chdir = lua.lfs.chdir;
-[Language(Lua)]
-private var rmdir = lua.lfs.rmdir;
-[Language(Lua)]
-private var mkdir = lua.lfs.mkdir;
-
 // 文件加载接口
 public class IFileLoader
 {
@@ -32,7 +13,7 @@ public class LuaFileLoader : IFileLoader
 {
     public fun Load(string file_path) : string
     {
-        var file = open(file_path, "r");
+        var file = lua.io.open(file_path, "r");
         if (file == null) return null;
         var content = file.read("*a");
         file.close();
@@ -62,7 +43,7 @@ public class LuaFileSaver : IFileSaver
 {
     public fun Save(string file_path, string content) : bool
     {
-        var file = open(file_path, "w");
+        var file = lua.io.open(file_path, "w");
         if (file == null) return false;
         file.write(content);
         file.close();
@@ -79,30 +60,11 @@ public class JFileSaver : IFileSaver
     }
 }
 
-// 获取当前路径
-public static File_GetCurrentPath() : string
-{
-    [Language(Lua)]
-    return currentdir();
-    [Language(JavaScript)]
-    return JavaScript.File_GetCurrentPath();
-}
-
-// 设置当前路径
-public static File_SetCurrentPath(string path) : bool
-{
-    [Language(Lua)]
-    return chdir(path);
-    
-    [Language(JavaScript)]
-    return JavaScript.File_SetCurrentPath(path);
-}
-
 // 重命名文件
 public static File_RenameFile(string path, string new_path) : bool
 {
     [Language(Lua)]
-    return rename(path, new_path);
+    return lua.os.rename(path, new_path);
     
     [Language(JavaScript)]
     return JavaScript.File_RenameFile(path, new_path);
@@ -112,47 +74,48 @@ public static File_RenameFile(string path, string new_path) : bool
 public static File_DeleteFile(string path) : bool
 {
     [Language(Lua)]
-    return remove(path);
+    return lua.os.remove(path);
     
     [Language(JavaScript)]
     return JavaScript.File_DeleteFile(path);
 }
 
+public struct PathAttribute
+{
+    bool directory;        // 文件类型
+    int size;           // 文件大小
+}
+
 // 获取文件属性
-public static File_GetFileAttr(string path) : lua.fileattr
+public static File_GetFileAttr(string path) : PathAttribute
 {
     [Language(Lua)]
-    return attributes(path);
+    return carp.GetPathAttribute(path);
     
     [Language(JavaScript)]
-    return JavaScript.File_GetFileAttr(path);
+    return JavaScript.File_GetPathAttribute(path);
 }
 
 // 获取某个目录以及子目录下的所有文件属性
-public static File_GetFileAttrByDir(string path, [Nullable] Map<string, lua.fileattr> file_map) : Map<string, lua.fileattr>
+public static File_GetFileAttrByDir(string path, [Nullable] Map<string, PathAttribute> file_map) : Map<string, PathAttribute>
 {
     // 初始化参数
     [Language(Lua)]
     {
         if (file_map == null)
-            file_map = new Map<string, lua.fileattr>();
+            file_map = new Map<string, PathAttribute>();
         // 遍历路径
-        for (var file in dir(path))
+        var file_list = carp.GetFileNameListInFolder(path);
+        for (var index, file in file_list)
         {
-            // 跳过当前目录，父级目录
-            if (file != "." && file != "..")
-            {
-                // 生成文件目录
-                var file_path = path .. "/" .. file;
-                // 获取文件属性
-                var attr = attributes(file_path);
-                // 如果是目录，那么就递归遍历
-                if (attr.mode == "directory")
-                    File_GetFileAttrByDir(file_path, file_map);
-                    // 如果是文件，那么就直接获取属性
-                else
-                    file_map[file_path] = attr;
-            }
+            var file_path = path .. "/" .. file;
+            file_map[file_path] = carp.GetPathAttribute(file_path);
+        }
+        var folder_list = carp.GetFolderNameListInFolder(path);
+        for (var index, file in folder_list)
+        {
+            var file_path = path .. "/" .. file;
+            File_GetFileAttrByDir(file_path, file_map);
         }
         // 返回结果
         return file_map;   
@@ -163,74 +126,66 @@ public static File_GetFileAttrByDir(string path, [Nullable] Map<string, lua.file
 }
 
 // 获取某个目录以及子目录下的所有文件属性
-public static File_GetFileListByDir(string path, [Nullable] List<string> file_list) : List<string>
+public static File_GetFileListByDir(string path, [Nullable] List<string> out_list) : List<string>
 {
     // 初始化参数
     [Language(Lua)]
     {
-        if (file_list == null)
-            file_list = new List<string>();
-        // 遍历路径
-        for (var file in dir(path))
+        if (out_list == null) out_list = new List<string>();
+        var file_list = carp.GetFileNameListInFolder(path);
+        for (var index, file in file_list)
         {
-            // 跳过当前目录，父级目录
-            if (file != "." && file != "..")
-            {
-                // 生成文件目录
-                var file_path = path .. "/" .. file;
-                // 获取文件属性
-                var attr = attributes(file_path);
-                // 如果是目录，那么就递归遍历
-                if (attr.mode == "directory")
-                    File_GetFileListByDir(file_path, file_list);
-                    // 如果是文件，那么就直接获取属性
-                else
-                    List_Push(file_list, file_path);
-            }
+            var file_path = path .. "/" .. file;
+            List_Push(out_list, file_path);
+        }
+        var folder_list = carp.GetFolderNameListInFolder(path);
+        for (var index, file in folder_list)
+        {
+            var file_path = path .. "/" .. file;
+            File_GetFileListByDir(file_path, out_list);
         }
         // 返回结果
-        return file_list;   
+        return out_list;   
     }
     
     [Language(JavaScript)]
-    return JavaScript.File_GetFileListByDir(path, file_list);
+    return JavaScript.File_GetFileListByDir(path, out_list);
 }
 
 // 获取某个目录所有文件属性
-public static File_GetFileNameListByDir(string path, [Nullable] Map<string, lua.fileattr> file_map) : Map<string, lua.fileattr>
+public static File_GetNameListByDir(string path, [Nullable] Map<string, PathAttribute> file_map) : Map<string, PathAttribute>
 {
     // 初始化参数
     [Language(Lua)]
     {
-        if (file_map == null)
-            file_map = new Map<string, lua.fileattr>();
-        // 遍历路径
-        for (var file in dir(path))
+        if (file_map == null) file_map = new Map<string, PathAttribute>();
+        var file_list = carp.GetFileNameListInFolder(path);
+        for (var index, file in file_list)
         {
-            // 跳过当前目录，父级目录
-            if (file != "." && file != "..")
-            {
-                // 生成文件目录
-                var file_path = path .. "/" .. file;
-                // 获取文件属性
-                file_map[file] = attributes(file_path);
-            }
+            var file_path = path .. "/" .. file;
+            file_map[file] = carp.GetPathAttribute(file_path);
+        }
+        var folder_list = carp.GetFolderNameListInFolder(path);
+        for (var index, file in folder_list)
+        {
+            var file_path = path .. "/" .. file;
+            file_map[file] = carp.GetPathAttribute(file_path);
         }
         // 返回结果
         return file_map;   
     }
     
     [Language(JavaScript)]
-    return JavaScript.File_GetFileNameListByDir(path, file_map);
+    return JavaScript.File_GetNameListByDir(path, file_map);
 }
 
 // 删除文件夹(只对空文件夹有效)
-public static File_DeleteDir(string path) : bool
+public static File_DeleteDir(string path)
 {
     [Language(Lua)]
-    return rmdir(path);
+    carp.DeleteFolder(path);
     [Language(JavaScript)]
-    return JavaScript.File_DeleteDir(path);
+    JavaScript.File_DeleteDir(path);
 }
 
 // 深度删除文件夹
@@ -243,28 +198,18 @@ public static File_DeleteDeepDir(string path, [Nullable] bool log_path)
             return;
         if (File_GetFileAttr(path) == null)
             return;
-        
-        // 遍历文件夹
-        for (var file in dir(path))
+        var file_list = carp.GetFileNameListInFolder(path);
+        for (var index, file in file_list)
         {
-            // 跳过当前目录，父级目录
-            if (file != "." && file != "..")
-            {
-                // 生成文件目录
-                var file_path = path .. "/" .. file;
-                // 获取文件属性
-                var attr = attributes(file_path);
-                // 如果是目录，那么就递归删除文件夹
-                if (attr.mode == "directory")
-                    File_DeleteDeepDir(file_path, log_path);
-                    // 如果是文件，那么就直接删除文件
-                else
-                {
-                    File_DeleteFile(file_path);
-                    if (log_path)
-                        Log("delete file:", file_path);
-                }
-            }
+            var file_path = path .. "/" .. file;
+            File_DeleteFile(file_path);
+            if (log_path) Log("delete file:", file_path);
+        }
+        var folder_list = carp.GetFolderNameListInFolder(path);
+        for (var index, file in folder_list)
+        {
+            var file_path = path .. "/" .. file;
+            File_DeleteDeepDir(file_path, log_path);
         }
         // 删除文件夹
         File_DeleteDir(path);
@@ -275,12 +220,12 @@ public static File_DeleteDeepDir(string path, [Nullable] bool log_path)
 }
 
 // 创建文件夹
-public static File_MakeDir(string path) : bool
+public static File_MakeDir(string path)
 {
     [Language(Lua)]
-    return mkdir(path);
+    carp.CreateFolder(path);
     [Language(JavaScript)]
-    return JavaScript.File_MakeDir(path);
+    JavaScript.File_MakeDir(path);
 }
 
 // 深度创建文件夹

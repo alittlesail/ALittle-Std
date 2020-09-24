@@ -10,8 +10,8 @@ Lua.LuaCsvFile = Lua.Class(ALittle.ICsvFile, "Lua.LuaCsvFile")
 
 function Lua.LuaCsvFile:Load(path)
 	self._path = path
-	self._csv = csv.create()
-	local error = csv.load(self._csv, path)
+	self._csv = carp.CarpCsv()
+	local error = self._csv:Load(path)
 	if error ~= nil then
 		ALittle.Error(error)
 	end
@@ -20,30 +20,30 @@ end
 
 function Lua.LuaCsvFile:Close()
 	if self._csv ~= nil then
-		csv.clear(self._csv)
+		self._csv:Clear()
 		self._csv = nil
 	end
 end
 
 function Lua.LuaCsvFile:ReadCell(row, col)
 	if self._csv == nil then
-		return ""
+		return nil
 	end
-	return csv.readcell(self._csv, row, col)
+	return self._csv:GetCell(row, col)
 end
 
 function Lua.LuaCsvFile:GetRowCount()
 	if self._csv == nil then
 		return 0
 	end
-	return csv.rowcount(self._csv)
+	return self._csv:GetRowCount()
 end
 
 function Lua.LuaCsvFile:GetColCount()
 	if self._csv == nil then
 		return 0
 	end
-	return csv.colcount(self._csv)
+	return self._csv:GetColCount()
 end
 
 end

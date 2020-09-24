@@ -125,8 +125,8 @@ function ALittle.LoopSystem:Update(frame_time)
 	end
 end
 
-_G.A_LuaLoopSystem = Lua.Template(ALittle.LoopSystem, "ALittle.LoopSystem<Lua.LuaHeapTimer>", Lua.LuaHeapTimer)()
-_G.A_LuaWeakLoopSystem = Lua.Template(ALittle.LoopSystem, "ALittle.LoopSystem<Lua.LuaHeapTimer>", Lua.LuaHeapTimer)(true)
+_G.A_LuaLoopSystem = Lua.Template(ALittle.LoopSystem, "ALittle.LoopSystem<carp.CarpTimer>", carp.CarpTimer)()
+_G.A_LuaWeakLoopSystem = Lua.Template(ALittle.LoopSystem, "ALittle.LoopSystem<carp.CarpTimer>", carp.CarpTimer)(true)
 local GetLoopSystem
 GetLoopSystem = function()
 	return A_LuaLoopSystem
