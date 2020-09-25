@@ -14,7 +14,7 @@ function ALittle.String_JsonDecode(text)
 	return json.decode(text)
 end
 
-function ALittle.String_MD5(text)
+function ALittle.String_Md5(text)
 	return carp.StringMd5(text)
 end
 

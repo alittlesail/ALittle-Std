@@ -19,7 +19,7 @@ public static String_JsonDecode(string text) : any
     return javascript.JSON.parse(text);
 }
 
-public static String_MD5(string text) : string
+public static String_Md5(string text) : string
 {
     [Language(Lua)]
     return carp.StringMd5(text);
