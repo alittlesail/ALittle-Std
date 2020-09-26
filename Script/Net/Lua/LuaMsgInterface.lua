@@ -20,19 +20,19 @@ function Lua.LuaMsgInterface:GetID()
 end
 
 function Lua.LuaMsgInterface:Connect(ip, port)
-	net.connect(A_LuaSchedule._net, self._id, ip, port)
+	A_LuaSchedule._net:Connect(self._id, ip, port)
 end
 
 function Lua.LuaMsgInterface:Close()
-	net.close(A_LuaSchedule._net, self._id)
+	A_LuaSchedule._net:Close(self._id)
 end
 
 function Lua.LuaMsgInterface:IsConnected()
-	return net.isconnected(A_LuaSchedule._net, self._id)
+	return A_LuaSchedule._net:IsConnected(self._id)
 end
 
 function Lua.LuaMsgInterface:SendFactory(factory)
-	net.send(A_LuaSchedule._net, self._id, factory._factory)
+	A_LuaSchedule._net:Send(self._id, factory)
 end
 
 end

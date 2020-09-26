@@ -26,17 +26,17 @@ end
 
 function Lua.LuaHttpInterface:Start()
 	if self._content == nil then
-		net.get(A_LuaSchedule._net, self._id, self._url)
+		A_LuaSchedule._net:HttpGet(self._id, self._url)
 	else
-		net.post(A_LuaSchedule._net, self._id, self._url, "application/json", self._content)
+		A_LuaSchedule._net:HttpPost(self._id, self._url, "application/json", self._content)
 	end
 end
 
 function Lua.LuaHttpInterface:Stop()
 	if self._content == nil then
-		net.stopget(A_LuaSchedule._net, self._id)
+		A_LuaSchedule._net:HttpStopGet(self._id)
 	else
-		net.stoppost(A_LuaSchedule._net, self._id)
+		A_LuaSchedule._net:HttpStopPost(self._id)
 	end
 end
 

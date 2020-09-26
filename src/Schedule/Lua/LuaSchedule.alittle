@@ -2,7 +2,7 @@
 [Language(Lua)]
 namespace Lua;
 
-public enum net_type
+public enum CarpNetEventType
 {
 	HTTP_SUCCEED = 1;
 	HTTP_FAILED = 2;
@@ -21,9 +21,9 @@ public enum net_type
 
 public class LuaSchedule : ALittle.ISchedule
 {
-    public lua.net _net;
+    public carp.CarpNet _net;
     private int _last_time;
-    private LuaMessageReadFactory _factory;
+    private carp.CarpMessageReadFactory _factory;
     
     public ctor()
     {
@@ -33,11 +33,11 @@ public class LuaSchedule : ALittle.ISchedule
     public fun RunInFrame()
     {
         if (this._net == null)
-            this._net = lua.net.create();
+            this._net = new carp.CarpNet();
 
         while (true)
         {
-            var event = lua.net.poll(this._net);
+            var event = carp.CarpNet.Poll(this._net);
             if (event == null) break;
             
             this.HandleEvent(event);
@@ -48,15 +48,15 @@ public class LuaSchedule : ALittle.ISchedule
     public fun Run()
     {   
         if (this._net == null)
-            this._net = lua.net.create();
+            this._net = new carp.CarpNet();
 
-        lua.net.timer(this._net, 16);
+        this._net.Timer(16);
         while (true)
         {
-            var event = lua.net.poll(this._net);
+            var event = carp.CarpNet.Poll(this._net);
             if (event == null) break;
             
-            if (event.type == net_type.TIMER)
+            if (event.type == CarpNetEventType.TIMER)
             {
                 if (this._last_time != null)
                 {
@@ -64,7 +64,7 @@ public class LuaSchedule : ALittle.ISchedule
                     A_LuaWeakLoopSystem.Update(event.time - this._last_time);
                 }
                 this._last_time = event.time;
-                lua.net.timer(this._net, 16);
+                this._net.Timer(16);
             }
             else
             {
@@ -73,29 +73,28 @@ public class LuaSchedule : ALittle.ISchedule
         }
     }
 
-    private fun HandleEvent(lua.net_event event)
+    private fun HandleEvent(carp.CarpNetEvent event)
     {
-        if (event.type == net_type.MSG_MESSAGE)
+        if (event.type == CarpNetEventType.MSG_MESSAGE)
         {
-            this._factory.SetFactory(event.factory);
             ALittle.__ALITTLEAPI_Message(event.id, event.msg_id, event.rpc_id, this._factory);
-            lua.net.rfactoryrelease(this._net, event.factory);
+            carp.CarpNet.FreeReadFactory(event.factory);
         }
-        elseif (event.type == net_type.HTTP_SUCCEED)
+        elseif (event.type == CarpNetEventType.HTTP_SUCCEED)
             ALittle.__ALITTLEAPI_HttpClientSucceed(event.id);
-        elseif (event.type == net_type.HTTP_FAILED)
+        elseif (event.type == CarpNetEventType.HTTP_FAILED)
             ALittle.__ALITTLEAPI_HttpClientFailed(event.id, event.error);
-        elseif (event.type == net_type.HTTP_FILE_SUCCEED)
+        elseif (event.type == CarpNetEventType.HTTP_FILE_SUCCEED)
             ALittle.__ALITTLEAPI_HttpFileSucceed(event.id);
-        elseif (event.type == net_type.HTTP_FILE_FAILED)
+        elseif (event.type == CarpNetEventType.HTTP_FILE_FAILED)
             ALittle.__ALITTLEAPI_HttpFileFailed(event.id, event.error);
-        elseif (event.type == net_type.HTTP_FILE_PROGRESS)
+        elseif (event.type == CarpNetEventType.HTTP_FILE_PROGRESS)
             ALittle.__ALITTLEAPI_HttpFileProcess(event.id, event.cur_size, event.total_size);
-        elseif (event.type == net_type.MSG_CONNECT_SUCCEED)
+        elseif (event.type == CarpNetEventType.MSG_CONNECT_SUCCEED)
             ALittle.__ALITTLEAPI_ConnectSucceed(event.id);
-        elseif (event.type == net_type.MSG_CONNECT_FAILED)
+        elseif (event.type == CarpNetEventType.MSG_CONNECT_FAILED)
             ALittle.__ALITTLEAPI_ConnectFailed(event.id);
-        elseif (event.type == net_type.MSG_DISCONNECTED)
+        elseif (event.type == CarpNetEventType.MSG_DISCONNECTED)
             ALittle.__ALITTLEAPI_Disconnected(event.id);
     }
 }

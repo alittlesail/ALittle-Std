@@ -25,16 +25,16 @@ public class LuaHttpInterface : ALittle.IHttpSenderNative
     public fun Start()
     {
         if (this._content == null)
-            lua.net.get(A_LuaSchedule._net, this._id, this._url);
+            A_LuaSchedule._net.HttpGet(this._id, this._url);
         else
-            lua.net.post(A_LuaSchedule._net, this._id, this._url, "application/json", this._content);
+            A_LuaSchedule._net.HttpPost(this._id, this._url, "application/json", this._content);
     }
     public fun Stop()
     {
         if (this._content == null)
-            lua.net.stopget(A_LuaSchedule._net, this._id);
+            A_LuaSchedule._net.HttpStopGet(this._id);
         else
-            lua.net.stoppost(A_LuaSchedule._net, this._id);
+            A_LuaSchedule._net.HttpStopPost(this._id);
     }
     public fun GetResponse() : string { return this._response; }                // 获取请求结果
 }

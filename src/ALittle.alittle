@@ -66,7 +66,6 @@ public await static RequireStd(string base_path)
         Require(base_path, "Net/Lua/LuaHttpFileInterface");
         Require(base_path, "Net/Lua/LuaHttpInterface");
         Require(base_path, "Net/Lua/LuaMsgInterface");
-        Require(base_path, "Net/Lua/LuaMessageFactory");
         Require(base_path, "Schedule/Lua/LuaSchedule");
     }
     

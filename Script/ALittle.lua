@@ -39,7 +39,6 @@ function _G.RequireStd(base_path)
 		Require(base_path, "Net/Lua/LuaHttpFileInterface")
 		Require(base_path, "Net/Lua/LuaHttpInterface")
 		Require(base_path, "Net/Lua/LuaMsgInterface")
-		Require(base_path, "Net/Lua/LuaMessageFactory")
 		Require(base_path, "Schedule/Lua/LuaSchedule")
 	end
 	Require(base_path, "Loop/LoopSystem")

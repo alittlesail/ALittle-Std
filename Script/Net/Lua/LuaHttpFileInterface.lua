@@ -27,17 +27,17 @@ end
 
 function Lua.LuaHttpFileInterface:Start()
 	if self._download then
-		net.download(A_LuaSchedule._net, self._id, self._url, self._file_path)
+		A_LuaSchedule._net:HttpDownload(self._id, self._url, self._file_path)
 	else
-		net.upload(A_LuaSchedule._net, self._id, self._url, self._file_path)
+		A_LuaSchedule._net:HttpUpload(self._id, self._url, self._file_path)
 	end
 end
 
 function Lua.LuaHttpFileInterface:Stop()
 	if self._download then
-		net.stopdownload(A_LuaSchedule._net, self._id)
+		A_LuaSchedule._net:HttpStopDownload(self._id)
 	else
-		net.stopupload(A_LuaSchedule._net, self._id)
+		A_LuaSchedule._net:HttpStopUpload(self._id)
 	end
 end
 
