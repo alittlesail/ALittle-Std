@@ -317,7 +317,7 @@ public static File_ReadJsonFromStdFile(string file_path) : any, string
         if (file == null) return null, file_path.." load failed";
         var content = file.read("*a");
         file.close();
-        var error, new_content = tcall(lua.json.decode, content);
+        var error, new_content = tcall(lua.cjson.decode, content);
         if (error == null) return new_content, content;
         return null, new_content;
     }
@@ -339,7 +339,7 @@ public static File_WriteJsonFromStdFile(any content, string file_path) : bool
     {
         var file = lua.io.open(file_path, "wb");
         if (file == null) return false;
-        file.write(lua.json.encode(content));
+        file.write(lua.cjson.encode(content));
         file.close();
         return true;
     }

@@ -7,11 +7,11 @@ local ___ipairs = ipairs
 
 
 function ALittle.String_JsonEncode(object)
-	return json.encode(object)
+	return cjson.encode(object)
 end
 
 function ALittle.String_JsonDecode(text)
-	return json.decode(text)
+	return cjson.decode(text)
 end
 
 function ALittle.String_Md5(text)

@@ -231,7 +231,7 @@ function ALittle.File_ReadJsonFromStdFile(file_path)
 		end
 		local content = file:read("*a")
 		file:close()
-		local error, new_content = Lua.TCall(json.decode, content)
+		local error, new_content = Lua.TCall(cjson.decode, content)
 		if error == nil then
 			return new_content, content
 		end
@@ -245,7 +245,7 @@ function ALittle.File_WriteJsonFromStdFile(content, file_path)
 		if file == nil then
 			return false
 		end
-		file:write(json.encode(content))
+		file:write(cjson.encode(content))
 		file:close()
 		return true
 	end

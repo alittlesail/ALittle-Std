@@ -4,7 +4,7 @@ namespace ALittle;
 public static String_JsonEncode(any object) : string
 {
     [Language(Lua)]
-    return lua.json.encode(object);
+    return lua.cjson.encode(object);
     
     [Language(JavaScript)]
     return javascript.JSON.stringify(object);
@@ -13,7 +13,7 @@ public static String_JsonEncode(any object) : string
 public static String_JsonDecode(string text) : any
 {
     [Language(Lua)]
-    return lua.json.decode(text);
+    return lua.cjson.decode(text);
     
     [Language(JavaScript)]
     return javascript.JSON.parse(text);
