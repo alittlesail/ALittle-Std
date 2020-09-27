@@ -20,7 +20,7 @@ end
 
 function Lua.LuaCsvFile:Close()
 	if self._csv ~= nil then
-		self._csv:Clear()
+		self._csv:Close()
 		self._csv = nil
 	end
 end
@@ -29,7 +29,7 @@ function Lua.LuaCsvFile:ReadCell(row, col)
 	if self._csv == nil then
 		return nil
 	end
-	return self._csv:GetCell(row, col)
+	return self._csv:ReadCell(row, col)
 end
 
 function Lua.LuaCsvFile:GetRowCount()

@@ -19,14 +19,14 @@ public class LuaCsvFile : ALittle.ICsvFile
     {
         if (this._csv != null)
         {
-            this._csv.Clear();
+            this._csv.Close();
             this._csv = null;
         }
     }
     public fun ReadCell(int row, int col) : string
     {
         if (this._csv == null) return null;
-        return this._csv.GetCell(row, col);
+        return this._csv.ReadCell(row, col);
     }
     public fun GetRowCount() : int
     {

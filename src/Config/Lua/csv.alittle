@@ -6,7 +6,7 @@ public class CarpCsv
     public fun Load(string file_path) : string {}
     public fun GetColCount() : int {}
     public fun GetRowCount() : int {}
-    public fun Clear() {}
-    public fun GetCell(int row, int col) : string {}
+    public fun Close() {}
+    public fun ReadCell(int row, int col) : string {}
     public fun GetPath() : string {}
 }
