@@ -10,7 +10,7 @@ ALittle.String_JsonDecode = function(text) {
 	return JSON.parse(text);
 }
 
-ALittle.String_MD5 = function(text) {
+ALittle.String_Md5 = function(text) {
 	return md5(text);
 }
 

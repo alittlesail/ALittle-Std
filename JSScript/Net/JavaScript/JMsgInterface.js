@@ -128,7 +128,7 @@ JavaScript.JMsgInterface = JavaScript.Class(ALittle.IMsgCommonNative, {
 		}
 		this._net_status = JavaScript.JConnectStatus.NET_IDLE;
 		this._net_system = undefined;
-		ALittle.__ALITTLEAPI_Disconnect(this._id);
+		ALittle.__ALITTLEAPI_Disconnected(this._id);
 	},
 	HandleError : function(event) {
 		if (this._net_status !== JavaScript.JConnectStatus.NET_CONNECTING) {

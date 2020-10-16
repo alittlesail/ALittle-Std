@@ -171,7 +171,7 @@ public class JMsgInterface : ALittle.IMsgCommonNative
 		this._net_status = JConnectStatus.NET_IDLE;
 		this._net_system = null;
         
-        ALittle.__ALITTLEAPI_Disconnect(this._id);
+        ALittle.__ALITTLEAPI_Disconnected(this._id);
     }
     
     private fun HandleError(javascript.WebSocketOnErrorEvent event)

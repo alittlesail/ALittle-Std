@@ -1,6 +1,12 @@
 {
 if (typeof ALittle === "undefined") window.ALittle = {};
 
+ALittle.RegStruct(839664979, "ALittle.PathAttribute", {
+name : "ALittle.PathAttribute", ns_name : "ALittle", rl_name : "PathAttribute", hash_code : 839664979,
+name_list : ["directory","size"],
+type_list : ["bool","int"],
+option_map : {}
+})
 
 ALittle.IFileLoader = JavaScript.Class(undefined, {
 	Load : function(file_path) {
@@ -29,14 +35,6 @@ ALittle.JFileSaver = JavaScript.Class(ALittle.IFileSaver, {
 	},
 }, "ALittle.JFileSaver");
 
-ALittle.File_GetCurrentPath = function() {
-	return JavaScript.File_GetCurrentPath();
-}
-
-ALittle.File_SetCurrentPath = function(path) {
-	return JavaScript.File_SetCurrentPath(path);
-}
-
 ALittle.File_RenameFile = function(path, new_path) {
 	return JavaScript.File_RenameFile(path, new_path);
 }
@@ -46,23 +44,23 @@ ALittle.File_DeleteFile = function(path) {
 }
 
 ALittle.File_GetFileAttr = function(path) {
-	return JavaScript.File_GetFileAttr(path);
+	return JavaScript.File_GetPathAttribute(path);
 }
 
 ALittle.File_GetFileAttrByDir = function(path, file_map) {
 	return JavaScript.File_GetFileAttrByDir(path, file_map);
 }
 
-ALittle.File_GetFileListByDir = function(path, file_list) {
-	return JavaScript.File_GetFileListByDir(path, file_list);
+ALittle.File_GetFileListByDir = function(path, out_list) {
+	return JavaScript.File_GetFileListByDir(path, out_list);
 }
 
-ALittle.File_GetFileNameListByDir = function(path, file_map) {
-	return JavaScript.File_GetFileNameListByDir(path, file_map);
+ALittle.File_GetNameListByDir = function(path, file_map) {
+	return JavaScript.File_GetNameListByDir(path, file_map);
 }
 
 ALittle.File_DeleteDir = function(path) {
-	return JavaScript.File_DeleteDir(path);
+	JavaScript.File_DeleteDir(path);
 }
 
 ALittle.File_DeleteDeepDir = function(path, log_path) {
@@ -70,7 +68,7 @@ ALittle.File_DeleteDeepDir = function(path, log_path) {
 }
 
 ALittle.File_MakeDir = function(path) {
-	return JavaScript.File_MakeDir(path);
+	JavaScript.File_MakeDir(path);
 }
 
 ALittle.File_MakeDeepDir = function(path) {

@@ -133,7 +133,7 @@ JavaScript.File_DeleteFile = function(path) {
 	return true;
 }
 
-JavaScript.File_GetFileAttr = function(path) {
+JavaScript.File_GetPathAttribute = function(path) {
 	let list = Path_FilterEmpty(ALittle.String_SplitSepList(path, ["/", "\\"]));
 	let list_len = ALittle.List_MaxN(list);
 	let cur = root;
@@ -158,11 +158,9 @@ JavaScript.File_GetFileAttr = function(path) {
 		return undefined;
 	}
 	let attr = {};
-	attr.mode = "file";
+	attr.directory = cur_file.is_directory;
 	attr.size = 0;
-	if (cur_file.is_directory) {
-		attr.mode = "directory";
-	} else {
+	if (!cur_file.is_directory) {
 		if (cur_file.buffer !== undefined) {
 			attr.size = cur_file.buffer.byteLength;
 		} else {
@@ -206,7 +204,7 @@ JavaScript.File_GetFileAttrByDir = function(path, file_map) {
 			JavaScript.File_GetFileAttrByDir(file_path, file_map);
 		} else {
 			let attr = {};
-			attr.mode = "file";
+			attr.directory = false;
 			attr.size = ALittle.String_Len(value.content);
 			file_map[file_path] = attr;
 		}
@@ -247,16 +245,13 @@ JavaScript.File_GetFileListByDir = function(path, file_list) {
 		if (value.is_directory) {
 			JavaScript.File_GetFileListByDir(file_path, file_list);
 		} else {
-			let attr = {};
-			attr.mode = "file";
-			attr.size = ALittle.String_Len(value.content);
 			ALittle.List_Push(file_list, file_path);
 		}
 	}
 	return file_list;
 }
 
-JavaScript.File_GetFileNameListByDir = function(path, file_map) {
+JavaScript.File_GetNameListByDir = function(path, file_map) {
 	if (file_map === undefined) {
 		file_map = {};
 	}
@@ -288,12 +283,12 @@ JavaScript.File_GetFileNameListByDir = function(path, file_map) {
 		let file_path = path + "/" + name;
 		if (value.is_directory) {
 			let attr = {};
-			attr.mode = "directory";
+			attr.directory = true;
 			attr.size = 0;
 			file_map[name] = attr;
 		} else {
 			let attr = {};
-			attr.mode = "file";
+			attr.directory = false;
 			attr.size = ALittle.String_Len(value.content);
 			file_map[name] = attr;
 		}

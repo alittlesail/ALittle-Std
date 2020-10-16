@@ -140,12 +140,12 @@ ALittle.__ALITTLEAPI_ConnectSucceed = function(id) {
 	client.HandleConnectSucceed();
 }
 
-ALittle.__ALITTLEAPI_Disconnect = function(id) {
+ALittle.__ALITTLEAPI_Disconnected = function(id) {
 	let client = __MsgSenderMap.get(id);
 	if (client === undefined) {
 		return;
 	}
-	client.HandleDisconnect();
+	client.HandleDisconnected();
 }
 
 ALittle.__ALITTLEAPI_ConnectFailed = function(id) {

@@ -2026,7 +2026,7 @@ ALittle.String_JsonDecode = function(text) {
 	return JSON.parse(text);
 }
 
-ALittle.String_MD5 = function(text) {
+ALittle.String_Md5 = function(text) {
 	return md5(text);
 }
 
@@ -2167,6 +2167,12 @@ ALittle.String_SplitUTF8 = function(content) {
 {
 if (typeof ALittle === "undefined") window.ALittle = {};
 
+ALittle.RegStruct(839664979, "ALittle.PathAttribute", {
+name : "ALittle.PathAttribute", ns_name : "ALittle", rl_name : "PathAttribute", hash_code : 839664979,
+name_list : ["directory","size"],
+type_list : ["bool","int"],
+option_map : {}
+})
 
 ALittle.IFileLoader = JavaScript.Class(undefined, {
 	Load : function(file_path) {
@@ -2195,14 +2201,6 @@ ALittle.JFileSaver = JavaScript.Class(ALittle.IFileSaver, {
 	},
 }, "ALittle.JFileSaver");
 
-ALittle.File_GetCurrentPath = function() {
-	return JavaScript.File_GetCurrentPath();
-}
-
-ALittle.File_SetCurrentPath = function(path) {
-	return JavaScript.File_SetCurrentPath(path);
-}
-
 ALittle.File_RenameFile = function(path, new_path) {
 	return JavaScript.File_RenameFile(path, new_path);
 }
@@ -2212,23 +2210,23 @@ ALittle.File_DeleteFile = function(path) {
 }
 
 ALittle.File_GetFileAttr = function(path) {
-	return JavaScript.File_GetFileAttr(path);
+	return JavaScript.File_GetPathAttribute(path);
 }
 
 ALittle.File_GetFileAttrByDir = function(path, file_map) {
 	return JavaScript.File_GetFileAttrByDir(path, file_map);
 }
 
-ALittle.File_GetFileListByDir = function(path, file_list) {
-	return JavaScript.File_GetFileListByDir(path, file_list);
+ALittle.File_GetFileListByDir = function(path, out_list) {
+	return JavaScript.File_GetFileListByDir(path, out_list);
 }
 
-ALittle.File_GetFileNameListByDir = function(path, file_map) {
-	return JavaScript.File_GetFileNameListByDir(path, file_map);
+ALittle.File_GetNameListByDir = function(path, file_map) {
+	return JavaScript.File_GetNameListByDir(path, file_map);
 }
 
 ALittle.File_DeleteDir = function(path) {
-	return JavaScript.File_DeleteDir(path);
+	JavaScript.File_DeleteDir(path);
 }
 
 ALittle.File_DeleteDeepDir = function(path, log_path) {
@@ -2236,7 +2234,7 @@ ALittle.File_DeleteDeepDir = function(path, log_path) {
 }
 
 ALittle.File_MakeDir = function(path) {
-	return JavaScript.File_MakeDir(path);
+	JavaScript.File_MakeDir(path);
 }
 
 ALittle.File_MakeDeepDir = function(path) {
@@ -3101,12 +3099,12 @@ ALittle.__ALITTLEAPI_ConnectSucceed = function(id) {
 	client.HandleConnectSucceed();
 }
 
-ALittle.__ALITTLEAPI_Disconnect = function(id) {
+ALittle.__ALITTLEAPI_Disconnected = function(id) {
 	let client = __MsgSenderMap.get(id);
 	if (client === undefined) {
 		return;
 	}
-	client.HandleDisconnect();
+	client.HandleDisconnected();
 }
 
 ALittle.__ALITTLEAPI_ConnectFailed = function(id) {
@@ -3528,7 +3526,7 @@ JavaScript.File_DeleteFile = function(path) {
 	return true;
 }
 
-JavaScript.File_GetFileAttr = function(path) {
+JavaScript.File_GetPathAttribute = function(path) {
 	let list = Path_FilterEmpty(ALittle.String_SplitSepList(path, ["/", "\\"]));
 	let list_len = ALittle.List_MaxN(list);
 	let cur = root;
@@ -3553,11 +3551,9 @@ JavaScript.File_GetFileAttr = function(path) {
 		return undefined;
 	}
 	let attr = {};
-	attr.mode = "file";
+	attr.directory = cur_file.is_directory;
 	attr.size = 0;
-	if (cur_file.is_directory) {
-		attr.mode = "directory";
-	} else {
+	if (!cur_file.is_directory) {
 		if (cur_file.buffer !== undefined) {
 			attr.size = cur_file.buffer.byteLength;
 		} else {
@@ -3601,7 +3597,7 @@ JavaScript.File_GetFileAttrByDir = function(path, file_map) {
 			JavaScript.File_GetFileAttrByDir(file_path, file_map);
 		} else {
 			let attr = {};
-			attr.mode = "file";
+			attr.directory = false;
 			attr.size = ALittle.String_Len(value.content);
 			file_map[file_path] = attr;
 		}
@@ -3642,16 +3638,13 @@ JavaScript.File_GetFileListByDir = function(path, file_list) {
 		if (value.is_directory) {
 			JavaScript.File_GetFileListByDir(file_path, file_list);
 		} else {
-			let attr = {};
-			attr.mode = "file";
-			attr.size = ALittle.String_Len(value.content);
 			ALittle.List_Push(file_list, file_path);
 		}
 	}
 	return file_list;
 }
 
-JavaScript.File_GetFileNameListByDir = function(path, file_map) {
+JavaScript.File_GetNameListByDir = function(path, file_map) {
 	if (file_map === undefined) {
 		file_map = {};
 	}
@@ -3683,12 +3676,12 @@ JavaScript.File_GetFileNameListByDir = function(path, file_map) {
 		let file_path = path + "/" + name;
 		if (value.is_directory) {
 			let attr = {};
-			attr.mode = "directory";
+			attr.directory = true;
 			attr.size = 0;
 			file_map[name] = attr;
 		} else {
 			let attr = {};
-			attr.mode = "file";
+			attr.directory = false;
 			attr.size = ALittle.String_Len(value.content);
 			file_map[name] = attr;
 		}
@@ -4510,7 +4503,7 @@ JavaScript.JMsgInterface = JavaScript.Class(ALittle.IMsgCommonNative, {
 		}
 		this._net_status = JavaScript.JConnectStatus.NET_IDLE;
 		this._net_system = undefined;
-		ALittle.__ALITTLEAPI_Disconnect(this._id);
+		ALittle.__ALITTLEAPI_Disconnected(this._id);
 	},
 	HandleError : function(event) {
 		if (this._net_status !== JavaScript.JConnectStatus.NET_CONNECTING) {
