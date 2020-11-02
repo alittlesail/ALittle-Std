@@ -220,7 +220,11 @@ function ALittle.File_GetJustFileNameByPath(file_path)
 	if l <= 1 then
 		return new_file_path
 	end
-	return list[l - 1]
+	if l == 2 then
+		return list[1]
+	end
+	ALittle.List_Remove(list, l)
+	return ALittle.String_Join(list, ".")
 end
 
 function ALittle.File_ReadJsonFromStdFile(file_path)
