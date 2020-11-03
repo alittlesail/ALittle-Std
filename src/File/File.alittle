@@ -60,6 +60,26 @@ public class JFileSaver : IFileSaver
     }
 }
 
+// 获取当前路径
+public static File_GetCurrentPath() : string
+{
+    [Language(Lua)]
+    return carp.GetCurrentPath();
+
+    [Language(JavaScript)]
+    return JavaScript.File_GetCurrentPath();
+}
+
+// 设置当前路径
+public static File_SetCurrentPath(string path) : bool
+{
+    [Language(Lua)]
+    return carp.SetCurrentPath(path);
+
+    [Language(JavaScript)]
+    return JavaScript.File_SetCurrentPath(path);
+}
+
 // 重命名文件
 public static File_RenameFile(string path, string new_path) : bool
 {

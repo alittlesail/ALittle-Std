@@ -1,6 +1,8 @@
 
 register namespace carp;
 
+public static GetCurrentPath() : string {}
+public static SetCurrentPath(string path) : bool {}
 public static CreateFolder(string path) {}
 public static DeleteFolder(string path) {}
 public static GetPathAttribute(string path) : ALittle.PathAttribute {}

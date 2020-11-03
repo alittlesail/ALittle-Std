@@ -49,6 +49,14 @@ function ALittle.LuaFileSaver:Save(file_path, content)
 	return true
 end
 
+function ALittle.File_GetCurrentPath()
+	return carp.GetCurrentPath()
+end
+
+function ALittle.File_SetCurrentPath(path)
+	return carp.SetCurrentPath(path)
+end
+
 function ALittle.File_RenameFile(path, new_path)
 	return os.rename(path, new_path)
 end
