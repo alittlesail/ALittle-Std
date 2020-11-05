@@ -204,7 +204,7 @@ public static ExecuteCommand(string cmd)
     }
     
     [Language(Lua)]
-    info.callback(lua.unpack(value_list, 1, len));
+    info.callback(lua.table.unpack(value_list, 1, len));
     
     [Language(JavaScript)]
     cast<javascript.Function>(info.callback).apply(null, value_list);

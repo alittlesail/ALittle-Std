@@ -151,7 +151,7 @@ function ALittle.ExecuteCommand(cmd)
 			return
 		end
 	end
-	info.callback(unpack(value_list, 1, len))
+	info.callback(table.unpack(value_list, 1, len))
 end
 
 end
