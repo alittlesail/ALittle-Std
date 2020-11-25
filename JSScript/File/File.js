@@ -35,6 +35,14 @@ ALittle.JFileSaver = JavaScript.Class(ALittle.IFileSaver, {
 	},
 }, "ALittle.JFileSaver");
 
+ALittle.File_GetCurrentPath = function() {
+	return JavaScript.File_GetCurrentPath();
+}
+
+ALittle.File_SetCurrentPath = function(path) {
+	return JavaScript.File_SetCurrentPath(path);
+}
+
 ALittle.File_RenameFile = function(path, new_path) {
 	return JavaScript.File_RenameFile(path, new_path);
 }
@@ -143,7 +151,11 @@ ALittle.File_GetJustFileNameByPath = function(file_path) {
 	if (l <= 1) {
 		return new_file_path;
 	}
-	return list[l - 1 - 1];
+	if (l === 2) {
+		return list[1 - 1];
+	}
+	ALittle.List_Remove(list, l);
+	return ALittle.String_Join(list, ".");
 }
 
 ALittle.File_ReadJsonFromStdFile = function(file_path) {

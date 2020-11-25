@@ -13,7 +13,7 @@ ALittle.IHttpReceiverNative = JavaScript.Class(undefined, {
 
 if (ALittle.IHttpReceiver === undefined) throw new Error(" extends class:ALittle.IHttpReceiver is undefined");
 ALittle.HttpReceiverTemplate = JavaScript.Class(ALittle.IHttpReceiver, {
-	Ctor : function(http_id) {
+	Ctor : function(method, http_id) {
 		this._http_id = http_id;
 		this._interface = ALittle.NewObject(this.__class.__element[0]);
 	},

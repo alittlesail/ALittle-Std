@@ -20,7 +20,7 @@ end
 assert(ALittle.IHttpReceiver, " extends class:ALittle.IHttpReceiver is nil")
 ALittle.HttpReceiverTemplate = Lua.Class(ALittle.IHttpReceiver, "ALittle.HttpReceiverTemplate")
 
-function ALittle.HttpReceiverTemplate:Ctor(http_id)
+function ALittle.HttpReceiverTemplate:Ctor(method, http_id)
 	___rawset(self, "_http_id", http_id)
 	___rawset(self, "_interface", self.__class.__element[1]())
 end

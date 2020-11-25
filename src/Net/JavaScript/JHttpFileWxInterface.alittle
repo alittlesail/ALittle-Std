@@ -91,7 +91,6 @@ public class JHttpFileWxInterface : ALittle.IHttpFileSenderNative
             ALittle.__ALITTLEAPI_HttpFileFailed(this._id, "file save failed:" .. this._file_path);
             return;
         }
-        
         this._response = info;
         ALittle.__ALITTLEAPI_HttpFileSucceed(this._id);
 	}
