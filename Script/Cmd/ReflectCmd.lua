@@ -3,6 +3,8 @@ do
 if _G.ALittle == nil then _G.ALittle = {} end
 local ___pairs = pairs
 local ___ipairs = ipairs
+local ALittle = ALittle
+local ALittle = ALittle
 
 ALittle.RegStruct(2073949729, "ALittle.CmdCallbackInfo", {
 name = "ALittle.CmdCallbackInfo", ns_name = "ALittle", rl_name = "CmdCallbackInfo", hash_code = 2073949729,

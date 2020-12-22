@@ -3,6 +3,8 @@ do
 if _G.ALittle == nil then _G.ALittle = {} end
 local ___pairs = pairs
 local ___ipairs = ipairs
+local ALittle = ALittle
+local ALittle = ALittle
 
 ALittle.RegStruct(839664979, "ALittle.PathAttribute", {
 name = "ALittle.PathAttribute", ns_name = "ALittle", rl_name = "PathAttribute", hash_code = 839664979,

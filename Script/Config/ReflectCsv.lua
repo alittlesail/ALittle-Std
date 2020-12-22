@@ -3,6 +3,8 @@ do
 if _G.ALittle == nil then _G.ALittle = {} end
 local ___pairs = pairs
 local ___ipairs = ipairs
+local ALittle = ALittle
+local ALittle = ALittle
 
 ALittle.RegStruct(-1155101349, "ALittle.CsvInvokeInfo", {
 name = "ALittle.CsvInvokeInfo", ns_name = "ALittle", rl_name = "CsvInvokeInfo", hash_code = -1155101349,
