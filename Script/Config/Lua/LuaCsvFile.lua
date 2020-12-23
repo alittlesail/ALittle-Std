@@ -1,10 +1,10 @@
 -- ALittle Generate Lua And Do Not Edit This Line!
 do
 if _G.Lua == nil then _G.Lua = {} end
-local ___pairs = pairs
-local ___ipairs = ipairs
 local Lua = Lua
 local ALittle = ALittle
+local ___pairs = pairs
+local ___ipairs = ipairs
 
 
 assert(ALittle.ICsvFile, " extends class:ALittle.ICsvFile is nil")
