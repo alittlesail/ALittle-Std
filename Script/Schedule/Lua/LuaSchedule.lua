@@ -49,7 +49,7 @@ function Lua.LuaSchedule:Run()
 		if event == nil then
 			break
 		end
-		if event.type == Lua.CarpNetEventType.TIMER then
+		if event.type == 21 then
 			if self._last_time ~= nil then
 				A_LuaLoopSystem:Update(event.time - self._last_time)
 				A_LuaWeakLoopSystem:Update(event.time - self._last_time)
@@ -63,24 +63,24 @@ function Lua.LuaSchedule:Run()
 end
 
 function Lua.LuaSchedule:HandleEvent(event)
-	if event.type == Lua.CarpNetEventType.MSG_MESSAGE then
+	if event.type == 34 then
 		ALittle.__ALITTLEAPI_Message(event.id, event.msg_id, event.rpc_id, self._factory)
 		carp.CarpNet.FreeReadFactory(event.factory)
-	elseif event.type == Lua.CarpNetEventType.HTTP_SUCCEED then
+	elseif event.type == 1 then
 		ALittle.__ALITTLEAPI_HttpClientSucceed(event.id)
-	elseif event.type == Lua.CarpNetEventType.HTTP_FAILED then
+	elseif event.type == 2 then
 		ALittle.__ALITTLEAPI_HttpClientFailed(event.id, event.error)
-	elseif event.type == Lua.CarpNetEventType.HTTP_FILE_SUCCEED then
+	elseif event.type == 11 then
 		ALittle.__ALITTLEAPI_HttpFileSucceed(event.id)
-	elseif event.type == Lua.CarpNetEventType.HTTP_FILE_FAILED then
+	elseif event.type == 12 then
 		ALittle.__ALITTLEAPI_HttpFileFailed(event.id, event.error)
-	elseif event.type == Lua.CarpNetEventType.HTTP_FILE_PROGRESS then
+	elseif event.type == 13 then
 		ALittle.__ALITTLEAPI_HttpFileProcess(event.id, event.cur_size, event.total_size)
-	elseif event.type == Lua.CarpNetEventType.MSG_CONNECT_SUCCEED then
+	elseif event.type == 31 then
 		ALittle.__ALITTLEAPI_ConnectSucceed(event.id)
-	elseif event.type == Lua.CarpNetEventType.MSG_CONNECT_FAILED then
+	elseif event.type == 32 then
 		ALittle.__ALITTLEAPI_ConnectFailed(event.id)
-	elseif event.type == Lua.CarpNetEventType.MSG_DISCONNECTED then
+	elseif event.type == 33 then
 		ALittle.__ALITTLEAPI_Disconnected(event.id)
 	end
 end
