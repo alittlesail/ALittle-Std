@@ -17,7 +17,6 @@ public await static RequireStd(string base_path)
     Require(base_path, "Config/CsvConfig");
     Require(base_path, "Config/JsonConfig");
 
-    Require(base_path, "Bit/Bit");
     Require(base_path, "WeakRef/WeakRef");
     Require(base_path, "Loop/IHeapTimer");
     Require(base_path, "Schedule/ISchedule");

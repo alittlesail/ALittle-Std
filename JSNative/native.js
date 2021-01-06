@@ -102,13 +102,6 @@ else
     }
 }
 
-
-window.bit = {}
-
-bit.band = function(x, y) { return x & y }
-bit.bor = function(x, y) { return x | y; }
-
-
 if (typeof TextDecoder !== "undefined")
     window.__TEXTDECODER = new TextDecoder("utf-8");
 

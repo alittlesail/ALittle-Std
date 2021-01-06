@@ -1,5 +1,0 @@
-
-register namespace carp;
-
-public static BitAnd(int a, int b) : int {}
-public static BitOr(int a, int b) : int {}
