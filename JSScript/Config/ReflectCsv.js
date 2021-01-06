@@ -10,7 +10,7 @@ option_map : {}
 
 let floor = ALittle.Math_Floor;
 let tonumber = ALittle.Math_ToDouble;
-let maxn = ALittle.List_MaxN;
+let list_len = ALittle.List_Len;
 let upper = ALittle.String_Upper;
 let Csv_ReadBool = function(content, value) {
 	return upper(content) === "TRUE";
@@ -76,8 +76,8 @@ __csv_read_data_map["long"] = Csv_ReadLong;
 __csv_read_data_map["string"] = Csv_ReadString;
 __csv_read_data_map["double"] = Csv_ReadDouble;
 let __split_list = ["*", "#", ";"];
-let __split_list_last = __split_list[maxn(__split_list) - 1];
-let __split_list_max = maxn(__split_list);
+let __split_list_last = __split_list[list_len(__split_list) - 1];
+let __split_list_max = list_len(__split_list);
 let find = ALittle.String_Find;
 let sub = ALittle.String_Sub;
 ALittle.CalcCsvSubInfoSplit = function(sub_type, split_index) {

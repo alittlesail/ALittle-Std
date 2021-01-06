@@ -18,7 +18,6 @@ function _G.RequireStd(base_path)
 	Require(base_path, "Loop/LoopTimer")
 	Require(base_path, "Config/CsvConfig")
 	Require(base_path, "Config/JsonConfig")
-	Require(base_path, "Bit/Bit")
 	Require(base_path, "WeakRef/WeakRef")
 	Require(base_path, "Loop/IHeapTimer")
 	Require(base_path, "Schedule/ISchedule")
@@ -49,6 +48,8 @@ end
 -- ALittle Generate Lua And Do Not Edit This Line!
 do
 if _G.ALittle == nil then _G.ALittle = {} end
+local ALittle = ALittle
+local Lua = Lua
 local ___pairs = pairs
 local ___ipairs = ipairs
 
@@ -168,8 +169,8 @@ function ALittle.ExecuteCommand(cmd)
 		i = i + 1
 		index = i
 	end
-	len = ALittle.List_MaxN(param_list)
-	local need_len = ALittle.List_MaxN(info.var_list)
+	len = ALittle.List_Len(param_list)
+	local need_len = ALittle.List_Len(info.var_list)
 	if len ~= need_len then
 		ALittle.Warn("输入的参数数量" .. len .. "和指令要求" .. need_len .. "的不一致")
 		return
@@ -206,6 +207,8 @@ end
 -- ALittle Generate Lua And Do Not Edit This Line!
 do
 if _G.ALittle == nil then _G.ALittle = {} end
+local ALittle = ALittle
+local Lua = Lua
 local ___pairs = pairs
 local ___ipairs = ipairs
 
@@ -218,7 +221,7 @@ option_map = {}
 
 local floor = ALittle.Math_Floor
 local tonumber = ALittle.Math_ToDouble
-local maxn = ALittle.List_MaxN
+local list_len = ALittle.List_Len
 local upper = ALittle.String_Upper
 local Csv_ReadBool
 Csv_ReadBool = function(content, value)
@@ -284,8 +287,8 @@ __csv_read_data_map["long"] = Csv_ReadLong
 __csv_read_data_map["string"] = Csv_ReadString
 __csv_read_data_map["double"] = Csv_ReadDouble
 local __split_list = {"*", "#", ";"}
-local __split_list_last = __split_list[maxn(__split_list)]
-local __split_list_max = maxn(__split_list)
+local __split_list_last = __split_list[list_len(__split_list)]
+local __split_list_max = list_len(__split_list)
 local find = ALittle.String_Find
 local sub = ALittle.String_Sub
 function ALittle.CalcCsvSubInfoSplit(sub_type, split_index)
@@ -391,6 +394,8 @@ end
 -- ALittle Generate Lua And Do Not Edit This Line!
 do
 if _G.ALittle == nil then _G.ALittle = {} end
+local ALittle = ALittle
+local Lua = Lua
 local ___pairs = pairs
 local ___ipairs = ipairs
 
@@ -876,6 +881,8 @@ end
 -- ALittle Generate Lua And Do Not Edit This Line!
 do
 if _G.ALittle == nil then _G.ALittle = {} end
+local ALittle = ALittle
+local Lua = Lua
 local ___pairs = pairs
 local ___ipairs = ipairs
 
@@ -918,6 +925,8 @@ end
 -- ALittle Generate Lua And Do Not Edit This Line!
 do
 if _G.ALittle == nil then _G.ALittle = {} end
+local ALittle = ALittle
+local Lua = Lua
 local ___pairs = pairs
 local ___ipairs = ipairs
 
@@ -949,6 +958,8 @@ end
 -- ALittle Generate Lua And Do Not Edit This Line!
 do
 if _G.ALittle == nil then _G.ALittle = {} end
+local ALittle = ALittle
+local Lua = Lua
 local ___rawset = rawset
 local ___pairs = pairs
 local ___ipairs = ipairs
@@ -993,6 +1004,8 @@ end
 -- ALittle Generate Lua And Do Not Edit This Line!
 do
 if _G.ALittle == nil then _G.ALittle = {} end
+local ALittle = ALittle
+local Lua = Lua
 local ___rawset = rawset
 local ___pairs = pairs
 local ___ipairs = ipairs
@@ -1112,6 +1125,8 @@ end
 -- ALittle Generate Lua And Do Not Edit This Line!
 do
 if _G.ALittle == nil then _G.ALittle = {} end
+local ALittle = ALittle
+local Lua = Lua
 local ___rawset = rawset
 local ___pairs = pairs
 local ___ipairs = ipairs
@@ -1248,6 +1263,8 @@ end
 -- ALittle Generate Lua And Do Not Edit This Line!
 do
 if _G.ALittle == nil then _G.ALittle = {} end
+local ALittle = ALittle
+local Lua = Lua
 local ___rawset = rawset
 local ___pairs = pairs
 local ___ipairs = ipairs
@@ -1362,6 +1379,8 @@ end
 -- ALittle Generate Lua And Do Not Edit This Line!
 do
 if _G.ALittle == nil then _G.ALittle = {} end
+local ALittle = ALittle
+local Lua = Lua
 local ___rawset = rawset
 local ___pairs = pairs
 local ___ipairs = ipairs
@@ -1454,6 +1473,8 @@ end
 -- ALittle Generate Lua And Do Not Edit This Line!
 do
 if _G.ALittle == nil then _G.ALittle = {} end
+local ALittle = ALittle
+local Lua = Lua
 local ___rawset = rawset
 local ___pairs = pairs
 local ___ipairs = ipairs
@@ -1769,6 +1790,8 @@ end
 -- ALittle Generate Lua And Do Not Edit This Line!
 do
 if _G.ALittle == nil then _G.ALittle = {} end
+local ALittle = ALittle
+local Lua = Lua
 local ___rawset = rawset
 local ___pairs = pairs
 local ___ipairs = ipairs
@@ -1895,22 +1918,8 @@ end
 -- ALittle Generate Lua And Do Not Edit This Line!
 do
 if _G.ALittle == nil then _G.ALittle = {} end
-local ___pairs = pairs
-local ___ipairs = ipairs
-
-
-function ALittle.BitAnd(x, y)
-	return carp.BitAnd(x, y)
-end
-
-function ALittle.BitOr(x, y)
-	return carp.BitOr(x, y)
-end
-
-end
--- ALittle Generate Lua And Do Not Edit This Line!
-do
-if _G.ALittle == nil then _G.ALittle = {} end
+local ALittle = ALittle
+local Lua = Lua
 local ___pairs = pairs
 local ___ipairs = ipairs
 
@@ -1935,6 +1944,8 @@ end
 -- ALittle Generate Lua And Do Not Edit This Line!
 do
 if _G.ALittle == nil then _G.ALittle = {} end
+local ALittle = ALittle
+local Lua = Lua
 local ___pairs = pairs
 local ___ipairs = ipairs
 
@@ -1960,6 +1971,8 @@ end
 -- ALittle Generate Lua And Do Not Edit This Line!
 do
 if _G.ALittle == nil then _G.ALittle = {} end
+local ALittle = ALittle
+local Lua = Lua
 local ___pairs = pairs
 local ___ipairs = ipairs
 
@@ -1976,6 +1989,8 @@ end
 -- ALittle Generate Lua And Do Not Edit This Line!
 do
 if _G.ALittle == nil then _G.ALittle = {} end
+local ALittle = ALittle
+local Lua = Lua
 local ___rawset = rawset
 local ___pairs = pairs
 local ___ipairs = ipairs
@@ -2057,6 +2072,8 @@ end
 -- ALittle Generate Lua And Do Not Edit This Line!
 do
 if _G.ALittle == nil then _G.ALittle = {} end
+local ALittle = ALittle
+local Lua = Lua
 local ___rawset = rawset
 local ___pairs = pairs
 local ___ipairs = ipairs
@@ -2099,6 +2116,8 @@ end
 -- ALittle Generate Lua And Do Not Edit This Line!
 do
 if _G.ALittle == nil then _G.ALittle = {} end
+local ALittle = ALittle
+local Lua = Lua
 local ___rawset = rawset
 local ___pairs = pairs
 local ___ipairs = ipairs
@@ -2165,7 +2184,7 @@ function ALittle.String_HttpAnalysisValueMap(param, content)
 	local param_split_list = ALittle.String_Split(param, "&")
 	for index, param_content in ___ipairs(param_split_list) do
 		local value_split_list = ALittle.String_Split(param_content, "=")
-		if ALittle.List_MaxN(value_split_list) == 2 then
+		if ALittle.List_Len(value_split_list) == 2 then
 			if ALittle.String_Sub(value_split_list[2], 1, 1) == "\"" and ALittle.String_Sub(value_split_list[2], -1, -1) == "\"" then
 				value_map[value_split_list[1]] = ALittle.String_Sub(value_split_list[2], 2, -2)
 			else
@@ -2247,6 +2266,8 @@ end
 -- ALittle Generate Lua And Do Not Edit This Line!
 do
 if _G.ALittle == nil then _G.ALittle = {} end
+local ALittle = ALittle
+local Lua = Lua
 local ___pairs = pairs
 local ___ipairs = ipairs
 
@@ -2432,7 +2453,7 @@ end
 
 function ALittle.File_GetFileNameByPath(file_path)
 	local list = ALittle.String_SplitSepList(file_path, {"/", "\\"})
-	local l = ALittle.List_MaxN(list)
+	local l = ALittle.List_Len(list)
 	if l <= 0 then
 		return file_path
 	end
@@ -2446,7 +2467,7 @@ end
 
 function ALittle.File_GetFileExtByPath(file_path)
 	local list = ALittle.String_Split(file_path, ".")
-	local l = ALittle.List_MaxN(list)
+	local l = ALittle.List_Len(list)
 	if l <= 0 then
 		return file_path
 	end
@@ -2455,7 +2476,7 @@ end
 
 function ALittle.File_ChangeFileExtByPath(file_path, ext)
 	local list = ALittle.String_Split(file_path, ".")
-	local l = ALittle.List_MaxN(list)
+	local l = ALittle.List_Len(list)
 	if l <= 0 then
 		return file_path .. "." .. ext
 	end
@@ -2470,7 +2491,7 @@ end
 function ALittle.File_GetJustFileNameByPath(file_path)
 	local new_file_path = ALittle.File_GetFileNameByPath(file_path)
 	local list = ALittle.String_Split(new_file_path, ".")
-	local l = ALittle.List_MaxN(list)
+	local l = ALittle.List_Len(list)
 	if l <= 1 then
 		return new_file_path
 	end
@@ -2537,6 +2558,8 @@ end
 -- ALittle Generate Lua And Do Not Edit This Line!
 do
 if _G.ALittle == nil then _G.ALittle = {} end
+local ALittle = ALittle
+local Lua = Lua
 local ___rawset = rawset
 local ___pairs = pairs
 local ___ipairs = ipairs
@@ -2596,6 +2619,8 @@ end
 -- ALittle Generate Lua And Do Not Edit This Line!
 do
 if _G.ALittle == nil then _G.ALittle = {} end
+local ALittle = ALittle
+local Lua = Lua
 local ___rawset = rawset
 local ___pairs = pairs
 local ___ipairs = ipairs
@@ -2768,6 +2793,8 @@ end
 -- ALittle Generate Lua And Do Not Edit This Line!
 do
 if _G.ALittle == nil then _G.ALittle = {} end
+local ALittle = ALittle
+local Lua = Lua
 local ___rawset = rawset
 local ___pairs = pairs
 local ___ipairs = ipairs
@@ -2808,6 +2835,8 @@ end
 -- ALittle Generate Lua And Do Not Edit This Line!
 do
 if _G.ALittle == nil then _G.ALittle = {} end
+local ALittle = ALittle
+local Lua = Lua
 local ___rawset = rawset
 local ___pairs = pairs
 local ___ipairs = ipairs
@@ -2919,6 +2948,8 @@ end
 -- ALittle Generate Lua And Do Not Edit This Line!
 do
 if _G.ALittle == nil then _G.ALittle = {} end
+local ALittle = ALittle
+local Lua = Lua
 local ___rawset = rawset
 local ___pairs = pairs
 local ___ipairs = ipairs
@@ -3147,6 +3178,8 @@ end
 -- ALittle Generate Lua And Do Not Edit This Line!
 do
 if _G.ALittle == nil then _G.ALittle = {} end
+local ALittle = ALittle
+local Lua = Lua
 local ___rawset = rawset
 local ___pairs = pairs
 local ___ipairs = ipairs
@@ -3206,6 +3239,8 @@ end
 -- ALittle Generate Lua And Do Not Edit This Line!
 do
 if _G.ALittle == nil then _G.ALittle = {} end
+local ALittle = ALittle
+local Lua = Lua
 local ___rawset = rawset
 local ___pairs = pairs
 local ___ipairs = ipairs
@@ -3385,6 +3420,8 @@ end
 -- ALittle Generate Lua And Do Not Edit This Line!
 do
 if _G.ALittle == nil then _G.ALittle = {} end
+local ALittle = ALittle
+local Lua = Lua
 local ___rawset = rawset
 local ___pairs = pairs
 local ___ipairs = ipairs
@@ -3440,6 +3477,8 @@ end
 -- ALittle Generate Lua And Do Not Edit This Line!
 do
 if _G.ALittle == nil then _G.ALittle = {} end
+local ALittle = ALittle
+local Lua = Lua
 local ___pairs = pairs
 local ___ipairs = ipairs
 
@@ -3465,6 +3504,8 @@ end
 -- ALittle Generate Lua And Do Not Edit This Line!
 do
 if _G.Lua == nil then _G.Lua = {} end
+local Lua = Lua
+local ALittle = ALittle
 local ___pairs = pairs
 local ___ipairs = ipairs
 
@@ -3514,6 +3555,8 @@ end
 -- ALittle Generate Lua And Do Not Edit This Line!
 do
 if _G.Lua == nil then _G.Lua = {} end
+local Lua = Lua
+local ALittle = ALittle
 local ___rawset = rawset
 local ___pairs = pairs
 local ___ipairs = ipairs
@@ -3562,6 +3605,8 @@ end
 -- ALittle Generate Lua And Do Not Edit This Line!
 do
 if _G.Lua == nil then _G.Lua = {} end
+local Lua = Lua
+local ALittle = ALittle
 local ___rawset = rawset
 local ___pairs = pairs
 local ___ipairs = ipairs
@@ -3609,6 +3654,8 @@ end
 -- ALittle Generate Lua And Do Not Edit This Line!
 do
 if _G.Lua == nil then _G.Lua = {} end
+local Lua = Lua
+local ALittle = ALittle
 local ___rawset = rawset
 local ___pairs = pairs
 local ___ipairs = ipairs
@@ -3647,6 +3694,8 @@ end
 -- ALittle Generate Lua And Do Not Edit This Line!
 do
 if _G.Lua == nil then _G.Lua = {} end
+local Lua = Lua
+local ALittle = ALittle
 local ___pairs = pairs
 local ___ipairs = ipairs
 
@@ -3693,7 +3742,7 @@ function Lua.LuaSchedule:Run()
 		if event == nil then
 			break
 		end
-		if event.type == Lua.CarpNetEventType.TIMER then
+		if event.type == 21 then
 			if self._last_time ~= nil then
 				A_LuaLoopSystem:Update(event.time - self._last_time)
 				A_LuaWeakLoopSystem:Update(event.time - self._last_time)
@@ -3707,24 +3756,24 @@ function Lua.LuaSchedule:Run()
 end
 
 function Lua.LuaSchedule:HandleEvent(event)
-	if event.type == Lua.CarpNetEventType.MSG_MESSAGE then
+	if event.type == 34 then
 		ALittle.__ALITTLEAPI_Message(event.id, event.msg_id, event.rpc_id, self._factory)
 		carp.CarpNet.FreeReadFactory(event.factory)
-	elseif event.type == Lua.CarpNetEventType.HTTP_SUCCEED then
+	elseif event.type == 1 then
 		ALittle.__ALITTLEAPI_HttpClientSucceed(event.id)
-	elseif event.type == Lua.CarpNetEventType.HTTP_FAILED then
+	elseif event.type == 2 then
 		ALittle.__ALITTLEAPI_HttpClientFailed(event.id, event.error)
-	elseif event.type == Lua.CarpNetEventType.HTTP_FILE_SUCCEED then
+	elseif event.type == 11 then
 		ALittle.__ALITTLEAPI_HttpFileSucceed(event.id)
-	elseif event.type == Lua.CarpNetEventType.HTTP_FILE_FAILED then
+	elseif event.type == 12 then
 		ALittle.__ALITTLEAPI_HttpFileFailed(event.id, event.error)
-	elseif event.type == Lua.CarpNetEventType.HTTP_FILE_PROGRESS then
+	elseif event.type == 13 then
 		ALittle.__ALITTLEAPI_HttpFileProcess(event.id, event.cur_size, event.total_size)
-	elseif event.type == Lua.CarpNetEventType.MSG_CONNECT_SUCCEED then
+	elseif event.type == 31 then
 		ALittle.__ALITTLEAPI_ConnectSucceed(event.id)
-	elseif event.type == Lua.CarpNetEventType.MSG_CONNECT_FAILED then
+	elseif event.type == 32 then
 		ALittle.__ALITTLEAPI_ConnectFailed(event.id)
-	elseif event.type == Lua.CarpNetEventType.MSG_DISCONNECTED then
+	elseif event.type == 33 then
 		ALittle.__ALITTLEAPI_Disconnected(event.id)
 	end
 end
@@ -3734,6 +3783,8 @@ end
 -- ALittle Generate Lua And Do Not Edit This Line!
 do
 if _G.ALittle == nil then _G.ALittle = {} end
+local ALittle = ALittle
+local Lua = Lua
 local ___rawset = rawset
 local ___pairs = pairs
 local ___ipairs = ipairs
@@ -3876,6 +3927,8 @@ end
 -- ALittle Generate Lua And Do Not Edit This Line!
 do
 if _G.ALittle == nil then _G.ALittle = {} end
+local ALittle = ALittle
+local Lua = Lua
 local ___pairs = pairs
 local ___ipairs = ipairs
 

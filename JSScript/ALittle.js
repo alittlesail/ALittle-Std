@@ -15,7 +15,6 @@ window.RequireStd = function(base_path) {
 		await Require(base_path, "Loop/LoopTimer");
 		await Require(base_path, "Config/CsvConfig");
 		await Require(base_path, "Config/JsonConfig");
-		await Require(base_path, "Bit/Bit");
 		await Require(base_path, "WeakRef/WeakRef");
 		await Require(base_path, "Loop/IHeapTimer");
 		await Require(base_path, "Schedule/ISchedule");

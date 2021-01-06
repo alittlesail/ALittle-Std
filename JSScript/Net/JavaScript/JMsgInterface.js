@@ -76,7 +76,7 @@ JavaScript.JMsgInterface = JavaScript.Class(ALittle.IMsgCommonNative, {
 	Ctor : function() {
 		++ __JMSG_MAXID;
 		this._id = __JMSG_MAXID;
-		this._net_status = JavaScript.JConnectStatus.NET_IDLE;
+		this._net_status = 0;
 		this._ip = "";
 		this._port = 0;
 		this._net_buffer = ALittle.NewObject(JavaScript.JNetBuffer, 2048);
@@ -85,15 +85,15 @@ JavaScript.JMsgInterface = JavaScript.Class(ALittle.IMsgCommonNative, {
 		return this._id;
 	},
 	Connect : function(ip, port) {
-		if (this._net_status === JavaScript.JConnectStatus.NET_CONNECTED) {
+		if (this._net_status === 2) {
 			this.Close();
 		}
-		if (this._net_status === JavaScript.JConnectStatus.NET_CONNECTING) {
+		if (this._net_status === 1) {
 			ALittle.Warn("net system already connecting:" + this._ip + ":" + this._port);
 			return;
 		}
 		let url = "ws://" + ip + ":" + port;
-		this._net_status = JavaScript.JConnectStatus.NET_CONNECTING;
+		this._net_status = 1;
 		this._net_system = new WebSocket(url);
 		this._net_system.binaryType = "arraybuffer";
 		this._net_system.onmessage = this.HandleMessage.bind(this);
@@ -102,39 +102,39 @@ JavaScript.JMsgInterface = JavaScript.Class(ALittle.IMsgCommonNative, {
 		this._net_system.onerror = this.HandleError.bind(this);
 	},
 	IsConnected : function() {
-		return this._net_status === JavaScript.JConnectStatus.NET_CONNECTED;
+		return this._net_status === 2;
 	},
 	SendFactory : function(factory) {
 		this._net_system.send(factory.GetArrayBuffer(true));
 	},
 	Close : function() {
-		if (this._net_status === JavaScript.JConnectStatus.NET_IDLE) {
+		if (this._net_status === 0) {
 			return;
 		}
 		this._net_system.close();
 		this._net_system = undefined;
-		this._net_status = JavaScript.JConnectStatus.NET_IDLE;
+		this._net_status = 0;
 	},
 	HandleOpen : function(event) {
-		if (this._net_status !== JavaScript.JConnectStatus.NET_CONNECTING) {
+		if (this._net_status !== 1) {
 			return;
 		}
-		this._net_status = JavaScript.JConnectStatus.NET_CONNECTED;
+		this._net_status = 2;
 		ALittle.__ALITTLEAPI_ConnectSucceed(this._id);
 	},
 	HandleClose : function(event) {
-		if (this._net_status !== JavaScript.JConnectStatus.NET_CONNECTED) {
+		if (this._net_status !== 2) {
 			return;
 		}
-		this._net_status = JavaScript.JConnectStatus.NET_IDLE;
+		this._net_status = 0;
 		this._net_system = undefined;
 		ALittle.__ALITTLEAPI_Disconnected(this._id);
 	},
 	HandleError : function(event) {
-		if (this._net_status !== JavaScript.JConnectStatus.NET_CONNECTING) {
+		if (this._net_status !== 1) {
 			return;
 		}
-		this._net_status = JavaScript.JConnectStatus.NET_IDLE;
+		this._net_status = 0;
 		this._net_system = undefined;
 		ALittle.__ALITTLEAPI_ConnectFailed(this._id);
 	},

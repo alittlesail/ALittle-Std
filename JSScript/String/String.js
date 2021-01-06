@@ -69,7 +69,7 @@ ALittle.String_HttpAnalysisValueMap = function(param, content) {
 		let param_content = ___OBJECT_1[index - 1];
 		if (param_content === undefined) break;
 		let value_split_list = ALittle.String_Split(param_content, "=");
-		if (ALittle.List_MaxN(value_split_list) === 2) {
+		if (ALittle.List_Len(value_split_list) === 2) {
 			if (ALittle.String_Sub(value_split_list[2 - 1], 1, 1) === "\"" && ALittle.String_Sub(value_split_list[2 - 1], -1, -1) === "\"") {
 				value_map[value_split_list[1 - 1]] = ALittle.String_Sub(value_split_list[2 - 1], 2, -2);
 			} else {

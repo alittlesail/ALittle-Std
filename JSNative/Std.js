@@ -15,7 +15,6 @@ window.RequireStd = function(base_path) {
 		await Require(base_path, "Loop/LoopTimer");
 		await Require(base_path, "Config/CsvConfig");
 		await Require(base_path, "Config/JsonConfig");
-		await Require(base_path, "Bit/Bit");
 		await Require(base_path, "WeakRef/WeakRef");
 		await Require(base_path, "Loop/IHeapTimer");
 		await Require(base_path, "Schedule/ISchedule");
@@ -178,8 +177,8 @@ ALittle.ExecuteCommand = function(cmd) {
 		++ i;
 		index = i;
 	}
-	len = ALittle.List_MaxN(param_list);
-	let need_len = ALittle.List_MaxN(info.var_list);
+	len = ALittle.List_Len(param_list);
+	let need_len = ALittle.List_Len(info.var_list);
 	if (len !== need_len) {
 		ALittle.Warn("输入的参数数量" + len + "和指令要求" + need_len + "的不一致");
 		return;
@@ -228,7 +227,7 @@ option_map : {}
 
 let floor = ALittle.Math_Floor;
 let tonumber = ALittle.Math_ToDouble;
-let maxn = ALittle.List_MaxN;
+let list_len = ALittle.List_Len;
 let upper = ALittle.String_Upper;
 let Csv_ReadBool = function(content, value) {
 	return upper(content) === "TRUE";
@@ -294,8 +293,8 @@ __csv_read_data_map["long"] = Csv_ReadLong;
 __csv_read_data_map["string"] = Csv_ReadString;
 __csv_read_data_map["double"] = Csv_ReadDouble;
 let __split_list = ["*", "#", ";"];
-let __split_list_last = __split_list[maxn(__split_list) - 1];
-let __split_list_max = maxn(__split_list);
+let __split_list_last = __split_list[list_len(__split_list) - 1];
+let __split_list_max = list_len(__split_list);
 let find = ALittle.String_Find;
 let sub = ALittle.String_Sub;
 ALittle.CalcCsvSubInfoSplit = function(sub_type, split_index) {
@@ -1849,19 +1848,6 @@ ALittle.CreateJsonConfig = function(file_path, print_error) {
 if (typeof ALittle === "undefined") window.ALittle = {};
 
 
-ALittle.BitAnd = function(x, y) {
-	return bit.band(x, y);
-}
-
-ALittle.BitOr = function(x, y) {
-	return bit.bor(x, y);
-}
-
-}
-{
-if (typeof ALittle === "undefined") window.ALittle = {};
-
-
 ALittle.CreateKeyWeakMap = function() {
 	return new jkeyweakmap();
 }
@@ -2085,7 +2071,7 @@ ALittle.String_HttpAnalysisValueMap = function(param, content) {
 		let param_content = ___OBJECT_1[index - 1];
 		if (param_content === undefined) break;
 		let value_split_list = ALittle.String_Split(param_content, "=");
-		if (ALittle.List_MaxN(value_split_list) === 2) {
+		if (ALittle.List_Len(value_split_list) === 2) {
 			if (ALittle.String_Sub(value_split_list[2 - 1], 1, 1) === "\"" && ALittle.String_Sub(value_split_list[2 - 1], -1, -1) === "\"") {
 				value_map[value_split_list[1 - 1]] = ALittle.String_Sub(value_split_list[2 - 1], 2, -2);
 			} else {
@@ -2275,7 +2261,7 @@ ALittle.File_PathEndWithSplit = function(file_path) {
 
 ALittle.File_GetFileNameByPath = function(file_path) {
 	let list = ALittle.String_SplitSepList(file_path, ["/", "\\"]);
-	let l = ALittle.List_MaxN(list);
+	let l = ALittle.List_Len(list);
 	if (l <= 0) {
 		return file_path;
 	}
@@ -2289,7 +2275,7 @@ ALittle.File_GetFilePathByPath = function(file_path) {
 
 ALittle.File_GetFileExtByPath = function(file_path) {
 	let list = ALittle.String_Split(file_path, ".");
-	let l = ALittle.List_MaxN(list);
+	let l = ALittle.List_Len(list);
 	if (l <= 0) {
 		return file_path;
 	}
@@ -2298,7 +2284,7 @@ ALittle.File_GetFileExtByPath = function(file_path) {
 
 ALittle.File_ChangeFileExtByPath = function(file_path, ext) {
 	let list = ALittle.String_Split(file_path, ".");
-	let l = ALittle.List_MaxN(list);
+	let l = ALittle.List_Len(list);
 	if (l <= 0) {
 		return file_path + "." + ext;
 	}
@@ -2313,7 +2299,7 @@ ALittle.File_GetFileExtByPathAndUpper = function(file_path) {
 ALittle.File_GetJustFileNameByPath = function(file_path) {
 	let new_file_path = ALittle.File_GetFileNameByPath(file_path);
 	let list = ALittle.String_Split(new_file_path, ".");
-	let l = ALittle.List_MaxN(list);
+	let l = ALittle.List_Len(list);
 	if (l <= 1) {
 		return new_file_path;
 	}
@@ -3465,7 +3451,7 @@ JavaScript.File_SetCurrentPath = function(path) {
 
 JavaScript.File_RenameFile = function(path, new_path) {
 	let list = Path_FilterEmpty(ALittle.String_SplitSepList(path, ["/", "\\"]));
-	let list_len = ALittle.List_MaxN(list);
+	let list_len = ALittle.List_Len(list);
 	let cur = root;
 	for (let i = 1; i <= list_len - 1; i += 1) {
 		if (cur.file === undefined) {
@@ -3488,7 +3474,7 @@ JavaScript.File_RenameFile = function(path, new_path) {
 		return false;
 	}
 	let new_list = Path_FilterEmpty(ALittle.String_SplitSepList(new_path, ["/", "\\"]));
-	let new_list_len = ALittle.List_MaxN(new_list);
+	let new_list_len = ALittle.List_Len(new_list);
 	let new_cur = root;
 	for (let i = 1; i <= new_list_len - 1; i += 1) {
 		if (new_cur.file === undefined) {
@@ -3511,7 +3497,7 @@ JavaScript.File_RenameFile = function(path, new_path) {
 
 JavaScript.File_DeleteFile = function(path) {
 	let list = Path_FilterEmpty(ALittle.String_SplitSepList(path, ["/", "\\"]));
-	let list_len = ALittle.List_MaxN(list);
+	let list_len = ALittle.List_Len(list);
 	let cur = root;
 	for (let i = 1; i <= list_len - 1; i += 1) {
 		if (cur.file === undefined) {
@@ -3540,7 +3526,7 @@ JavaScript.File_DeleteFile = function(path) {
 
 JavaScript.File_GetPathAttribute = function(path) {
 	let list = Path_FilterEmpty(ALittle.String_SplitSepList(path, ["/", "\\"]));
-	let list_len = ALittle.List_MaxN(list);
+	let list_len = ALittle.List_Len(list);
 	let cur = root;
 	for (let i = 1; i <= list_len - 1; i += 1) {
 		if (cur.file === undefined) {
@@ -3769,7 +3755,7 @@ JavaScript.File_DeleteDeepDir = function(path, log_path) {
 
 JavaScript.File_MakeDir = function(path) {
 	let list = Path_FilterEmpty(ALittle.String_SplitSepList(path, ["/", "\\"]));
-	let list_len = ALittle.List_MaxN(list);
+	let list_len = ALittle.List_Len(list);
 	let cur = root;
 	for (let i = 1; i <= list_len - 1; i += 1) {
 		if (cur.file === undefined) {
@@ -3801,7 +3787,7 @@ JavaScript.File_MakeDir = function(path) {
 
 JavaScript.File_LoadFile = function(path) {
 	let list = Path_FilterEmpty(ALittle.String_SplitSepList(path, ["/", "\\"]));
-	let list_len = ALittle.List_MaxN(list);
+	let list_len = ALittle.List_Len(list);
 	let cur = root;
 	for (let i = 1; i <= list_len - 1; i += 1) {
 		if (cur.file === undefined) {
@@ -3836,7 +3822,7 @@ JavaScript.File_CopyFile = function(src_path, dst_path) {
 
 JavaScript.File_SaveFile = function(path, content, buffer) {
 	let list = Path_FilterEmpty(ALittle.String_SplitSepList(path, ["/", "\\"]));
-	let list_len = ALittle.List_MaxN(list);
+	let list_len = ALittle.List_Len(list);
 	let cur = root;
 	for (let i = 1; i <= list_len - 1; i += 1) {
 		if (cur.file === undefined) {
@@ -4463,7 +4449,7 @@ JavaScript.JMsgInterface = JavaScript.Class(ALittle.IMsgCommonNative, {
 	Ctor : function() {
 		++ __JMSG_MAXID;
 		this._id = __JMSG_MAXID;
-		this._net_status = JavaScript.JConnectStatus.NET_IDLE;
+		this._net_status = 0;
 		this._ip = "";
 		this._port = 0;
 		this._net_buffer = ALittle.NewObject(JavaScript.JNetBuffer, 2048);
@@ -4472,15 +4458,15 @@ JavaScript.JMsgInterface = JavaScript.Class(ALittle.IMsgCommonNative, {
 		return this._id;
 	},
 	Connect : function(ip, port) {
-		if (this._net_status === JavaScript.JConnectStatus.NET_CONNECTED) {
+		if (this._net_status === 2) {
 			this.Close();
 		}
-		if (this._net_status === JavaScript.JConnectStatus.NET_CONNECTING) {
+		if (this._net_status === 1) {
 			ALittle.Warn("net system already connecting:" + this._ip + ":" + this._port);
 			return;
 		}
 		let url = "ws://" + ip + ":" + port;
-		this._net_status = JavaScript.JConnectStatus.NET_CONNECTING;
+		this._net_status = 1;
 		this._net_system = new WebSocket(url);
 		this._net_system.binaryType = "arraybuffer";
 		this._net_system.onmessage = this.HandleMessage.bind(this);
@@ -4489,39 +4475,39 @@ JavaScript.JMsgInterface = JavaScript.Class(ALittle.IMsgCommonNative, {
 		this._net_system.onerror = this.HandleError.bind(this);
 	},
 	IsConnected : function() {
-		return this._net_status === JavaScript.JConnectStatus.NET_CONNECTED;
+		return this._net_status === 2;
 	},
 	SendFactory : function(factory) {
 		this._net_system.send(factory.GetArrayBuffer(true));
 	},
 	Close : function() {
-		if (this._net_status === JavaScript.JConnectStatus.NET_IDLE) {
+		if (this._net_status === 0) {
 			return;
 		}
 		this._net_system.close();
 		this._net_system = undefined;
-		this._net_status = JavaScript.JConnectStatus.NET_IDLE;
+		this._net_status = 0;
 	},
 	HandleOpen : function(event) {
-		if (this._net_status !== JavaScript.JConnectStatus.NET_CONNECTING) {
+		if (this._net_status !== 1) {
 			return;
 		}
-		this._net_status = JavaScript.JConnectStatus.NET_CONNECTED;
+		this._net_status = 2;
 		ALittle.__ALITTLEAPI_ConnectSucceed(this._id);
 	},
 	HandleClose : function(event) {
-		if (this._net_status !== JavaScript.JConnectStatus.NET_CONNECTED) {
+		if (this._net_status !== 2) {
 			return;
 		}
-		this._net_status = JavaScript.JConnectStatus.NET_IDLE;
+		this._net_status = 0;
 		this._net_system = undefined;
 		ALittle.__ALITTLEAPI_Disconnected(this._id);
 	},
 	HandleError : function(event) {
-		if (this._net_status !== JavaScript.JConnectStatus.NET_CONNECTING) {
+		if (this._net_status !== 1) {
 			return;
 		}
-		this._net_status = JavaScript.JConnectStatus.NET_IDLE;
+		this._net_status = 0;
 		this._net_system = undefined;
 		ALittle.__ALITTLEAPI_ConnectFailed(this._id);
 	},

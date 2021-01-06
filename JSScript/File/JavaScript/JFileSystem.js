@@ -60,7 +60,7 @@ JavaScript.File_SetCurrentPath = function(path) {
 
 JavaScript.File_RenameFile = function(path, new_path) {
 	let list = Path_FilterEmpty(ALittle.String_SplitSepList(path, ["/", "\\"]));
-	let list_len = ALittle.List_MaxN(list);
+	let list_len = ALittle.List_Len(list);
 	let cur = root;
 	for (let i = 1; i <= list_len - 1; i += 1) {
 		if (cur.file === undefined) {
@@ -83,7 +83,7 @@ JavaScript.File_RenameFile = function(path, new_path) {
 		return false;
 	}
 	let new_list = Path_FilterEmpty(ALittle.String_SplitSepList(new_path, ["/", "\\"]));
-	let new_list_len = ALittle.List_MaxN(new_list);
+	let new_list_len = ALittle.List_Len(new_list);
 	let new_cur = root;
 	for (let i = 1; i <= new_list_len - 1; i += 1) {
 		if (new_cur.file === undefined) {
@@ -106,7 +106,7 @@ JavaScript.File_RenameFile = function(path, new_path) {
 
 JavaScript.File_DeleteFile = function(path) {
 	let list = Path_FilterEmpty(ALittle.String_SplitSepList(path, ["/", "\\"]));
-	let list_len = ALittle.List_MaxN(list);
+	let list_len = ALittle.List_Len(list);
 	let cur = root;
 	for (let i = 1; i <= list_len - 1; i += 1) {
 		if (cur.file === undefined) {
@@ -135,7 +135,7 @@ JavaScript.File_DeleteFile = function(path) {
 
 JavaScript.File_GetPathAttribute = function(path) {
 	let list = Path_FilterEmpty(ALittle.String_SplitSepList(path, ["/", "\\"]));
-	let list_len = ALittle.List_MaxN(list);
+	let list_len = ALittle.List_Len(list);
 	let cur = root;
 	for (let i = 1; i <= list_len - 1; i += 1) {
 		if (cur.file === undefined) {
@@ -364,7 +364,7 @@ JavaScript.File_DeleteDeepDir = function(path, log_path) {
 
 JavaScript.File_MakeDir = function(path) {
 	let list = Path_FilterEmpty(ALittle.String_SplitSepList(path, ["/", "\\"]));
-	let list_len = ALittle.List_MaxN(list);
+	let list_len = ALittle.List_Len(list);
 	let cur = root;
 	for (let i = 1; i <= list_len - 1; i += 1) {
 		if (cur.file === undefined) {
@@ -396,7 +396,7 @@ JavaScript.File_MakeDir = function(path) {
 
 JavaScript.File_LoadFile = function(path) {
 	let list = Path_FilterEmpty(ALittle.String_SplitSepList(path, ["/", "\\"]));
-	let list_len = ALittle.List_MaxN(list);
+	let list_len = ALittle.List_Len(list);
 	let cur = root;
 	for (let i = 1; i <= list_len - 1; i += 1) {
 		if (cur.file === undefined) {
@@ -431,7 +431,7 @@ JavaScript.File_CopyFile = function(src_path, dst_path) {
 
 JavaScript.File_SaveFile = function(path, content, buffer) {
 	let list = Path_FilterEmpty(ALittle.String_SplitSepList(path, ["/", "\\"]));
-	let list_len = ALittle.List_MaxN(list);
+	let list_len = ALittle.List_Len(list);
 	let cur = root;
 	for (let i = 1; i <= list_len - 1; i += 1) {
 		if (cur.file === undefined) {
