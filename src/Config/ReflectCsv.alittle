@@ -20,7 +20,7 @@ public struct CsvInvokeInfo
 
 private var floor = Math_Floor;
 private var tonumber = Math_ToDouble;
-private var maxn = List_MaxN;
+private var list_len = List_Len;
 private var upper = String_Upper;
 
 private static Csv_ReadBool(string content, CsvInvokeInfo value) : bool
@@ -81,8 +81,8 @@ __csv_read_data_map["string"] = Csv_ReadString;
 __csv_read_data_map["double"] = Csv_ReadDouble;
 
 private var __split_list = ["*","#",";"];     // 从左到右，从里到外
-private var __split_list_last = __split_list[maxn(__split_list)];
-private var __split_list_max = maxn(__split_list);
+private var __split_list_last = __split_list[list_len(__split_list)];
+private var __split_list_max = list_len(__split_list);
 
 //构造部分//////////////////////////////////////////////////////////////////////////////////////////////////////////-
 private var find = String_Find;

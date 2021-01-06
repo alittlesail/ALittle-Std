@@ -55,7 +55,7 @@ public static File_SetCurrentPath(string path) : bool
 public static File_RenameFile(string path, string new_path) : bool
 {   
     var list = Path_FilterEmpty(ALittle.String_SplitSepList(path, ["/", "\\"]));
-    var list_len = ALittle.List_MaxN(list);
+    var list_len = ALittle.List_Len(list);
     var cur = root;
     for (var i = 1; i <= list_len - 1; 1)
     {
@@ -70,7 +70,7 @@ public static File_RenameFile(string path, string new_path) : bool
     if (cur_file == null || cur_file.is_directory) return false;
     
     var new_list = Path_FilterEmpty(ALittle.String_SplitSepList(new_path, ["/", "\\"]));
-    var new_list_len = ALittle.List_MaxN(new_list);
+    var new_list_len = ALittle.List_Len(new_list);
     var new_cur = root;
     for (var i = 1; i <= new_list_len - 1; 1)
     {
@@ -89,7 +89,7 @@ public static File_RenameFile(string path, string new_path) : bool
 public static File_DeleteFile(string path) : bool
 {
     var list = Path_FilterEmpty(ALittle.String_SplitSepList(path, ["/", "\\"]));
-    var list_len = ALittle.List_MaxN(list);
+    var list_len = ALittle.List_Len(list);
     var cur = root;
     for (var i = 1; i <= list_len - 1; 1)
     {
@@ -110,7 +110,7 @@ public static File_DeleteFile(string path) : bool
 public static File_GetPathAttribute(string path) : ALittle.PathAttribute
 {
     var list = Path_FilterEmpty(ALittle.String_SplitSepList(path, ["/", "\\"]));
-    var list_len = ALittle.List_MaxN(list);
+    var list_len = ALittle.List_Len(list);
     var cur = root;
     for (var i = 1; i <= list_len - 1; 1)
     {
@@ -307,7 +307,7 @@ public static File_DeleteDeepDir(string path, [Nullable] bool log_path)
 public static File_MakeDir(string path) : bool
 {
     var list = Path_FilterEmpty(ALittle.String_SplitSepList(path, ["/", "\\"]));
-    var list_len = ALittle.List_MaxN(list);
+    var list_len = ALittle.List_Len(list);
     var cur = root;
     for (var i = 1; i <= list_len - 1; 1)
     {
@@ -334,7 +334,7 @@ public static File_MakeDir(string path) : bool
 public static File_LoadFile(string path) : string, javascript.ArrayBuffer
 {
     var list = Path_FilterEmpty(ALittle.String_SplitSepList(path, ["/", "\\"]));
-    var list_len = ALittle.List_MaxN(list);
+    var list_len = ALittle.List_Len(list);
     var cur = root;
     for (var i = 1; i <= list_len - 1; 1)
     {
@@ -360,7 +360,7 @@ public static File_CopyFile(string src_path, string dst_path) : bool
 public static File_SaveFile(string path, string content, javascript.ArrayBuffer buffer) : bool
 {
     var list = Path_FilterEmpty(ALittle.String_SplitSepList(path, ["/", "\\"]));
-    var list_len = ALittle.List_MaxN(list);
+    var list_len = ALittle.List_Len(list);
     var cur = root;
     for (var i = 1; i <= list_len - 1; 1)
     {

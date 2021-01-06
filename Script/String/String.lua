@@ -69,7 +69,7 @@ function ALittle.String_HttpAnalysisValueMap(param, content)
 	local param_split_list = ALittle.String_Split(param, "&")
 	for index, param_content in ___ipairs(param_split_list) do
 		local value_split_list = ALittle.String_Split(param_content, "=")
-		if ALittle.List_MaxN(value_split_list) == 2 then
+		if ALittle.List_Len(value_split_list) == 2 then
 			if ALittle.String_Sub(value_split_list[2], 1, 1) == "\"" and ALittle.String_Sub(value_split_list[2], -1, -1) == "\"" then
 				value_map[value_split_list[1]] = ALittle.String_Sub(value_split_list[2], 2, -2)
 			else

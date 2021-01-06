@@ -15,7 +15,7 @@ option_map = {}
 
 local floor = ALittle.Math_Floor
 local tonumber = ALittle.Math_ToDouble
-local maxn = ALittle.List_MaxN
+local list_len = ALittle.List_Len
 local upper = ALittle.String_Upper
 local Csv_ReadBool
 Csv_ReadBool = function(content, value)
@@ -81,8 +81,8 @@ __csv_read_data_map["long"] = Csv_ReadLong
 __csv_read_data_map["string"] = Csv_ReadString
 __csv_read_data_map["double"] = Csv_ReadDouble
 local __split_list = {"*", "#", ";"}
-local __split_list_last = __split_list[maxn(__split_list)]
-local __split_list_max = maxn(__split_list)
+local __split_list_last = __split_list[list_len(__split_list)]
+local __split_list_max = list_len(__split_list)
 local find = ALittle.String_Find
 local sub = ALittle.String_Sub
 function ALittle.CalcCsvSubInfoSplit(sub_type, split_index)

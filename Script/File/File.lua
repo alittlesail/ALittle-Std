@@ -188,7 +188,7 @@ end
 
 function ALittle.File_GetFileNameByPath(file_path)
 	local list = ALittle.String_SplitSepList(file_path, {"/", "\\"})
-	local l = ALittle.List_MaxN(list)
+	local l = ALittle.List_Len(list)
 	if l <= 0 then
 		return file_path
 	end
@@ -202,7 +202,7 @@ end
 
 function ALittle.File_GetFileExtByPath(file_path)
 	local list = ALittle.String_Split(file_path, ".")
-	local l = ALittle.List_MaxN(list)
+	local l = ALittle.List_Len(list)
 	if l <= 0 then
 		return file_path
 	end
@@ -211,7 +211,7 @@ end
 
 function ALittle.File_ChangeFileExtByPath(file_path, ext)
 	local list = ALittle.String_Split(file_path, ".")
-	local l = ALittle.List_MaxN(list)
+	local l = ALittle.List_Len(list)
 	if l <= 0 then
 		return file_path .. "." .. ext
 	end
@@ -226,7 +226,7 @@ end
 function ALittle.File_GetJustFileNameByPath(file_path)
 	local new_file_path = ALittle.File_GetFileNameByPath(file_path)
 	local list = ALittle.String_Split(new_file_path, ".")
-	local l = ALittle.List_MaxN(list)
+	local l = ALittle.List_Len(list)
 	if l <= 1 then
 		return new_file_path
 	end

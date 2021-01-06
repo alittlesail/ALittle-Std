@@ -122,8 +122,8 @@ function ALittle.ExecuteCommand(cmd)
 		i = i + 1
 		index = i
 	end
-	len = ALittle.List_MaxN(param_list)
-	local need_len = ALittle.List_MaxN(info.var_list)
+	len = ALittle.List_Len(param_list)
+	local need_len = ALittle.List_Len(info.var_list)
 	if len ~= need_len then
 		ALittle.Warn("输入的参数数量" .. len .. "和指令要求" .. need_len .. "的不一致")
 		return
