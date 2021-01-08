@@ -1,0 +1,285 @@
+
+namespace ALittle;
+
+protected struct WorkerRPCInfo
+{
+    Thread thread;
+}
+
+protected class WorkerCommon : IWorker
+{
+    private SafeIDCreator _id_creator;
+    private Map<int, WorkerRPCInfo> _id_map_rpc = new Map<int, WorkerRPCInfo>();
+
+    public ctor()
+    {
+        this._id_creator = new SafeIDCreator();
+    }
+
+    public fun HandleMessage(WorkerMessage worker_msg)
+    {
+        var id = worker_msg.id;
+        var rpc_id = worker_msg.rpc_id;
+
+        // 消息id为0，心跳包返回
+        if (id == 0) return;
+
+        // 如果是普通消息
+        if (rpc_id == 0)
+        {
+            // 获取函数对象
+            var callback = FindWorkerCallback(id);
+            if (callback == null)
+            {
+                var name = "unknow";
+                var rflt = FindStructById(id);
+                if (rflt != null) name = rflt.name;
+                Log("WorkerCommon can't find callback by id:"..id..", name:"..name);
+                return;
+            }
+
+            var msg = worker_msg.msg;
+            if (msg == null)
+            {
+                var name = "unknow";
+                var rflt = FindStructById(id);
+                if (rflt != null) name = rflt.name;
+                Log("WorkerCommon MessageRead failed by id:"..id..", name:"..name);
+                return;
+            }
+            callback(this, msg);
+            return;
+        }
+        
+        // 如果rpc_id大于0，说明是对方发过来
+        if (rpc_id > 0)
+        {
+            this.HandleRPCRequest(id, rpc_id, worker_msg.msg);
+            return;
+        }
+
+        // 如果rpc_id小于0，说明是RPC回包
+        rpc_id = -rpc_id;
+        // 回收id
+        this._id_creator.ReleaseID(rpc_id);
+        var info = this._id_map_rpc[rpc_id];
+        if (info == null)
+        {
+            Log("WorkerCommon can't find rpc info by id:"..id);
+            return;
+        }
+        this._id_map_rpc[rpc_id] = null;
+
+        // 如果是RPC异常包
+        if (id == 1)
+        {
+            var result, reason = Coroutine.Resume(info.thread, worker_msg.reason, null);
+            if (result != true) Error(reason);
+            return;
+        }
+
+        var result, reason = Coroutine.Resume(info.thread, null, worker_msg.msg);
+        if (result != true) Error(reason);
+    }
+
+    private fun SendRpcError(int rpc_id, string reason)
+    {
+        var msg = new WorkerMessage();
+        msg.id = 1;
+        msg.reason = reason;
+        msg.rpc_id = -rpc_id;
+        this.Send(msg);
+    }
+
+    // 处理RPC请求
+    private async fun HandleRPCRequest(int id, int rpc_id, any msg)
+    {
+        // 获取函数对象
+        var callback, return_id = FindWorkerRpcCallback(id);
+        if (callback == null)
+        {
+            this.SendRpcError(rpc_id, "没有注册消息RPC回调函数");
+            Log("WorkerCommon.HandleMessage can't find callback by id:"..id);
+            return;
+        }
+        
+        // 调用函数
+        var error, return_body = tcall(callback, this, msg);
+        if (error != null)
+        {
+            this.SendRpcError(rpc_id, error);
+            Log("WorkerCommon.HandleMessage callback invoke failed! by id:"..id..", reason:"..error);
+            return;
+        }
+        if (return_body == null)
+        {
+            this.SendRpcError(rpc_id, "WorkerCommon.HandleMessage callback have not return! by id:"..id);
+            Log("WorkerCommon.HandleMessage callback have not return! by id:"..id);
+            return;
+        }
+
+        var worker_msg = new WorkerMessage();
+        worker_msg.id = return_id;
+        worker_msg.msg = return_body;
+        worker_msg.rpc_id = -rpc_id;
+        this.Send(worker_msg);
+    }
+}
+
+public class Worker : WorkerCommon
+{
+    [Language(Lua)]
+    private carp.CarpLuaWorker _lua_worker;
+    [Language(Lua)]
+    private LoopFrame _loop_frame;
+    
+    [Language(JavaScript)]
+    private javascript.Worker _web_worker;
+
+    [Language(JavaScript)]
+    private javascript.WxWorker _wx_worker;
+
+    private bool _stop = false;
+
+    public ctor(string path)
+    {
+        [Language(Lua)]
+        this._lua_worker = new carp.CarpLuaWorker(A_CoreBasePath, A_StdBasePath, path..".lua");
+        [Language(Lua)]
+        this._loop_frame = new LoopFrame(bind(this.HandleLuaMessage, this));
+        [Language(Lua)]
+        A_LuaWeakLoopSystem.AddUpdater(this._loop_frame);
+
+        [Language(JavaScript)]
+        if (window.wx != null)
+        {
+            this._wx_worker = window.wx.createWorker(path..".js");
+            this._wx_worker.onMessage(bind(this.HandleWxMessage, this));
+        }
+        else
+        {
+            this._web_worker = new javascript.Worker(path..".js");
+            this._web_worker.onmessage = bind(this.HandleWebMessage, this);
+        }
+    }
+
+    public fun IsStopped() : bool { return this._stop; }
+
+    public fun Stop()
+    {
+        if (this._stop) return;
+        this._stop = true;
+
+        [Language(Lua)]
+        if (this._lua_worker != null)
+        {
+            this._lua_worker.Stop();
+            this._lua_worker = null;
+            A_LuaWeakLoopSystem.RemoveUpdater(this._loop_frame);
+            this._loop_frame = null;
+        }
+
+        [Language(JavaScript)]
+        if (this._wx_worker != null)
+        {
+            this._wx_worker.terminate();
+            this._wx_worker = null;
+        }
+        else
+        {
+            this._web_worker.terminate();
+            this._web_worker = null;
+        }
+    }
+
+    private fun HandleWxMessage(javascript.WxWorkerEvent event)
+    {
+        this.HandleMessage(event.data);
+    }
+
+    private fun HandleWebMessage(javascript.WorkerEvent event)
+    {
+        this.HandleMessage(event.data);
+    }
+
+    private fun HandleLuaMessage(int frame_time)
+    {
+        while (true)
+        {
+            var content = this._lua_worker.Pull();
+            if (content == null) return;
+
+            var result, object = lua.pcall(lua.ajson.decode, content);
+            if (result) this.HandleMessage(object);
+        }
+    }
+}
+
+public class WorkerInst : WorkerCommon
+{
+    public fun Send(WorkerMessage msg)
+    {
+        [Language(JavaScript)]
+        if (window.wx != null)
+        {
+            worker.postMessage(msg);
+            return;
+        }
+
+        [Language(JavaScript)]
+        javascript.postMessage(msg);
+
+        [Language(Lua)]
+        carp_CarpLuaWorker.Post(lua.ajson.encode(msg));
+    }
+}
+
+private var A_WorkerInst:WorkerInst;
+
+// Web支线程获取主线程消息
+[Language(JavaScript)]
+private static __WebWorkerMessage(javascript.WorkerEvent event)
+{
+    A_WorkerInst.HandleMessage(event.data);
+}
+
+// 微信支线程获取主线程消息
+[Language(JavaScript)]
+private static __WxWorkerMessage(javascript.WxWorkerEvent event)
+{
+    A_WorkerInst.HandleMessage(event.data);
+}
+
+// 支线程获取主线程消息
+public static __ALITTLEAPI_WorkerMessage(string json)
+{
+    var result, object:WorkerMessage = lua.pcall(lua.ajson.decode, json);
+    if (!result)
+    {
+        Error("__ALITTLEAPI_WorkerMessage ajson decode failed");
+        return;
+    }
+    A_WorkerInst.HandleMessage(object);
+}
+
+// 初始化支线程worker
+private static __WorkerInit() : bool
+{
+    // 处理微信
+    [Language(JavaScript)]
+    if (window.wx != null && worker != null)
+        worker.onMessage(__WxWorkerMessage);
+
+    // 处理Web
+    [Language(JavaScript)]
+    if (javascript.postMessage != null)
+        onmessage = __WebWorkerMessage;
+
+    // 处理Lua
+    [Language(Lua)]
+    A_WorkerInst = new WorkerInst();
+    return true;
+}
+
+// 初始化支线程Worker信息
+private var __worker_init = __WorkerInit();

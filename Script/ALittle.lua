@@ -4,8 +4,10 @@ local ___pairs = pairs
 local ___ipairs = ipairs
 
 
+_G.A_StdBasePath = nil
 function _G.RequireStd(base_path)
 	local ___COROUTINE = coroutine.running()
+	A_StdBasePath = base_path
 	Require(base_path, "Cmd/ReflectCmd")
 	Require(base_path, "Config/ReflectCsv")
 	Require(base_path, "Net/ReflectMessage")
@@ -25,6 +27,7 @@ function _G.RequireStd(base_path)
 	Require(base_path, "Utility/SafeIDCreator")
 	Require(base_path, "String/String")
 	Require(base_path, "File/File")
+	Require(base_path, "Worker/Worker")
 	Require(base_path, "Net/HttpFileReceiverTemplate")
 	Require(base_path, "Net/HttpFileSenderTemplate")
 	Require(base_path, "Net/HttpReceiverTemplate")

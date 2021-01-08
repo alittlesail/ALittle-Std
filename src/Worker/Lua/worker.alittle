@@ -1,0 +1,20 @@
+
+register namespace carp;
+
+public class CarpLuaWorker
+{
+    public ctor(string core_path, string std_path, string lua_path) {}
+
+    // 主线程先支线程发送信息
+    // 支线程向主线程发送信息
+    public fun Post(string info) : bool {}
+
+    // 主线程拉取支线程消息
+    public fun Pull() : string {}
+    // 主线程判断支线程是否停止
+    public fun IsStopped() : bool {}
+    // 主线程终止支线程
+    public fun Stop() {}
+}
+
+public var carp_CarpLuaWorker:CarpLuaWorker;
