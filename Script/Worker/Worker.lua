@@ -122,7 +122,7 @@ ALittle.Worker = Lua.Class(ALittle.WorkerCommon, "ALittle.Worker")
 
 function ALittle.Worker:Ctor(path)
 	___rawset(self, "_stop", false)
-	___rawset(self, "_lua_worker", carp.CarpLuaWorker(A_CoreBasePath, A_StdBasePath, path .. ".lua"))
+	___rawset(self, "_lua_worker", carp.CarpLuaWorker(A_CoreBasePath, A_StdBasePath, path))
 	___rawset(self, "_loop_frame", ALittle.LoopFrame(Lua.Bind(self.HandleLuaMessage, self)))
 	A_LuaWeakLoopSystem:AddUpdater(self._loop_frame)
 end

@@ -144,7 +144,7 @@ public class Worker : WorkerCommon
     public ctor(string path)
     {
         [Language(Lua)]
-        this._lua_worker = new carp.CarpLuaWorker(A_CoreBasePath, A_StdBasePath, path..".lua");
+        this._lua_worker = new carp.CarpLuaWorker(A_CoreBasePath, A_StdBasePath, path);
         [Language(Lua)]
         this._loop_frame = new LoopFrame(bind(this.HandleLuaMessage, this));
         [Language(Lua)]
@@ -215,7 +215,7 @@ public class Worker : WorkerCommon
     }
 }
 
-public class WorkerInst : WorkerCommon
+protected class WorkerInst : WorkerCommon
 {
     public fun Send(WorkerMessage msg)
     {
