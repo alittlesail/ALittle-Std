@@ -9,8 +9,8 @@ local ___ipairs = ipairs
 
 ALittle.RegStruct(-1631648859, "ALittle.WorkerRPCInfo", {
 name = "ALittle.WorkerRPCInfo", ns_name = "ALittle", rl_name = "WorkerRPCInfo", hash_code = -1631648859,
-name_list = {"thread"},
-type_list = {"ALittle.Thread"},
+name_list = {"thread","rpc_id"},
+type_list = {"ALittle.Thread","int"},
 option_map = {}
 })
 ALittle.RegStruct(-930447138, "ALittle.Thread", {
@@ -21,14 +21,29 @@ option_map = {}
 })
 
 assert(ALittle.IWorker, " extends class:ALittle.IWorker is nil")
-ALittle.WorkerCommon = Lua.Class(ALittle.IWorker, "ALittle.WorkerCommon")
+ALittle.IWorkerCommon = Lua.Class(ALittle.IWorker, "ALittle.IWorkerCommon")
 
-function ALittle.WorkerCommon:Ctor()
+function ALittle.IWorkerCommon:Ctor()
 	___rawset(self, "_id_map_rpc", {})
 	___rawset(self, "_id_creator", ALittle.SafeIDCreator())
 end
 
-function ALittle.WorkerCommon:HandleMessage(worker_msg)
+function ALittle.IWorkerCommon:ClearRPC(reason)
+	local tmp = {}
+	for rpc_id, info in ___pairs(self._id_map_rpc) do
+		self._id_creator:ReleaseID(rpc_id)
+		tmp[rpc_id] = info
+	end
+	self._id_map_rpc = {}
+	for rpc_id, info in ___pairs(tmp) do
+		local result, error = ALittle.Coroutine.Resume(info.thread, reason, nil)
+		if result ~= true then
+			ALittle.Error(error)
+		end
+	end
+end
+
+function ALittle.IWorkerCommon:HandleMessage(worker_msg)
 	local id = worker_msg.id
 	local rpc_id = worker_msg.rpc_id
 	if id == 0 then
@@ -83,7 +98,7 @@ function ALittle.WorkerCommon:HandleMessage(worker_msg)
 	end
 end
 
-function ALittle.WorkerCommon:SendRpcError(rpc_id, reason)
+function ALittle.IWorkerCommon:SendRpcError(rpc_id, reason)
 	local msg = {}
 	msg.id = 1
 	msg.reason = reason
@@ -91,7 +106,20 @@ function ALittle.WorkerCommon:SendRpcError(rpc_id, reason)
 	self:Send(msg)
 end
 
-function ALittle.WorkerCommon:HandleRPCRequest(id, rpc_id, msg)
+function ALittle.IWorkerCommon:SendRPC(thread, msg_id, msg_body)
+	local rpc_id = self._id_creator:CreateID()
+	local worker_msg = {}
+	worker_msg.id = msg_id
+	worker_msg.msg = msg_body
+	worker_msg.rpc_id = rpc_id
+	self:Send(worker_msg)
+	local info = {}
+	info.thread = thread
+	info.rpc_id = rpc_id
+	self._id_map_rpc[rpc_id] = info
+end
+
+function ALittle.IWorkerCommon:HandleRPCRequest(id, rpc_id, msg)
 	local callback, return_id = ALittle.FindWorkerRpcCallback(id)
 	if callback == nil then
 		self:SendRpcError(rpc_id, "没有注册消息RPC回调函数")
@@ -115,10 +143,10 @@ function ALittle.WorkerCommon:HandleRPCRequest(id, rpc_id, msg)
 	worker_msg.rpc_id = -rpc_id
 	self:Send(worker_msg)
 end
-ALittle.WorkerCommon.HandleRPCRequest = Lua.CoWrap(ALittle.WorkerCommon.HandleRPCRequest)
+ALittle.IWorkerCommon.HandleRPCRequest = Lua.CoWrap(ALittle.IWorkerCommon.HandleRPCRequest)
 
-assert(ALittle.WorkerCommon, " extends class:ALittle.WorkerCommon is nil")
-ALittle.Worker = Lua.Class(ALittle.WorkerCommon, "ALittle.Worker")
+assert(ALittle.IWorkerCommon, " extends class:ALittle.IWorkerCommon is nil")
+ALittle.Worker = Lua.Class(ALittle.IWorkerCommon, "ALittle.Worker")
 
 function ALittle.Worker:Ctor(path)
 	___rawset(self, "_stop", false)
@@ -131,17 +159,25 @@ function ALittle.Worker:IsStopped()
 	return self._stop
 end
 
-function ALittle.Worker:Stop()
+function ALittle.Worker:Stop(reason)
 	if self._stop then
 		return
 	end
 	self._stop = true
+	if reason == nil then
+		reason = "主动关闭Worker"
+	end
+	self:ClearRPC(reason)
 	if self._lua_worker ~= nil then
 		self._lua_worker:Stop()
 		self._lua_worker = nil
 		A_LuaWeakLoopSystem:RemoveUpdater(self._loop_frame)
 		self._loop_frame = nil
 	end
+end
+
+function ALittle.Worker:Send(msg)
+	self._lua_worker:Post(ajson.encode(msg))
 end
 
 function ALittle.Worker:HandleWxMessage(event)
@@ -165,8 +201,8 @@ function ALittle.Worker:HandleLuaMessage(frame_time)
 	end
 end
 
-assert(ALittle.WorkerCommon, " extends class:ALittle.WorkerCommon is nil")
-ALittle.WorkerInst = Lua.Class(ALittle.WorkerCommon, "ALittle.WorkerInst")
+assert(ALittle.IWorkerCommon, " extends class:ALittle.IWorkerCommon is nil")
+ALittle.WorkerInst = Lua.Class(ALittle.IWorkerCommon, "ALittle.WorkerInst")
 
 function ALittle.WorkerInst:Send(msg)
 	carp_CarpLuaWorker:Post(ajson.encode(msg))
@@ -184,6 +220,7 @@ end
 
 local __WorkerInit
 __WorkerInit = function()
+	_G["__ALITTLEAPI_WorkerMessage"] = ALittle.__ALITTLEAPI_WorkerMessage
 	A_WorkerInst = ALittle.WorkerInst()
 	return true
 end

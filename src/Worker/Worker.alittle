@@ -4,9 +4,10 @@ namespace ALittle;
 protected struct WorkerRPCInfo
 {
     Thread thread;
+    int rpc_id;
 }
 
-protected class WorkerCommon : IWorker
+public class IWorkerCommon : IWorker
 {
     private SafeIDCreator _id_creator;
     private Map<int, WorkerRPCInfo> _id_map_rpc = new Map<int, WorkerRPCInfo>();
@@ -14,6 +15,25 @@ protected class WorkerCommon : IWorker
     public ctor()
     {
         this._id_creator = new SafeIDCreator();
+    }
+
+    // 清理RPC
+    private fun ClearRPC(string reason)
+    {
+        // 先复制，再清理
+        var tmp = new Map<int, WorkerRPCInfo>();
+        for (var rpc_id, info in this._id_map_rpc)
+        {
+            this._id_creator.ReleaseID(rpc_id);
+            tmp[rpc_id] = info;
+        }
+        this._id_map_rpc = new Map<int, WorkerRPCInfo>();
+        // 逐个调用表示失败
+        for (var rpc_id, info in tmp)
+        {
+            var result, error = Coroutine.Resume(info.thread, reason, null);
+            if (result != true) Error(error);
+        }
     }
 
     public fun HandleMessage(WorkerMessage worker_msg)
@@ -91,6 +111,22 @@ protected class WorkerCommon : IWorker
         this.Send(msg);
     }
 
+    // 发送RPC包
+    protected fun SendRPC(Thread thread, int msg_id, any msg_body)
+    {
+        var rpc_id = this._id_creator.CreateID();
+        var worker_msg = new WorkerMessage();
+        worker_msg.id = msg_id;
+        worker_msg.msg = msg_body;
+        worker_msg.rpc_id = rpc_id;
+        this.Send(worker_msg);
+            
+        var info = new WorkerRPCInfo();
+        info.thread = thread;
+        info.rpc_id = rpc_id;
+        this._id_map_rpc[rpc_id] = info;
+    }
+
     // 处理RPC请求
     private async fun HandleRPCRequest(int id, int rpc_id, any msg)
     {
@@ -126,7 +162,7 @@ protected class WorkerCommon : IWorker
     }
 }
 
-public class Worker : WorkerCommon
+public class Worker : IWorkerCommon
 {
     [Language(Lua)]
     private carp.CarpLuaWorker _lua_worker;
@@ -165,10 +201,13 @@ public class Worker : WorkerCommon
 
     public fun IsStopped() : bool { return this._stop; }
 
-    public fun Stop()
+    public fun Stop([Nullable] string reason)
     {
         if (this._stop) return;
         this._stop = true;
+
+        if (reason == null) reason = "主动关闭Worker";
+        this.ClearRPC(reason);
 
         [Language(Lua)]
         if (this._lua_worker != null)
@@ -190,6 +229,19 @@ public class Worker : WorkerCommon
             this._web_worker.terminate();
             this._web_worker = null;
         }
+    }
+
+    // 发送数据
+    protected fun Send(WorkerMessage msg)
+    {
+        [Language(Lua)]
+        this._lua_worker.Post(lua.ajson.encode(msg));
+
+        [Language(JavaScript)]
+        if (this._wx_worker != null)
+            this._wx_worker.postMessage(msg);
+        else
+            this._web_worker.postMessage(msg);
     }
 
     private fun HandleWxMessage(javascript.WxWorkerEvent event)
@@ -215,7 +267,7 @@ public class Worker : WorkerCommon
     }
 }
 
-protected class WorkerInst : WorkerCommon
+protected class WorkerInst : IWorkerCommon
 {
     public fun Send(WorkerMessage msg)
     {
@@ -276,6 +328,8 @@ private static __WorkerInit() : bool
         onmessage = __WebWorkerMessage;
 
     // 处理Lua
+    [Language(Lua)]
+    _G["__ALITTLEAPI_WorkerMessage"] = __ALITTLEAPI_WorkerMessage;
     [Language(Lua)]
     A_WorkerInst = new WorkerInst();
     return true;
