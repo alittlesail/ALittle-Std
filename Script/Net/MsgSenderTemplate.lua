@@ -55,7 +55,7 @@ function ALittle.MsgSenderTemplate:HandleConnectSucceed()
 	end
 end
 
-function ALittle.MsgSenderTemplate:HandleDisconnect()
+function ALittle.MsgSenderTemplate:HandleDisconnected()
 	self:StopHeartbeat()
 	__MsgSenderMap[self._interface:GetID()] = nil
 	self:ClearRPC("连接断开了")

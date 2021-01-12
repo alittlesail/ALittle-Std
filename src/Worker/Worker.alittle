@@ -184,7 +184,7 @@ public class Worker : IWorkerCommon
         [Language(Lua)]
         this._loop_frame = new LoopFrame(bind(this.HandleLuaMessage, this));
         [Language(Lua)]
-        A_LuaWeakLoopSystem.AddUpdater(this._loop_frame);
+        A_WeakLoopSystem.AddUpdater(this._loop_frame);
 
         [Language(JavaScript)]
         if (window.wx != null)
@@ -214,7 +214,7 @@ public class Worker : IWorkerCommon
         {
             this._lua_worker.Stop();
             this._lua_worker = null;
-            A_LuaWeakLoopSystem.RemoveUpdater(this._loop_frame);
+            A_WeakLoopSystem.RemoveUpdater(this._loop_frame);
             this._loop_frame = null;
         }
 

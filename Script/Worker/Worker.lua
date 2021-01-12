@@ -152,7 +152,7 @@ function ALittle.Worker:Ctor(path)
 	___rawset(self, "_stop", false)
 	___rawset(self, "_lua_worker", carp.CarpLuaWorker(A_CoreBasePath, A_StdBasePath, path))
 	___rawset(self, "_loop_frame", ALittle.LoopFrame(Lua.Bind(self.HandleLuaMessage, self)))
-	A_LuaWeakLoopSystem:AddUpdater(self._loop_frame)
+	A_WeakLoopSystem:AddUpdater(self._loop_frame)
 end
 
 function ALittle.Worker:IsStopped()
@@ -171,7 +171,7 @@ function ALittle.Worker:Stop(reason)
 	if self._lua_worker ~= nil then
 		self._lua_worker:Stop()
 		self._lua_worker = nil
-		A_LuaWeakLoopSystem:RemoveUpdater(self._loop_frame)
+		A_WeakLoopSystem:RemoveUpdater(self._loop_frame)
 		self._loop_frame = nil
 	end
 end

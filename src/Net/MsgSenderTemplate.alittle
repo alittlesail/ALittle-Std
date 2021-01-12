@@ -75,7 +75,7 @@ public class MsgSenderTemplate<MI : IMsgCommonNative, WFACTORY : IMessageWriteFa
     }
 
     // 断开连接
-    protected fun HandleDisconnect()
+    protected fun HandleDisconnected()
     {
         this.StopHeartbeat();
         __MsgSenderMap[this._interface.GetID()] = null;
