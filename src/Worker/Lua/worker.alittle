@@ -13,7 +13,7 @@ public class CarpLuaWorker
     public fun Pull() : string {}
     // 主线程判断支线程是否停止
     public fun IsStopped() : bool {}
-    // 主线程终止支线程
+    // 主线程正常终止支线程
     public fun Stop() {}
 }
 

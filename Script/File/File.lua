@@ -157,6 +157,37 @@ function ALittle.File_DeleteDeepDir(path, log_path)
 	end
 end
 
+function ALittle.File_CopyFile(src_path, dst_path)
+	return carp.CopyFile(src_path, dst_path, false)
+end
+
+function ALittle.File_CopyDeepDir(src_path, dest_path, ext, log)
+	do
+		local upper_ext = nil
+		if ext ~= nil then
+			upper_ext = string.upper(ext)
+		end
+		local file_list = carp.GetFileNameListInFolder(src_path)
+		for index, file in ___ipairs(file_list) do
+			local src_file_path = src_path .. "/" .. file
+			local dest_file_path = dest_path .. "/" .. file
+			if upper_ext == nil or ALittle.File_GetFileExtByPathAndUpper(src_file_path) == upper_ext then
+				ALittle.File_CopyFile(src_file_path, dest_file_path)
+				if log then
+					ALittle.Log("copy file:", src_file_path, dest_file_path)
+				end
+			end
+		end
+		local folder_list = carp.GetFolderNameListInFolder(src_path)
+		for index, file in ___ipairs(folder_list) do
+			local src_file_path = src_path .. "/" .. file
+			local dest_file_path = dest_path .. "/" .. file
+			carp.CreateFolder(dest_file_path)
+			ALittle.File_CopyDeepDir(src_file_path, dest_file_path, upper_ext, log)
+		end
+	end
+end
+
 function ALittle.File_MakeDir(path)
 	carp.CreateFolder(path)
 end
