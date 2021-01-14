@@ -24,6 +24,16 @@ function ALittle.LoopSystem:Ctor(weak)
 	___rawset(self, "_handler_map", {})
 end
 
+function ALittle.LoopSystem:Sleep(ms_time)
+	local ___COROUTINE = coroutine.running()
+	self:AddTimer(ms_time, Lua.Bind(self.HandleSleep, self, ___COROUTINE))
+	return coroutine.yield()
+end
+
+function ALittle.LoopSystem:HandleSleep(thread)
+	ALittle.Coroutine.Resume(thread)
+end
+
 function ALittle.LoopSystem:AddUpdater(updater)
 	if updater == nil then
 		return

@@ -10,7 +10,7 @@ public class LoopSystem<HT : IHeapTimer> : ILoopSystem
     
     private HT _timer;
     private Map<int, Functor<()>> _handler_map;
-    
+
     public ctor([Nullable] bool weak)
     {
         if (weak)
@@ -24,6 +24,14 @@ public class LoopSystem<HT : IHeapTimer> : ILoopSystem
         this._timer = new HT();
         this._handler_map = new Map<int, Functor<()>>();
     }
+
+    // 延时接口
+    public await fun Sleep(int ms_time)
+    {
+        this.AddTimer(ms_time, bind(this.HandleSleep, this, co));
+        return yield;
+    }
+    private fun HandleSleep(Thread thread) { Coroutine.Resume(thread); }
 
     // 添加updater
     public fun AddUpdater(LoopObject updater)
