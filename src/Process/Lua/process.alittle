@@ -1,7 +1,7 @@
 
 register namespace carp;
 
-public static CreateProcess(string cmd_line, [Nullable] string work_path) : bool {}
+public static CreateProcess(string file_path, [Nullable] string param, [Nullable] string work_path) : bool {}
 public static GetProcessIDByPath(string path) : List<int> {}
 public static KillProcessByID(int pid) : bool {}
 public static SendVirtualKey(int pid, string cmd) : bool {}
