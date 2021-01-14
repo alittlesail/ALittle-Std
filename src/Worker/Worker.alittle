@@ -314,6 +314,13 @@ public static __ALITTLEAPI_WorkerMessage(string json)
     A_WorkerInst.HandleMessage(object);
 }
 
+// 支线程调用Update
+public static __ALITTLEAPI_WorkerUpdate(int frame_time)
+{
+    A_LoopSystem.Update(frame_time);
+    A_WeakLoopSystem.Update(frame_time);
+}
+
 // 初始化支线程worker
 private static __WorkerInit() : bool
 {
@@ -330,6 +337,9 @@ private static __WorkerInit() : bool
     // 处理Lua
     [Language(Lua)]
     _G["__ALITTLEAPI_WorkerMessage"] = __ALITTLEAPI_WorkerMessage;
+    // 处理Lua
+    [Language(Lua)]
+    _G["__ALITTLEAPI_WorkerUpdate"] = __ALITTLEAPI_WorkerUpdate;
     [Language(Lua)]
     A_WorkerInst = new WorkerInst();
     return true;

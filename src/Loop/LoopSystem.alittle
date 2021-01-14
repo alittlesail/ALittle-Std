@@ -151,8 +151,8 @@ public class LoopSystem<HT : IHeapTimer> : ILoopSystem
                 var handle = this._handler_map[-id];
                 if (handle != null)
                 {
-                    handle();
                     this._handler_map[-id] = null;
+                    handle();
                 }
             }
             else

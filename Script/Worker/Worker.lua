@@ -218,9 +218,15 @@ function ALittle.__ALITTLEAPI_WorkerMessage(json)
 	A_WorkerInst:HandleMessage(object)
 end
 
+function ALittle.__ALITTLEAPI_WorkerUpdate(frame_time)
+	A_LoopSystem:Update(frame_time)
+	A_WeakLoopSystem:Update(frame_time)
+end
+
 local __WorkerInit
 __WorkerInit = function()
 	_G["__ALITTLEAPI_WorkerMessage"] = ALittle.__ALITTLEAPI_WorkerMessage
+	_G["__ALITTLEAPI_WorkerUpdate"] = ALittle.__ALITTLEAPI_WorkerUpdate
 	A_WorkerInst = ALittle.WorkerInst()
 	return true
 end

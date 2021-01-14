@@ -125,8 +125,8 @@ function ALittle.LoopSystem:Update(frame_time)
 		if id < 0 then
 			local handle = self._handler_map[-id]
 			if handle ~= nil then
-				handle()
 				self._handler_map[-id] = nil
+				handle()
 			end
 		else
 			local handle = self._handler_map[id]
