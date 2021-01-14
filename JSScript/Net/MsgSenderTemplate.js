@@ -46,7 +46,7 @@ ALittle.MsgSenderTemplate = JavaScript.Class(ALittle.IMsgCommonTemplate, {
 			ALittle.Error(reason);
 		}
 	},
-	HandleDisconnect : function() {
+	HandleDisconnected : function() {
 		this.StopHeartbeat();
 		__MsgSenderMap.delete(this._interface.GetID());
 		this.ClearRPC("连接断开了");

@@ -4,8 +4,10 @@ local ___pairs = pairs
 local ___ipairs = ipairs
 
 
+_G.A_StdBasePath = nil
 function _G.RequireStd(base_path)
 	local ___COROUTINE = coroutine.running()
+	A_StdBasePath = base_path
 	Require(base_path, "Cmd/ReflectCmd")
 	Require(base_path, "Config/ReflectCsv")
 	Require(base_path, "Net/ReflectMessage")
@@ -25,6 +27,7 @@ function _G.RequireStd(base_path)
 	Require(base_path, "Utility/SafeIDCreator")
 	Require(base_path, "String/String")
 	Require(base_path, "File/File")
+	Require(base_path, "Worker/Worker")
 	Require(base_path, "Net/HttpFileReceiverTemplate")
 	Require(base_path, "Net/HttpFileSenderTemplate")
 	Require(base_path, "Net/HttpReceiverTemplate")
@@ -934,6 +937,10 @@ local ___ipairs = ipairs
 ALittle.ILoopSystem = Lua.Class(nil, "ALittle.ILoopSystem")
 
 function ALittle.ILoopSystem:Update(frame_time)
+end
+
+function ALittle.ILoopSystem:Sleep(ms_time)
+	local ___COROUTINE = coroutine.running()
 end
 
 function ALittle.ILoopSystem:AddTimer(delay_ms, callback, loop, interval_ms)
@@ -2422,6 +2429,37 @@ function ALittle.File_DeleteDeepDir(path, log_path)
 	end
 end
 
+function ALittle.File_CopyFile(src_path, dst_path)
+	return carp.CopyFile(src_path, dst_path, false)
+end
+
+function ALittle.File_CopyDeepDir(src_path, dest_path, ext, log)
+	do
+		local upper_ext = nil
+		if ext ~= nil then
+			upper_ext = string.upper(ext)
+		end
+		local file_list = carp.GetFileNameListInFolder(src_path)
+		for index, file in ___ipairs(file_list) do
+			local src_file_path = src_path .. "/" .. file
+			local dest_file_path = dest_path .. "/" .. file
+			if upper_ext == nil or ALittle.File_GetFileExtByPathAndUpper(src_file_path) == upper_ext then
+				ALittle.File_CopyFile(src_file_path, dest_file_path)
+				if log then
+					ALittle.Log("copy file:", src_file_path, dest_file_path)
+				end
+			end
+		end
+		local folder_list = carp.GetFolderNameListInFolder(src_path)
+		for index, file in ___ipairs(folder_list) do
+			local src_file_path = src_path .. "/" .. file
+			local dest_file_path = dest_path .. "/" .. file
+			carp.CreateFolder(dest_file_path)
+			ALittle.File_CopyDeepDir(src_file_path, dest_file_path, upper_ext, log)
+		end
+	end
+end
+
 function ALittle.File_MakeDir(path)
 	carp.CreateFolder(path)
 end
@@ -3293,7 +3331,7 @@ function ALittle.MsgSenderTemplate:HandleConnectSucceed()
 	end
 end
 
-function ALittle.MsgSenderTemplate:HandleDisconnect()
+function ALittle.MsgSenderTemplate:HandleDisconnected()
 	self:StopHeartbeat()
 	__MsgSenderMap[self._interface:GetID()] = nil
 	self:ClearRPC("连接断开了")
@@ -3806,6 +3844,16 @@ function ALittle.LoopSystem:Ctor(weak)
 	___rawset(self, "_handler_map", {})
 end
 
+function ALittle.LoopSystem:Sleep(ms_time)
+	local ___COROUTINE = coroutine.running()
+	self:AddTimer(ms_time, Lua.Bind(self.HandleSleep, self, ___COROUTINE))
+	return coroutine.yield()
+end
+
+function ALittle.LoopSystem:HandleSleep(thread)
+	ALittle.Coroutine.Resume(thread)
+end
+
 function ALittle.LoopSystem:AddUpdater(updater)
 	if updater == nil then
 		return
@@ -3897,8 +3945,8 @@ function ALittle.LoopSystem:Update(frame_time)
 		if id < 0 then
 			local handle = self._handler_map[-id]
 			if handle ~= nil then
-				handle()
 				self._handler_map[-id] = nil
+				handle()
 			end
 		else
 			local handle = self._handler_map[id]

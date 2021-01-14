@@ -1,8 +1,10 @@
 {
 
 
+window.A_StdBasePath = undefined;
 window.RequireStd = function(base_path) {
 	return new Promise(async function(___COROUTINE, ___) {
+		A_StdBasePath = base_path;
 		await Require(base_path, "Cmd/ReflectCmd");
 		await Require(base_path, "Config/ReflectCsv");
 		await Require(base_path, "Net/ReflectMessage");
@@ -22,6 +24,7 @@ window.RequireStd = function(base_path) {
 		await Require(base_path, "Utility/SafeIDCreator");
 		await Require(base_path, "String/String");
 		await Require(base_path, "File/File");
+		await Require(base_path, "Worker/Worker");
 		await Require(base_path, "Net/HttpFileReceiverTemplate");
 		await Require(base_path, "Net/HttpFileSenderTemplate");
 		await Require(base_path, "Net/HttpReceiverTemplate");

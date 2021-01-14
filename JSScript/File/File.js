@@ -75,6 +75,14 @@ ALittle.File_DeleteDeepDir = function(path, log_path) {
 	JavaScript.File_DeleteDeepDir(path, log_path);
 }
 
+ALittle.File_CopyFile = function(src_path, dst_path) {
+	return JavaScript.File_CopyFile(src_path, dst_path);
+}
+
+ALittle.File_CopyDeepDir = function(src_path, dest_path, ext, log) {
+	JavaScript.File_CopyDeepDir(src_path, dest_path, ext, log);
+}
+
 ALittle.File_MakeDir = function(path) {
 	JavaScript.File_MakeDir(path);
 }

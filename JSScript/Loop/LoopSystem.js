@@ -16,6 +16,16 @@ ALittle.LoopSystem = JavaScript.Class(ALittle.ILoopSystem, {
 		this._timer = ALittle.NewObject(this.__class.__element[0]);
 		this._handler_map = new Map();
 	},
+	Sleep : function(ms_time) {
+		return new Promise((function(___COROUTINE, ___) {
+			this.AddTimer(ms_time, this.HandleSleep.bind(this, ___COROUTINE));
+			return;
+			___COROUTINE();
+		}).bind(this));
+	},
+	HandleSleep : function(thread) {
+		ALittle.Coroutine.Resume(thread);
+	},
 	AddUpdater : function(updater) {
 		if (updater === undefined) {
 			return;
@@ -105,8 +115,8 @@ ALittle.LoopSystem = JavaScript.Class(ALittle.ILoopSystem, {
 			if (id < 0) {
 				let handle = this._handler_map.get(-id);
 				if (handle !== undefined) {
-					handle();
 					this._handler_map.delete(-id);
+					handle();
 				}
 			} else {
 				let handle = this._handler_map.get(id);
