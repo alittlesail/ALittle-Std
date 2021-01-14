@@ -12,6 +12,10 @@ ALittle.ILoopSystem = Lua.Class(nil, "ALittle.ILoopSystem")
 function ALittle.ILoopSystem:Update(frame_time)
 end
 
+function ALittle.ILoopSystem:Sleep(ms_time)
+	local ___COROUTINE = coroutine.running()
+end
+
 function ALittle.ILoopSystem:AddTimer(delay_ms, callback, loop, interval_ms)
 	return 0
 end
