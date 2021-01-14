@@ -1,0 +1,6 @@
+
+register namespace carp;
+
+public static GetProcessIDByPath(string path) : List<int> {}
+public static KillProcessByID(int pid) {}
+public static SendVirtualKey(int pid, string cmd) {}
