@@ -2199,6 +2199,10 @@ ALittle.File_GetCurrentPath = function() {
 	return JavaScript.File_GetCurrentPath();
 }
 
+ALittle.File_GetAllDriver = function() {
+	return [];
+}
+
 ALittle.File_SetCurrentPath = function(path) {
 	return JavaScript.File_SetCurrentPath(path);
 }
