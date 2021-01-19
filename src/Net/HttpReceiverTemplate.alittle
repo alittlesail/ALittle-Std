@@ -13,7 +13,7 @@ public class HttpReceiverTemplate<NATIVE : IHttpReceiverNative> : IHttpReceiver
     private int _http_id;
     private NATIVE _interface;
     
-    public ctor(string method, int http_id)
+    public ctor(string url, string method, int http_id)
     {
         this._http_id = http_id;
         this._interface = new NATIVE();
