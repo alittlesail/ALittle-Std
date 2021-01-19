@@ -70,6 +70,16 @@ public static File_GetCurrentPath() : string
     return JavaScript.File_GetCurrentPath();
 }
 
+// 获取当前盘符路径
+public static File_GetAllDriver() : List<string>
+{
+    [Language(Lua)]
+    return carp.GetDriveStrings();
+
+    [Language(JavaScript)]
+    return new List<string>();
+}
+
 // 设置当前路径
 public static File_SetCurrentPath(string path) : bool
 {

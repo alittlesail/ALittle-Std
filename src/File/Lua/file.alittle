@@ -8,3 +8,4 @@ public static DeleteFolder(string path) {}
 public static GetPathAttribute(string path) : ALittle.PathAttribute {}
 public static GetFileNameListInFolder(string path) : List<string> {}
 public static GetFolderNameListInFolder(string path) : List<string> {}
+public static GetDriveStrings() : List<string> {}

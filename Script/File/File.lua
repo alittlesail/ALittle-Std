@@ -55,6 +55,10 @@ function ALittle.File_GetCurrentPath()
 	return carp.GetCurrentPath()
 end
 
+function ALittle.File_GetAllDriver()
+	return carp.GetDriveStrings()
+end
+
 function ALittle.File_SetCurrentPath(path)
 	return carp.SetCurrentPath(path)
 end
