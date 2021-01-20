@@ -25,6 +25,9 @@ public class XMLNode
     public fun ToDocument() : XMLDocument {}
     public fun ToDeclaration() : XMLDeclaration {}
 
+    // 查找元素
+    public fun FindElement(string name) : XMLDocument {}
+
     // 获取值
     public fun Value() : string {}
     // 设置值
