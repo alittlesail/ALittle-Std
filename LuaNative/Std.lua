@@ -2584,7 +2584,7 @@ function ALittle.File_ReadTextFromStdFile(file_path)
 	end
 end
 
-function ALittle.File_WriteTextFromStdFile(content, file_path)
+function ALittle.File_WriteTextToStdFile(content, file_path)
 	do
 		local file = io.open(file_path, "wb")
 		if file == nil then
@@ -3091,7 +3091,7 @@ end
 assert(ALittle.IHttpReceiver, " extends class:ALittle.IHttpReceiver is nil")
 ALittle.HttpReceiverTemplate = Lua.Class(ALittle.IHttpReceiver, "ALittle.HttpReceiverTemplate")
 
-function ALittle.HttpReceiverTemplate:Ctor(method, http_id)
+function ALittle.HttpReceiverTemplate:Ctor(url, method, http_id)
 	___rawset(self, "_http_id", http_id)
 	___rawset(self, "_interface", self.__class.__element[1]())
 end

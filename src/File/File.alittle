@@ -458,7 +458,7 @@ public static File_ReadTextFromStdFile(string file_path) : string
     }
 }
 
-public static File_WriteTextFromStdFile(string content, string file_path) : bool
+public static File_WriteTextToStdFile(string content, string file_path) : bool
 {
     // 读取文件
     [Language(Lua)]

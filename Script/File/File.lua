@@ -312,7 +312,7 @@ function ALittle.File_ReadTextFromStdFile(file_path)
 	end
 end
 
-function ALittle.File_WriteTextFromStdFile(content, file_path)
+function ALittle.File_WriteTextToStdFile(content, file_path)
 	do
 		local file = io.open(file_path, "wb")
 		if file == nil then

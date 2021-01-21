@@ -2357,7 +2357,7 @@ ALittle.File_ReadTextFromStdFile = function(file_path) {
 	}
 }
 
-ALittle.File_WriteTextFromStdFile = function(content, file_path) {
+ALittle.File_WriteTextToStdFile = function(content, file_path) {
 	{
 		return JavaScript.File_SaveFile(file_path, content, undefined);
 	}
@@ -2837,7 +2837,7 @@ ALittle.IHttpReceiverNative = JavaScript.Class(undefined, {
 
 if (ALittle.IHttpReceiver === undefined) throw new Error(" extends class:ALittle.IHttpReceiver is undefined");
 ALittle.HttpReceiverTemplate = JavaScript.Class(ALittle.IHttpReceiver, {
-	Ctor : function(method, http_id) {
+	Ctor : function(url, method, http_id) {
 		this._http_id = http_id;
 		this._interface = ALittle.NewObject(this.__class.__element[0]);
 	},
