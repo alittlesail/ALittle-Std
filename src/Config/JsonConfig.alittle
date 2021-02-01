@@ -41,6 +41,7 @@ public class JsonConfig<FL : IFileLoader, FS : IFileSaver> : IJsonConfig
             Log("Json Decode failed." .. file_path .. ", " .. error);
             return;
         }
+
         // 保存解析内容
         this._config_map = json_content;
     }
