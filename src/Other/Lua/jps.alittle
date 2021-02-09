@@ -1,0 +1,11 @@
+
+register namespace carp;
+
+public class CarpSquareJPS
+{
+    public ctor(int width, int height) {}
+    public fun IsEmpty(int x, int y) : bool {}
+    public fun SetEmpty(int x, int y, bool value) {}
+    public fun SetAllEmpty() {}
+    public fun SearchRoute(int start_x, int start_y, int end_x, int end_y) : bool, List<int>, List<int> {}
+}
