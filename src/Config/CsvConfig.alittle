@@ -1,6 +1,8 @@
 
 namespace ALittle;
 
+private var __reload_map:Map<string, CsvConfig>;
+
 public class ICsvFile
 {
     public fun Close() {}
@@ -19,9 +21,13 @@ public class ICsvFileLoader
 
 public class CsvConfig
 {
+    private string _file_path;
+
     // 直接阻塞加载
     public fun Load(string file_path)
     {
+        this._file_path = file_path;
+        
         // Lua加载csv
         [Language(Lua)]
         var lua_file = new Lua.LuaCsvFile();
@@ -40,6 +46,15 @@ public class CsvConfig
         
         // 打印加载成功
         Log(file_path.." load succeed!");
+
+        if (__reload_map == null) __reload_map = ALittle.CreateValueWeakMap();
+        __reload_map[ALittle.File_GetJustFileNameByPath(file_path)] = this;
+    }
+
+    // 重新加载
+    public fun Reload()
+    {
+        this.Load(this._file_path);
     }
     
     // 初始化数据
@@ -66,6 +81,8 @@ public class KeyValueConfig<T:struct> : CsvConfig
     protected fun Init(ICsvFile file)
     {
         if (file == null) return;
+
+        this._data = new T();
         
         var reflt = reflect<T>;
         var handle_map = new Map<string, CsvInvokeInfo>();
@@ -125,10 +142,13 @@ protected class CsvTableConfig<T:struct> : CsvConfig
     
     public fun Init(ICsvFile file)
     {
+        // 获取csv列映射信息
+        this._col_map = new Map<int, int>();
+
         if (this._csv_file != null) this._csv_file.Close();
         this._csv_file = file;
         if (this._csv_file == null) return;
-        
+
         // 收集字段列信息
         var rflt = reflect<T>;
         var name_map = new Map<string, int>();
@@ -184,6 +204,9 @@ public class SingleKeyTableConfig<T:struct, KEY> : CsvTableConfig
     
     public fun onInit()
     {
+        this._key_map = new Map<KEY, int>();
+        this._cache_map = new Map<KEY, T>();
+
         var rflt = reflect<T>;
         var key_type = rflt.type_list[1];
         var key_index = this._col_map[1];
@@ -237,6 +260,9 @@ public class DoubleKeyTableConfig<T:struct, KEY1, KEY2> : CsvTableConfig
 
     public fun onInit()
     {   
+        this._key_map = new Map<KEY1, Map<KEY2, int>>();
+        this._cache_map = new Map<KEY1, Map<KEY2, T>>();
+
         var rflt = reflect<T>;
         
         // 第一个key
@@ -331,4 +357,33 @@ public class DoubleKeyTableConfig<T:struct, KEY1, KEY2> : CsvTableConfig
         tmp[second_key] = value;
         return value;
     }
+}
+
+[Cmd("重新加载csv")]
+public static ReloadCsv(string reload_name)
+{
+    var config:CsvConfig;
+    if (__reload_map != null) config = __reload_map[reload_name];
+    if (config == null)
+    {
+        ALittle.Log("reload_name:"..reload_name.." 不存在");
+        return;
+    }
+
+    config.Reload();
+}
+
+[Cmd("查找csv")]
+public static FindCsv(string reload_name)
+{
+    var list = new List<string>();
+    if (__reload_map != null)
+    {
+        for (var name, config in __reload_map)
+        {
+            if (ALittle.String_Find(name, reload_name) != null)
+                ALittle.List_Push(list, name);
+        }
+    }
+    ALittle.Log(ALittle.String_Join(list, ","));
 }
