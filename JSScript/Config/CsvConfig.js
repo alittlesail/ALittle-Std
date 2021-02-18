@@ -9,6 +9,7 @@ type_list : ["string","string"],
 option_map : {}
 })
 
+let __reload_map = undefined;
 ALittle.ICsvFile = JavaScript.Class(undefined, {
 	Close : function() {
 	},
@@ -38,10 +39,18 @@ ALittle.ICsvFileLoader = JavaScript.Class(undefined, {
 
 ALittle.CsvConfig = JavaScript.Class(undefined, {
 	Load : function(file_path) {
+		this._file_path = file_path;
 		let js_file = ALittle.NewObject(JavaScript.JCsvFile);
 		JavaScript.Assert(js_file.Load(file_path), file_path + " load failed!");
 		this.Init(js_file);
 		ALittle.Log(file_path + " load succeed!");
+		if (__reload_map === undefined) {
+			__reload_map = ALittle.CreateValueWeakMap();
+		}
+		__reload_map[ALittle.File_GetJustFileNameByPath(file_path)] = this;
+	},
+	Reload : function() {
+		this.Load(this._file_path);
 	},
 	Init : function(file) {
 	},
@@ -57,6 +66,7 @@ ALittle.KeyValueConfig = JavaScript.Class(ALittle.CsvConfig, {
 		if (file === undefined) {
 			return;
 		}
+		this._data = {};
 		let reflt = this.__class.__element[0];
 		let handle_map = {};
 		let ___OBJECT_1 = this._csv_info.handle;
@@ -103,6 +113,7 @@ ALittle.CsvTableConfig = JavaScript.Class(ALittle.CsvConfig, {
 		this._col_map = new Map();
 	},
 	Init : function(file) {
+		this._col_map = new Map();
 		if (this._csv_file !== undefined) {
 			this._csv_file.Close();
 		}
@@ -158,6 +169,8 @@ ALittle.SingleKeyTableConfig = JavaScript.Class(ALittle.CsvTableConfig, {
 		this._cache_map = new Map();
 	},
 	onInit : function() {
+		this._key_map = new Map();
+		this._cache_map = new Map();
 		let rflt = this.__class.__element[0];
 		let key_type = rflt.type_list[1 - 1];
 		let key_index = this._col_map.get(1);
@@ -205,6 +218,8 @@ ALittle.DoubleKeyTableConfig = JavaScript.Class(ALittle.CsvTableConfig, {
 		this._cache_map = new Map();
 	},
 	onInit : function() {
+		this._key_map = new Map();
+		this._cache_map = new Map();
 		let rflt = this.__class.__element[0];
 		let first_key_type = rflt.type_list[1 - 1];
 		let first_key_index = this._col_map.get(1);
@@ -287,4 +302,33 @@ ALittle.DoubleKeyTableConfig = JavaScript.Class(ALittle.CsvTableConfig, {
 	},
 }, "ALittle.DoubleKeyTableConfig");
 
+ALittle.ReloadCsv = function(reload_name) {
+	let config = undefined;
+	if (__reload_map !== undefined) {
+		config = __reload_map[reload_name];
+	}
+	if (config === undefined) {
+		ALittle.Log("reload_name:" + reload_name + " 不存在");
+		return;
+	}
+	config.Reload();
+}
+
+ALittle.RegCmdCallback("ReloadCsv", ALittle.ReloadCsv, ["string"], ["reload_name"], "重新加载csv")
+ALittle.FindCsv = function(reload_name) {
+	let list = [];
+	if (__reload_map !== undefined) {
+		let ___OBJECT_4 = __reload_map;
+		for (let name in ___OBJECT_4) {
+			let config = ___OBJECT_4[name];
+			if (config === undefined) continue;
+			if (ALittle.String_Find(name, reload_name) !== undefined) {
+				ALittle.List_Push(list, name);
+			}
+		}
+	}
+	ALittle.Log(ALittle.String_Join(list, ","));
+}
+
+ALittle.RegCmdCallback("FindCsv", ALittle.FindCsv, ["string"], ["reload_name"], "查找csv")
 }

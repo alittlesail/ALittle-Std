@@ -236,7 +236,11 @@ Csv_ReadInt = function(content, value)
 	if content == "" then
 		return 0
 	end
-	return floor(tonumber(content))
+	local num = tonumber(content)
+	if num == nil then
+		return 0
+	end
+	return floor(num)
 end
 
 local Csv_ReadLong
@@ -244,7 +248,11 @@ Csv_ReadLong = function(content, value)
 	if content == "" then
 		return 0
 	end
-	return floor(tonumber(content))
+	local num = tonumber(content)
+	if num == nil then
+		return 0
+	end
+	return floor(num)
 end
 
 local Csv_ReadString
@@ -257,7 +265,11 @@ Csv_ReadDouble = function(content, value)
 	if content == "" then
 		return 0
 	end
-	return tonumber(content)
+	local num = tonumber(content)
+	if num == nil then
+		return 0
+	end
+	return num
 end
 
 local Csv_ReadArray
@@ -1494,6 +1506,7 @@ type_list = {"string","string"},
 option_map = {}
 })
 
+local __reload_map = nil
 ALittle.ICsvFile = Lua.Class(nil, "ALittle.ICsvFile")
 
 function ALittle.ICsvFile:Close()
@@ -1530,10 +1543,19 @@ end
 ALittle.CsvConfig = Lua.Class(nil, "ALittle.CsvConfig")
 
 function ALittle.CsvConfig:Load(file_path)
+	self._file_path = file_path
 	local lua_file = Lua.LuaCsvFile()
 	Lua.Assert(lua_file:Load(file_path), file_path .. " load failed!")
 	self:Init(lua_file)
 	ALittle.Log(file_path .. " load succeed!")
+	if __reload_map == nil then
+		__reload_map = ALittle.CreateValueWeakMap()
+	end
+	__reload_map[ALittle.File_GetJustFileNameByPath(file_path)] = self
+end
+
+function ALittle.CsvConfig:Reload()
+	self:Load(self._file_path)
 end
 
 function ALittle.CsvConfig:Init(file)
@@ -1551,6 +1573,7 @@ function ALittle.KeyValueConfig:Init(file)
 	if file == nil then
 		return
 	end
+	self._data = {}
 	local reflt = self.__class.__element[1]
 	local handle_map = {}
 	for index, handle in ___ipairs(self._csv_info.handle) do
@@ -1600,6 +1623,7 @@ function ALittle.CsvTableConfig:Ctor()
 end
 
 function ALittle.CsvTableConfig:Init(file)
+	self._col_map = {}
 	if self._csv_file ~= nil then
 		self._csv_file:Close()
 	end
@@ -1655,6 +1679,8 @@ function ALittle.SingleKeyTableConfig:Ctor()
 end
 
 function ALittle.SingleKeyTableConfig:onInit()
+	self._key_map = {}
+	self._cache_map = {}
 	local rflt = self.__class.__element[1]
 	local key_type = rflt.type_list[1]
 	local key_index = self._col_map[1]
@@ -1707,6 +1733,8 @@ function ALittle.DoubleKeyTableConfig:Ctor()
 end
 
 function ALittle.DoubleKeyTableConfig:onInit()
+	self._key_map = {}
+	self._cache_map = {}
 	local rflt = self.__class.__element[1]
 	local first_key_type = rflt.type_list[1]
 	local first_key_index = self._col_map[1]
@@ -1793,6 +1821,32 @@ function ALittle.DoubleKeyTableConfig:GetData(first_key, second_key)
 	return value
 end
 
+function ALittle.ReloadCsv(reload_name)
+	local config
+	if __reload_map ~= nil then
+		config = __reload_map[reload_name]
+	end
+	if config == nil then
+		ALittle.Log("reload_name:" .. reload_name .. " 不存在")
+		return
+	end
+	config:Reload()
+end
+
+ALittle.RegCmdCallback("ReloadCsv", ALittle.ReloadCsv, {"string"}, {"reload_name"}, "重新加载csv")
+function ALittle.FindCsv(reload_name)
+	local list = {}
+	if __reload_map ~= nil then
+		for name, config in ___pairs(__reload_map) do
+			if ALittle.String_Find(name, reload_name) ~= nil then
+				ALittle.List_Push(list, name)
+			end
+		end
+	end
+	ALittle.Log(ALittle.String_Join(list, ","))
+end
+
+ALittle.RegCmdCallback("FindCsv", ALittle.FindCsv, {"string"}, {"reload_name"}, "查找csv")
 end
 -- ALittle Generate Lua And Do Not Edit This Line!
 do

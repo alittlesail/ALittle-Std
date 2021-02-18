@@ -20,14 +20,22 @@ let Csv_ReadInt = function(content, value) {
 	if (content === "") {
 		return 0;
 	}
-	return floor(tonumber(content));
+	let num = tonumber(content);
+	if (num === undefined) {
+		return 0;
+	}
+	return floor(num);
 }
 
 let Csv_ReadLong = function(content, value) {
 	if (content === "") {
 		return 0;
 	}
-	return floor(tonumber(content));
+	let num = tonumber(content);
+	if (num === undefined) {
+		return 0;
+	}
+	return floor(num);
 }
 
 let Csv_ReadString = function(content, value) {
@@ -38,7 +46,11 @@ let Csv_ReadDouble = function(content, value) {
 	if (content === "") {
 		return 0;
 	}
-	return tonumber(content);
+	let num = tonumber(content);
+	if (num === undefined) {
+		return 0;
+	}
+	return num;
 }
 
 let Csv_ReadArray = function(content, value) {
