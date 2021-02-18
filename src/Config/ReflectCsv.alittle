@@ -31,13 +31,17 @@ private static Csv_ReadBool(string content, CsvInvokeInfo value) : bool
 private static Csv_ReadInt(string content, CsvInvokeInfo value) : int
 {
     if (content == "") return 0;
-    return floor(tonumber(content));
+    var num = tonumber(content);
+    if (num == null) return 0;
+    return floor(num);
 }
 
 private static Csv_ReadLong(string content, CsvInvokeInfo value) : long
 {
     if (content == "") return 0;
-    return floor(tonumber(content));
+    var num = tonumber(content);
+    if (num == null) return 0;
+    return floor(num);
 }
 
 private static Csv_ReadString(string content, CsvInvokeInfo value) : string
@@ -48,7 +52,9 @@ private static Csv_ReadString(string content, CsvInvokeInfo value) : string
 private static Csv_ReadDouble(string content, CsvInvokeInfo value) : double
 {
     if (content == "") return 0;
-    return tonumber(content);
+    var num = tonumber(content);
+    if (num == null) return 0;
+    return num;
 }
 
 private static Csv_ReadArray(string content, CsvInvokeInfo value) : List<any>

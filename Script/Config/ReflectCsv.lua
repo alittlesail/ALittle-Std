@@ -27,7 +27,11 @@ Csv_ReadInt = function(content, value)
 	if content == "" then
 		return 0
 	end
-	return floor(tonumber(content))
+	local num = tonumber(content)
+	if num == nil then
+		return 0
+	end
+	return floor(num)
 end
 
 local Csv_ReadLong
@@ -35,7 +39,11 @@ Csv_ReadLong = function(content, value)
 	if content == "" then
 		return 0
 	end
-	return floor(tonumber(content))
+	local num = tonumber(content)
+	if num == nil then
+		return 0
+	end
+	return floor(num)
 end
 
 local Csv_ReadString
@@ -48,7 +56,11 @@ Csv_ReadDouble = function(content, value)
 	if content == "" then
 		return 0
 	end
-	return tonumber(content)
+	local num = tonumber(content)
+	if num == nil then
+		return 0
+	end
+	return num
 end
 
 local Csv_ReadArray

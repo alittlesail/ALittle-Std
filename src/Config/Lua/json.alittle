@@ -3,12 +3,12 @@ register namespace lua;
 
 public class cjson
 {
-    public static encode(any table) : string {}
+    public static encode(const any table) : string {}
     public static decode(string value) : any {}
 }
 
 public class ajson
 {
-    public static encode(any table) : string {}
+    public static encode(const any table) : string {}
     public static decode(string value) : any {}
 }

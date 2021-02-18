@@ -1,7 +1,7 @@
 
 namespace ALittle;
 
-public static String_JsonEncode(any object) : string
+public static String_JsonEncode(const any object) : string
 {
     [Language(Lua)]
     return lua.cjson.encode(object);
