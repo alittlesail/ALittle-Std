@@ -23,6 +23,8 @@ function ALittle.MsgReceiverTemplate:Ctor(client_id, remote_ip, remote_port)
 	___rawset(self, "_client_logining", false)
 	___rawset(self, "_web_account_id", "")
 	___rawset(self, "_web_is_logining", false)
+	___rawset(self, "_thirdparty_account_id", "")
+	___rawset(self, "_thirdparty_is_logining", false)
 end
 
 function ALittle.MsgReceiverTemplate.__getter:remote_ip()
