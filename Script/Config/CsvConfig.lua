@@ -233,6 +233,10 @@ function ALittle.SingleKeyTableConfig:GetData(key)
 	return value
 end
 
+function ALittle.SingleKeyTableConfig:GetKeyMap()
+	return self._key_map
+end
+
 assert(ALittle.CsvTableConfig, " extends class:ALittle.CsvTableConfig is nil")
 ALittle.DoubleKeyTableConfig = Lua.Class(ALittle.CsvTableConfig, "ALittle.DoubleKeyTableConfig")
 

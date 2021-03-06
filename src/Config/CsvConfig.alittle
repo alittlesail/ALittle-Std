@@ -245,6 +245,9 @@ public class SingleKeyTableConfig<T:struct, KEY> : CsvTableConfig
         this._cache_map[key] = value;
         return value;
     }
+
+    [Constant]
+    public fun GetKeyMap() : const Map<KEY, int> { return this._key_map; }
 }
 
 public class DoubleKeyTableConfig<T:struct, KEY1, KEY2> : CsvTableConfig
