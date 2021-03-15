@@ -3,14 +3,14 @@ namespace ALittle;
 
 struct CmdCallbackInfo
 {
-    Functor<(...)> callback;
+    Functor<(...):string> callback;
     List<string> var_list;
     List<string> name_list;
     string desc;
 }
 
 private var __all_callback = new Map<string, CmdCallbackInfo>();
-protected static RegCmdCallback(string method, Functor<(...)> callback, List<string> var_list, List<string> name_list, string desc)
+protected static RegCmdCallback(string method, Functor<(...):string> callback, List<string> var_list, List<string> name_list, string desc)
 {
     if (__all_callback[method] != null)
     {
@@ -29,13 +29,9 @@ protected static RegCmdCallback(string method, Functor<(...)> callback, List<str
 }
 
 // 处理命令行
-public static ExecuteCommand(string cmd)
+public static ExecuteCommand(string cmd) : string
 {
-    if (cmd == "")
-    {
-        Warn("命令行是空");
-        return;
-    }
+    assert(cmd != "", "命令行是空");
 
     var method = "";
     var param = "";
@@ -70,16 +66,11 @@ public static ExecuteCommand(string cmd)
             detail = method_name.." "..ALittle.String_Join(param_list, ", ").." "..info.desc;
             List_Push(out_list, detail);
         }
-        Log(String_Join(out_list, "\n"));
-        return;
+        return String_Join(out_list, "\n");
     }
 
     var info = __all_callback[method];
-    if (info == null)
-    {
-        Warn("未知指令:"..cmd);
-        return;
-    }
+    assert(info, "未知指令:"..cmd);
 
     var param_list = new List<string>();
     index = 1;
@@ -161,11 +152,7 @@ public static ExecuteCommand(string cmd)
 
     len = List_Len(param_list);
     var need_len = List_Len(info.var_list);
-    if (len != need_len)
-    {
-        Warn("输入的参数数量"..len.."和指令要求"..need_len.."的不一致");
-        return;
-    }
+    assert(len == need_len, "输入的参数数量"..len.."和指令要求"..need_len.."的不一致");
 
     var value_list = new List<any>();
     for (var ii, _ in param_list)
@@ -174,11 +161,7 @@ public static ExecuteCommand(string cmd)
         if (var_type == "int" || var_type == "long" || var_type == "double")
         {
             value_list[ii] = Math_ToDouble(param_list[ii]);
-            if (value_list[ii] == null)
-            {
-                Warn("输入的第"..ii.."个参数"..param_list[ii].."转为"..var_type.."失败");
-                return;
-            }
+            assert(value_list[ii] != null, "输入的第"..ii.."个参数"..param_list[ii].."转为"..var_type.."失败");
         }
         elseif (var_type == "string")
         {
@@ -191,21 +174,19 @@ public static ExecuteCommand(string cmd)
             elseif (param_list[ii] == "false")
                 value_list[ii] = false;
             else
-            {
-                Warn("输入的第"..ii.."个参数"..param_list[ii].."转为"..var_type.."失败");
-                return;
-            }
+                assert(false, "输入的第"..ii.."个参数"..param_list[ii].."转为"..var_type.."失败");
         }
         else
         {
-            Warn("输入的第"..ii.."个参数"..param_list[ii].."转为"..var_type.."失败，支持基本变量类型");
-            return;
+            assert(false, "输入的第"..ii.."个参数"..param_list[ii].."转为"..var_type.."失败，支持基本变量类型");
         }
     }
     
     [Language(Lua)]
-    info.callback(lua.table.unpack(value_list, 1, len));
+    return info.callback(lua.table.unpack(value_list, 1, len));
     
     [Language(JavaScript)]
-    cast<javascript.Function>(info.callback).apply(null, value_list);
+    var result = cast<javascript.Function>(info.callback).apply(null, value_list);
+    [Language(JavaScript)]
+    return result;
 }
