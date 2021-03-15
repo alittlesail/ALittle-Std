@@ -58,7 +58,7 @@ if (typeof ALittle === "undefined") window.ALittle = {};
 ALittle.RegStruct(2073949729, "ALittle.CmdCallbackInfo", {
 name : "ALittle.CmdCallbackInfo", ns_name : "ALittle", rl_name : "CmdCallbackInfo", hash_code : 2073949729,
 name_list : ["callback","var_list","name_list","desc"],
-type_list : ["Functor<(...)>","List<string>","List<string>","string"],
+type_list : ["Functor<(...):string>","List<string>","List<string>","string"],
 option_map : {}
 })
 
@@ -81,10 +81,7 @@ ALittle.RegCmdCallback = function(method, callback, var_list, name_list, desc) {
 }
 
 ALittle.ExecuteCommand = function(cmd) {
-	if (cmd === "") {
-		ALittle.Warn("命令行是空");
-		return;
-	}
+	JavaScript.Assert(cmd !== "", "命令行是空");
 	let method = "";
 	let param = "";
 	let index = ALittle.String_Find(cmd, " ");
@@ -123,14 +120,10 @@ ALittle.ExecuteCommand = function(cmd) {
 			detail = method_name + " " + ALittle.String_Join(param_list, ", ") + " " + info.desc;
 			ALittle.List_Push(out_list, detail);
 		}
-		ALittle.Log(ALittle.String_Join(out_list, "\n"));
-		return;
+		return ALittle.String_Join(out_list, "\n");
 	}
 	let info = __all_callback[method];
-	if (info === undefined) {
-		ALittle.Warn("未知指令:" + cmd);
-		return;
-	}
+	JavaScript.Assert(info, "未知指令:" + cmd);
 	let param_list = [];
 	index = 1;
 	let in_quote = false;
@@ -182,10 +175,7 @@ ALittle.ExecuteCommand = function(cmd) {
 	}
 	len = ALittle.List_Len(param_list);
 	let need_len = ALittle.List_Len(info.var_list);
-	if (len !== need_len) {
-		ALittle.Warn("输入的参数数量" + len + "和指令要求" + need_len + "的不一致");
-		return;
-	}
+	JavaScript.Assert(len === need_len, "输入的参数数量" + len + "和指令要求" + need_len + "的不一致");
 	let value_list = [];
 	let ___OBJECT_4 = param_list;
 	for (let ii = 1; ii <= ___OBJECT_4.length; ++ii) {
@@ -194,10 +184,7 @@ ALittle.ExecuteCommand = function(cmd) {
 		let var_type = info.var_list[ii - 1];
 		if (var_type === "int" || var_type === "long" || var_type === "double") {
 			value_list[ii - 1] = ALittle.Math_ToDouble(param_list[ii - 1]);
-			if (value_list[ii - 1] === undefined) {
-				ALittle.Warn("输入的第" + ii + "个参数" + param_list[ii - 1] + "转为" + var_type + "失败");
-				return;
-			}
+			JavaScript.Assert(value_list[ii - 1] !== undefined, "输入的第" + ii + "个参数" + param_list[ii - 1] + "转为" + var_type + "失败");
 		} else if (var_type === "string") {
 			value_list[ii - 1] = param_list[ii - 1];
 		} else if (var_type === "bool") {
@@ -206,15 +193,14 @@ ALittle.ExecuteCommand = function(cmd) {
 			} else if (param_list[ii - 1] === "false") {
 				value_list[ii - 1] = false;
 			} else {
-				ALittle.Warn("输入的第" + ii + "个参数" + param_list[ii - 1] + "转为" + var_type + "失败");
-				return;
+				JavaScript.Assert(false, "输入的第" + ii + "个参数" + param_list[ii - 1] + "转为" + var_type + "失败");
 			}
 		} else {
-			ALittle.Warn("输入的第" + ii + "个参数" + param_list[ii - 1] + "转为" + var_type + "失败，支持基本变量类型");
-			return;
+			JavaScript.Assert(false, "输入的第" + ii + "个参数" + param_list[ii - 1] + "转为" + var_type + "失败，支持基本变量类型");
 		}
 	}
-	info.callback.apply(undefined, value_list);
+	let [result] = info.callback.apply(undefined, value_list);
+	return result;
 }
 
 }
@@ -1674,6 +1660,9 @@ ALittle.SingleKeyTableConfig = JavaScript.Class(ALittle.CsvTableConfig, {
 		}
 		this._cache_map.set(key, value);
 		return value;
+	},
+	GetKeyMap : function() {
+		return this._key_map;
 	},
 }, "ALittle.SingleKeyTableConfig");
 
@@ -3242,6 +3231,8 @@ ALittle.MsgReceiverTemplate = JavaScript.Class(ALittle.IMsgCommonTemplate, {
 		this._client_logining = false;
 		this._web_account_id = "";
 		this._web_is_logining = false;
+		this._thirdparty_account_id = "";
+		this._thirdparty_is_logining = false;
 	},
 	get remote_ip() {
 		return this._remote_ip;

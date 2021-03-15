@@ -16,6 +16,8 @@ ALittle.MsgReceiverTemplate = JavaScript.Class(ALittle.IMsgCommonTemplate, {
 		this._client_logining = false;
 		this._web_account_id = "";
 		this._web_is_logining = false;
+		this._thirdparty_account_id = "";
+		this._thirdparty_is_logining = false;
 	},
 	get remote_ip() {
 		return this._remote_ip;

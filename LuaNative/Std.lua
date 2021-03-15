@@ -59,7 +59,7 @@ local ___ipairs = ipairs
 ALittle.RegStruct(2073949729, "ALittle.CmdCallbackInfo", {
 name = "ALittle.CmdCallbackInfo", ns_name = "ALittle", rl_name = "CmdCallbackInfo", hash_code = 2073949729,
 name_list = {"callback","var_list","name_list","desc"},
-type_list = {"Functor<(...)>","List<string>","List<string>","string"},
+type_list = {"Functor<(...):string>","List<string>","List<string>","string"},
 option_map = {}
 })
 
@@ -82,10 +82,7 @@ function ALittle.RegCmdCallback(method, callback, var_list, name_list, desc)
 end
 
 function ALittle.ExecuteCommand(cmd)
-	if cmd == "" then
-		ALittle.Warn("命令行是空")
-		return
-	end
+	Lua.Assert(cmd ~= "", "命令行是空")
 	local method = ""
 	local param = ""
 	local index = ALittle.String_Find(cmd, " ")
@@ -115,14 +112,10 @@ function ALittle.ExecuteCommand(cmd)
 			detail = method_name .. " " .. ALittle.String_Join(param_list, ", ") .. " " .. info.desc
 			ALittle.List_Push(out_list, detail)
 		end
-		ALittle.Log(ALittle.String_Join(out_list, "\n"))
-		return
+		return ALittle.String_Join(out_list, "\n")
 	end
 	local info = __all_callback[method]
-	if info == nil then
-		ALittle.Warn("未知指令:" .. cmd)
-		return
-	end
+	Lua.Assert(info, "未知指令:" .. cmd)
 	local param_list = {}
 	index = 1
 	local in_quote = false
@@ -174,19 +167,13 @@ function ALittle.ExecuteCommand(cmd)
 	end
 	len = ALittle.List_Len(param_list)
 	local need_len = ALittle.List_Len(info.var_list)
-	if len ~= need_len then
-		ALittle.Warn("输入的参数数量" .. len .. "和指令要求" .. need_len .. "的不一致")
-		return
-	end
+	Lua.Assert(len == need_len, "输入的参数数量" .. len .. "和指令要求" .. need_len .. "的不一致")
 	local value_list = {}
 	for ii, _ in ___ipairs(param_list) do
 		local var_type = info.var_list[ii]
 		if var_type == "int" or var_type == "long" or var_type == "double" then
 			value_list[ii] = ALittle.Math_ToDouble(param_list[ii])
-			if value_list[ii] == nil then
-				ALittle.Warn("输入的第" .. ii .. "个参数" .. param_list[ii] .. "转为" .. var_type .. "失败")
-				return
-			end
+			Lua.Assert(value_list[ii] ~= nil, "输入的第" .. ii .. "个参数" .. param_list[ii] .. "转为" .. var_type .. "失败")
 		elseif var_type == "string" then
 			value_list[ii] = param_list[ii]
 		elseif var_type == "bool" then
@@ -195,15 +182,13 @@ function ALittle.ExecuteCommand(cmd)
 			elseif param_list[ii] == "false" then
 				value_list[ii] = false
 			else
-				ALittle.Warn("输入的第" .. ii .. "个参数" .. param_list[ii] .. "转为" .. var_type .. "失败")
-				return
+				Lua.Assert(false, "输入的第" .. ii .. "个参数" .. param_list[ii] .. "转为" .. var_type .. "失败")
 			end
 		else
-			ALittle.Warn("输入的第" .. ii .. "个参数" .. param_list[ii] .. "转为" .. var_type .. "失败，支持基本变量类型")
-			return
+			Lua.Assert(false, "输入的第" .. ii .. "个参数" .. param_list[ii] .. "转为" .. var_type .. "失败，支持基本变量类型")
 		end
 	end
-	info.callback(table.unpack(value_list, 1, len))
+	return info.callback(table.unpack(value_list, 1, len))
 end
 
 end
@@ -1722,6 +1707,10 @@ function ALittle.SingleKeyTableConfig:GetData(key)
 	end
 	self._cache_map[key] = value
 	return value
+end
+
+function ALittle.SingleKeyTableConfig:GetKeyMap()
+	return self._key_map
 end
 
 assert(ALittle.CsvTableConfig, " extends class:ALittle.CsvTableConfig is nil")
@@ -3531,6 +3520,8 @@ function ALittle.MsgReceiverTemplate:Ctor(client_id, remote_ip, remote_port)
 	___rawset(self, "_client_logining", false)
 	___rawset(self, "_web_account_id", "")
 	___rawset(self, "_web_is_logining", false)
+	___rawset(self, "_thirdparty_account_id", "")
+	___rawset(self, "_thirdparty_is_logining", false)
 end
 
 function ALittle.MsgReceiverTemplate.__getter:remote_ip()

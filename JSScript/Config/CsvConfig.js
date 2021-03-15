@@ -209,6 +209,9 @@ ALittle.SingleKeyTableConfig = JavaScript.Class(ALittle.CsvTableConfig, {
 		this._cache_map.set(key, value);
 		return value;
 	},
+	GetKeyMap : function() {
+		return this._key_map;
+	},
 }, "ALittle.SingleKeyTableConfig");
 
 if (ALittle.CsvTableConfig === undefined) throw new Error(" extends class:ALittle.CsvTableConfig is undefined");
