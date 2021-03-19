@@ -110,7 +110,7 @@ function ALittle.String_IsPhoneNumber(number)
 	return true
 end
 
-function ALittle.String_IsWordChar(char)
+function ALittle.String_IsCodeChar(char)
 	local len = ALittle.String_Len(char)
 	if len ~= 1 then
 		return false
@@ -129,6 +129,15 @@ function ALittle.String_IsWordChar(char)
 		return true
 	end
 	return false
+end
+
+function ALittle.String_IsAsciiChar(char)
+	local len = ALittle.String_Len(char)
+	if len ~= 1 then
+		return false
+	end
+	local value = ALittle.String_Byte(char, 1)
+	return value <= 126 and value >= 33
 end
 
 function ALittle.String_SplitUTF8(content)

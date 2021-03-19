@@ -160,7 +160,7 @@ public static String_IsPhoneNumber(string number) : bool
 }
 
 // 判断是不是单词的字符
-public static String_IsWordChar(string char) : bool
+public static String_IsCodeChar(string char) : bool
 {
     var len = String_Len(char);
     if (len != 1) return false;
@@ -176,6 +176,16 @@ public static String_IsWordChar(string char) : bool
     if (value >= 64 && value <= 90) return true;
 
     return false;
+}
+
+// 判断是不是可显示的字符
+public static String_IsAsciiChar(string char) : bool
+{
+    var len = String_Len(char);
+    if (len != 1) return false;
+
+    var value = String_Byte(char, 1);
+    return value <= 126 && value >= 33;
 }
 
 // 切割utf8字符串
