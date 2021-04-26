@@ -1,7 +1,24 @@
 
 register namespace carp;
 
+// 创建进程
 public static CreateProcess(string file_path, [Nullable] string param, [Nullable] string work_path) : bool {}
+// 根据文件路径获取对应的进程ID
 public static GetProcessIDByPath(string path) : List<int> {}
+// 杀死进程
 public static KillProcessByID(int pid) : bool {}
+// 向pid进程的进程窗口发送cmd字符串
 public static SendVirtualKey(int pid, string cmd) : bool {}
+// pid填0表示当前进程，否则是目标进程
+// last_time 上一次的时间
+// last_system_time 上一次系统时间
+// return cpu_usage%, last_time, last_system_time
+public static GetCPUUsage(int pid, int last_time, int last_system_time) : int, int, int {}
+// 获取内存
+// pid填0表示当前进程，否则是目标进程
+// return 是否成功，mem，vmem
+public static GetMemoryUsage(int pid) : bool, int, int {}
+// 获取CPU利用率
+// pid填0表示当前进程，否则是目标进程
+// return 是否成功，read, write
+public static GetIOUsage(int pid) : bool, int, int {}
