@@ -2165,7 +2165,7 @@ ALittle.String_IsPhoneNumber = function(number) {
 	return true;
 }
 
-ALittle.String_IsWordChar = function(char) {
+ALittle.String_IsCodeChar = function(char) {
 	let len = ALittle.String_Len(char);
 	if (len !== 1) {
 		return false;
@@ -2184,6 +2184,15 @@ ALittle.String_IsWordChar = function(char) {
 		return true;
 	}
 	return false;
+}
+
+ALittle.String_IsAsciiChar = function(char) {
+	let len = ALittle.String_Len(char);
+	if (len !== 1) {
+		return false;
+	}
+	let value = ALittle.String_Byte(char, 1);
+	return value <= 126 && value >= 33;
 }
 
 ALittle.String_SplitUTF8 = function(content) {
