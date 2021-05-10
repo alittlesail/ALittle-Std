@@ -3865,7 +3865,7 @@ function Lua.LuaCsvFile:ReadCell(row, col)
 	if self._csv == nil then
 		return nil
 	end
-	return self._csv:ReadCell(row, col)
+	return self._csv:ReadCell(row - 1, col - 1)
 end
 
 function Lua.LuaCsvFile:GetRowCount()

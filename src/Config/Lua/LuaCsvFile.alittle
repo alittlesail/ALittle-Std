@@ -26,7 +26,7 @@ public class LuaCsvFile : ALittle.ICsvFile
     public fun ReadCell(int row, int col) : string
     {
         if (this._csv == null) return null;
-        return this._csv.ReadCell(row, col);
+        return this._csv.ReadCell(row - 1, col - 1);
     }
     public fun GetRowCount() : int
     {
