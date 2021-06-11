@@ -29,6 +29,7 @@ public class SafeIDCreator
         }
         // 没有的话就把maxid加1，然后再使用
         this._max_id = this._max_id + 1;
+        if (this._max_id == 0) this._max_id = this._max_id + 1;
         return this._max_id;
     }
 

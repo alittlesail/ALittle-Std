@@ -26,6 +26,9 @@ function ALittle.SafeIDCreator:CreateID()
 		return id
 	end
 	self._max_id = self._max_id + 1
+	if self._max_id == 0 then
+		self._max_id = self._max_id + 1
+	end
 	return self._max_id
 end
 
