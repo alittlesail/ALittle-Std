@@ -1,0 +1,10 @@
+
+register namespace wiringPi;
+
+// 返回-1表示失败
+public static wiringPiSetup() : int {}
+public static softPwmCreate(int pin, int value, int range) : int {}
+public static softPwmWrite(int pin, int value) {}
+
+public static delay(int howLong) {}
+public static delayMicroseconds(int howLong) {}
