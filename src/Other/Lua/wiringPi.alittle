@@ -1,10 +1,23 @@
 
 register namespace wiringPi;
 
+public enum PinMode
+{
+	INPUT   = 0;
+	OUTPUT  = 1;
+
+	LOW	 = 0;
+	HIGH	= 1;
+}
+
 // 返回-1表示失败
 public static wiringPiSetup() : int {}
+
 public static softPwmCreate(int pin, int value, int range) : int {}
 public static softPwmWrite(int pin, int value) {}
+
+public static pinMode(int pin, int mode) {}
+public static digitalWrite(int pin, int value) {}
 
 public static delay(int howLong) {}
 public static delayMicroseconds(int howLong) {}
