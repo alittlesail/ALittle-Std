@@ -19,6 +19,9 @@ ALittle.SafeIDCreator = JavaScript.Class(undefined, {
 			return id;
 		}
 		this._max_id = this._max_id + 1;
+		if (this._max_id === 0) {
+			this._max_id = this._max_id + 1;
+		}
 		return this._max_id;
 	},
 	ReleaseID : function(id) {
