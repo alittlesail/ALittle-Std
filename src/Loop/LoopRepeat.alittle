@@ -1,0 +1,107 @@
+
+namespace ALittle;
+
+public class LoopRepeat : LoopObject
+{
+    private LoopObject _object;
+    // 总次数
+    private int _total_count;
+    // 累计次数
+    private int _accumulate_count;
+    // 是否强制完成
+    private bool _force_completed = false;
+
+    public ctor(LoopObject object, int count)
+    {
+        this._object = object;                // 保存函数
+        this._total_count = count;        // 保存次数，如果小于0则表示无限调用
+        this._accumulate_count = 0;
+    
+        // 如果调用的函数无效，那么直接初始化为结束
+        if (this._object == null)
+        {
+            this._accumulate_count = 0;
+            this._total_count = 0;
+            Log("LoopRepeat create failed:function is nil or not a function");
+            return;
+        }
+
+    }
+
+    // 重置
+    public fun Reset()
+    {
+        this._accumulate_count = 0;
+        if (this._object != null) this._object.Reset();
+        this._force_completed = false;
+    }
+
+    public fun IsCompleted() : bool
+    {
+        // 判断强制完成
+        if (this._force_completed) return true;
+            // 判断是否无限循环
+        if (this._total_count < 0) return false;
+            // 判断是否达到累计次数
+        return this._total_count <= this._accumulate_count;
+    }
+
+    // 直接设置为完成
+    public fun SetCompleted()
+    {
+        if (this._total_count < 0)
+        {
+            // 标记为强制完成
+            this._force_completed = true;
+            return;
+        }
+            // 累积次数直接等于总次数
+        this._accumulate_count = this._total_count;
+    }
+
+    // 设置时间
+    public fun SetTime(int time) : int, bool
+    {
+        // 初始化累计时间
+        this._accumulate_count = 0;
+        // 时间小于0则直接返回
+        if (time <= 0) return 0, false;
+        // 如果是无限次，那么直接返回
+        if (this._total_count < 0) return 0, false;
+        
+        // 扣除延时时间
+        while (this._accumulate_count < this._total_count && time > 0)
+        {
+            var remain_time, competed = this._object.SetTime(time);
+            if (competed) ++ this._accumulate_count;
+            time = remain_time;
+        }
+
+        return time, this._accumulate_count >= this._total_count;
+    }
+
+    // 更新
+    protected fun Update(int frame_time) : int
+    {
+        // 扣除延时时间
+        while ((this._total_count <= 0 || this._accumulate_count < this._total_count) && frame_time > 0)
+        {
+            // 判断是否完成，如果完成了，就重置
+            if (this._object.IsCompleted())
+                this._object.Reset();
+
+            // 执行动画
+            frame_time = this._object.Update(frame_time);
+            
+            // 判断是否完成
+            if (this._object.IsCompleted())
+            {
+                ++ this._accumulate_count;
+                this._object.Completed();    
+            }
+        }
+
+        // 返回剩余时间
+        return frame_time;
+    }
+}

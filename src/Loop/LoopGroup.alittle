@@ -7,7 +7,6 @@ public class LoopGroup : LoopObject
     private int _complete_count;      // updater完成数量
     private Map<LoopObject, bool> _loop_updaters;       // 未完成的updater集合
     private Map<LoopObject, bool> _complete_updaters;   // 已完成的updater集合
-    private Functor<()> _complete_callback;   // 完成后会调用这个函数
 
     public ctor()
     {
@@ -15,23 +14,9 @@ public class LoopGroup : LoopObject
         this._complete_count = 0;
         this._loop_updaters = new Map<LoopObject, bool>();
         this._complete_updaters = new Map<LoopObject, bool>();
-        this._complete_callback = null;
     }
     
-    public get complete_callback() : Functor<()>
-    {
-        return this._complete_callback;
-    }
-
-    public set complete_callback(Functor<()> value)
-    {
-        this._complete_callback = value;
-    }
-
-    public get total_count() : int
-    {
-        return this._total_count;
-    }
+    public get total_count() : int { return this._total_count; }
 
     // 添加updater
     public fun AddUpdater(LoopObject value)
@@ -41,7 +26,13 @@ public class LoopGroup : LoopObject
         // 检查是否已经在集合内部
         if (this._complete_updaters[value] || this._loop_updaters[value]) return;
         // 添加到待完成集合
-        this._loop_updaters[value] = true;
+        if (value.IsCompleted())
+        {
+            this._complete_updaters[value] = true;
+            ++this._complete_count;
+        }
+        else
+	        this._loop_updaters[value] = true;
         // 总数+1
         ++ this._total_count;
     }
@@ -119,12 +110,6 @@ public class LoopGroup : LoopObject
         return this._complete_count >= this._total_count;
     }
 
-    public fun Completed()
-    {
-        if (this._complete_callback != null)
-            this._complete_callback();
-    }
-
     // 设置为完成
     public fun SetCompleted()
     {
@@ -138,17 +123,18 @@ public class LoopGroup : LoopObject
     }
 
     // 更新
-    protected fun Update(int frame_time)
+    protected fun Update(int frame_time) : int
     {
-        if (this._complete_count >= this._total_count) return;
+        if (this._complete_count >= this._total_count) return frame_time;
 
         var remove_map = new Map<LoopObject, bool>();
         for (var updater, v in this._loop_updaters)
         {
+            var remain_time = updater.Update(frame_time);
+            if (remain_time < frame_time) frame_time = remain_time;
+
             if (updater.IsCompleted())
-                remove_map[updater] = true;
-            else
-                updater.Update(frame_time);
+            	remove_map[updater] = true;
         }
         for (var updater, v in remove_map)
         {
@@ -157,5 +143,7 @@ public class LoopGroup : LoopObject
             ++ this._complete_count;
             updater.Completed();
         }
+
+        return frame_time;
     }
 }

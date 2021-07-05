@@ -16,15 +16,6 @@ function ALittle.LoopGroup:Ctor()
 	___rawset(self, "_complete_count", 0)
 	___rawset(self, "_loop_updaters", {})
 	___rawset(self, "_complete_updaters", {})
-	___rawset(self, "_complete_callback", nil)
-end
-
-function ALittle.LoopGroup.__getter:complete_callback()
-	return self._complete_callback
-end
-
-function ALittle.LoopGroup.__setter:complete_callback(value)
-	self._complete_callback = value
 end
 
 function ALittle.LoopGroup.__getter:total_count()
@@ -38,7 +29,12 @@ function ALittle.LoopGroup:AddUpdater(value)
 	if self._complete_updaters[value] or self._loop_updaters[value] then
 		return
 	end
-	self._loop_updaters[value] = true
+	if value:IsCompleted() then
+		self._complete_updaters[value] = true
+		self._complete_count = self._complete_count + 1
+	else
+		self._loop_updaters[value] = true
+	end
 	self._total_count = self._total_count + 1
 end
 
@@ -100,12 +96,6 @@ function ALittle.LoopGroup:IsCompleted()
 	return self._complete_count >= self._total_count
 end
 
-function ALittle.LoopGroup:Completed()
-	if self._complete_callback ~= nil then
-		self._complete_callback()
-	end
-end
-
 function ALittle.LoopGroup:SetCompleted()
 	self._complete_count = self._total_count
 	for updater, v in ___pairs(self._loop_updaters) do
@@ -117,14 +107,16 @@ end
 
 function ALittle.LoopGroup:Update(frame_time)
 	if self._complete_count >= self._total_count then
-		return
+		return frame_time
 	end
 	local remove_map = {}
 	for updater, v in ___pairs(self._loop_updaters) do
+		local remain_time = updater:Update(frame_time)
+		if remain_time < frame_time then
+			frame_time = remain_time
+		end
 		if updater:IsCompleted() then
 			remove_map[updater] = true
-		else
-			updater:Update(frame_time)
 		end
 	end
 	for updater, v in ___pairs(remove_map) do
@@ -133,6 +125,7 @@ function ALittle.LoopGroup:Update(frame_time)
 		self._complete_count = self._complete_count + 1
 		updater:Completed()
 	end
+	return frame_time
 end
 
 end

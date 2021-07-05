@@ -3,18 +3,34 @@ namespace ALittle;
 
 public class LoopObject
 {
+    // 携带参数
+    public any _user_data;
+
+    // 完成回调函数
+    public Functor<()> _complete_callback;
+    public get complete_callback() : Functor<()> { return this._complete_callback; }
+    public set complete_callback(Functor<()> value) { this._complete_callback = value; }
+
+    // 判断是否完成
     public fun IsCompleted() : bool { return true; }
-    public fun Completed() {}
-    protected fun Update(int frame_time) {}
+    // 处理播放完成回调
+    public fun Completed() { if (this._complete_callback != null) this._complete_callback(); }
+    // 输入帧间隔时间，返回消费后剩余的时间
+    protected fun Update(int frame_time) : int { return frame_time; }
+    // 重置
     public fun Reset() {}
+    // 从头开始运算。输入帧间隔时间，返回消费后的剩余时间，返回是否完成动画
     public fun SetTime(int time) : int, bool { return time, true; }
+    // 强行设置为完成
     public fun SetCompleted() {}
     
+    // 销毁
     public fun Dispose([Nullable] bool deep)
     {
         this.Stop();
     }
     
+    // 开始播放
     public fun Start()
     {
         [Language(Lua)]
@@ -24,6 +40,7 @@ public class LoopObject
         A_JLoopSystem.AddUpdater(this);
     }
     
+    // 停止播放
     public fun Stop()
     {
         [Language(Lua)]

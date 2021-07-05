@@ -12,8 +12,8 @@ assert(ALittle.LoopObject, " extends class:ALittle.LoopObject is nil")
 ALittle.LoopFrame = Lua.Class(ALittle.LoopObject, "ALittle.LoopFrame")
 
 function ALittle.LoopFrame:Ctor(func)
-	___rawset(self, "_func", func)
 	___rawset(self, "_force_completed", false)
+	___rawset(self, "_func", func)
 	if self._func == nil then
 		___rawset(self, "_force_completed", true)
 		ALittle.Log("LoopFrame create failed:function is nil or not a function")
@@ -22,9 +22,7 @@ function ALittle.LoopFrame:Ctor(func)
 end
 
 function ALittle.LoopFrame:Reset()
-end
-
-function ALittle.LoopFrame:Completed()
+	self._force_completed = false
 end
 
 function ALittle.LoopFrame:IsCompleted()
@@ -41,6 +39,7 @@ end
 
 function ALittle.LoopFrame:Update(frame_time)
 	self._func(frame_time)
+	return 0
 end
 
 end

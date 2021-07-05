@@ -6,7 +6,6 @@ public class LoopList : LoopObject
     private int _count;              // updater个数
     private int _cur_index;          // 当前执行的updater下标
     private List<LoopObject> _update_list;   // updater列表
-    private Functor<()> _complete_callback;  // 完成后会调用这个函数
     
     public ctor()
     {
@@ -15,21 +14,8 @@ public class LoopList : LoopObject
         this._update_list = new List<LoopObject>();        // updater列表
         this._complete_callback = null;    // 完成后会调用这个函数
     }
-    
-    public get complete_callback() : Functor<()>
-    {
-        return this._complete_callback;
-    }
 
-    public set complete_callback(Functor<()> value)
-    {
-        this._complete_callback = value;
-    }
-
-    public get total_count() : int
-    {
-        return this._count;
-    }
+    public get total_count() : int { return this._count; }
     
     // 添加updater
     public fun AddUpdater(LoopObject value)
@@ -42,8 +28,7 @@ public class LoopList : LoopObject
     // 移除updater
     public fun RemoveUpdater(LoopObject value)
     {
-        if (value == null || this._count == 0)
-            return;
+        if (value == null || this._count == 0) return;
             
         for (var index, updater in this._update_list)
         {
@@ -93,13 +78,7 @@ public class LoopList : LoopObject
 
     public fun IsCompleted() : bool
     {
-        return this._cur_index > this._count;
-    }
-
-    public fun Completed()
-    {
-        if (this._complete_callback != null)
-            this._complete_callback();
+        return this._cur_index > this._count;        
     }
 
     // 设置为完成
@@ -107,21 +86,30 @@ public class LoopList : LoopObject
     {
         for (var index = this._cur_index; index <= this._count; 1)
             this._update_list[index].SetCompleted();
-
         this._cur_index = this._count + 1;
     }
 
     // 更新
-    protected fun Update(int frame_time)
+    protected fun Update(int frame_time) : int
     {
-        if (this._cur_index > this._count)
-            return;
+        if (frame_time <= 0) return 0;
+        if (this._cur_index > this._count) return frame_time;
+
         var updater = this._update_list[this._cur_index];
-        updater.Update(frame_time);
+        if (updater.IsCompleted())
+        {
+            ++ this._cur_index;
+            return this.Update(frame_time);
+        }
+
+        frame_time = updater.Update(frame_time);
         if (updater.IsCompleted())
         {
             ++ this._cur_index;
             updater.Completed();
         }
+
+        if (frame_time <= 0) return 0;
+        return this.Update(frame_time);
     }
 }

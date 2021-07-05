@@ -9,14 +9,26 @@ local ___ipairs = ipairs
 
 ALittle.LoopObject = Lua.Class(nil, "ALittle.LoopObject")
 
+function ALittle.LoopObject.__getter:complete_callback()
+	return self._complete_callback
+end
+
+function ALittle.LoopObject.__setter:complete_callback(value)
+	self._complete_callback = value
+end
+
 function ALittle.LoopObject:IsCompleted()
 	return true
 end
 
 function ALittle.LoopObject:Completed()
+	if self._complete_callback ~= nil then
+		self._complete_callback()
+	end
 end
 
 function ALittle.LoopObject:Update(frame_time)
+	return frame_time
 end
 
 function ALittle.LoopObject:Reset()

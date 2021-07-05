@@ -7,7 +7,6 @@ public class LoopTimer : LoopObject
     private int _total_delay_time;          // 动画的延时时间，就是延时多久才开始动画
     private int _accumulate_count;          // 当前累积的时间
     private int _accumulate_delay_time;     // 当前累积的延时时间
-    private Functor<()> _complete_callback; // 完成后会调用这个函数
 
     public ctor(Functor<()> func, int delay_time)
     {
@@ -34,16 +33,6 @@ public class LoopTimer : LoopObject
         this._complete_callback = null;    // 完成后会调用这个函数
     }
     
-    public get complete_callback() : Functor<()>
-    {
-        return this._complete_callback;
-    }
-
-    public set complete_callback(Functor<()> value)
-    {
-        this._complete_callback = value;
-    }
-
     // 重置
     public fun Reset()
     {
@@ -51,17 +40,8 @@ public class LoopTimer : LoopObject
         this._accumulate_delay_time = 0;
     }
 
-    public fun Completed()
-    {
-        if (this._complete_callback != null)
-            this._complete_callback();
-    }
-
     // 如果次数小于0，那么永远都是false，否则计算累积次数是否达到总次数
-    public fun IsCompleted() : bool
-    {
-        return this._accumulate_count >= 1;
-    }
+    public fun IsCompleted() : bool { return this._accumulate_count >= 1; }
 
     // 直接设置为完成
     public fun SetCompleted()
@@ -89,6 +69,7 @@ public class LoopTimer : LoopObject
             return 0, false;
         }
 
+        // 设置完成
         this._accumulate_delay_time = this._total_delay_time;
         this._accumulate_count = 1;
         this._func();
@@ -97,20 +78,28 @@ public class LoopTimer : LoopObject
     }
 
     // 更新
-    protected fun Update(int frame_time)
+    protected fun Update(int frame_time) : int
     {
         // 扣除延时时间
         if (this._accumulate_delay_time < this._total_delay_time)
         {
+            // 累加延迟时间
             this._accumulate_delay_time += frame_time;
-            if (this._accumulate_delay_time < this._total_delay_time)
-                return;
+            // 依然不够，返回0
+            if (this._accumulate_delay_time < this._total_delay_time) return 0;
+            // 计算剩余时间
+            frame_time = this._total_delay_time - this._accumulate_delay_time;
+            // 设置饱和
             this._accumulate_delay_time = this._total_delay_time;
         }
 
-        if (this._accumulate_count >= 1) return;
+        // 判断完成
+        if (this._accumulate_count >= 1) return frame_time;
 
+        // 设置完成
         this._accumulate_count = 1;
         this._func();
+
+        return frame_time;
     }
 }

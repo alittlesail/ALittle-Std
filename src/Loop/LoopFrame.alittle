@@ -3,14 +3,16 @@ namespace ALittle;
 
 public class LoopFrame : LoopObject
 {
+    // 输入帧间隔时间，返回消费后的时间
     private Functor<(int)> _func;
-    private bool _force_completed;
+    // 是否被强制设置为完成
+    private bool _force_completed = false;
     
+    // 设置回调函数
     public ctor(Functor<(int)> func)
     {
         this._func = func;                // 保存函数
-        this._force_completed = false;
-    
+
         // 如果调用的函数无效，那么直接初始化为结束
         if (this._func == null)
         {
@@ -21,36 +23,21 @@ public class LoopFrame : LoopObject
     }
     
     // 重置
-    public fun Reset()
-    {
-    }
+    public fun Reset() { this._force_completed = false; }
 
-    public fun Completed()
-    {
-    }
-
-    public fun IsCompleted() : bool
-    {
-        return this._force_completed;
-    }
+    // 判断是否完成
+    public fun IsCompleted() : bool { return this._force_completed; }
 
     // 直接设置为完成
-    public fun SetCompleted()
-    {
-        // 标记为强制完成
-        this._force_completed = true;
-    }
+    public fun SetCompleted() { this._force_completed = true; }
 
     // 设置时间
-    public fun SetTime(int time) : int, bool
-    {
-        // 返回剩余时间
-        return time, true;
-    }
+    public fun SetTime(int time) : int, bool { return time, true; }
 
     // 更新
-    protected fun Update(int frame_time)
+    protected fun Update(int frame_time) : int
     {
         this._func(frame_time);
+        return 0;
     }
 }

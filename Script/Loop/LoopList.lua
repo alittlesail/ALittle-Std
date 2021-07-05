@@ -18,14 +18,6 @@ function ALittle.LoopList:Ctor()
 	___rawset(self, "_complete_callback", nil)
 end
 
-function ALittle.LoopList.__getter:complete_callback()
-	return self._complete_callback
-end
-
-function ALittle.LoopList.__setter:complete_callback(value)
-	self._complete_callback = value
-end
-
 function ALittle.LoopList.__getter:total_count()
 	return self._count
 end
@@ -85,12 +77,6 @@ function ALittle.LoopList:IsCompleted()
 	return self._cur_index > self._count
 end
 
-function ALittle.LoopList:Completed()
-	if self._complete_callback ~= nil then
-		self._complete_callback()
-	end
-end
-
 function ALittle.LoopList:SetCompleted()
 	local index = self._cur_index
 	while true do
@@ -102,15 +88,26 @@ function ALittle.LoopList:SetCompleted()
 end
 
 function ALittle.LoopList:Update(frame_time)
+	if frame_time <= 0 then
+		return 0
+	end
 	if self._cur_index > self._count then
-		return
+		return frame_time
 	end
 	local updater = self._update_list[self._cur_index]
-	updater:Update(frame_time)
+	if updater:IsCompleted() then
+		self._cur_index = self._cur_index + 1
+		return self:Update(frame_time)
+	end
+	frame_time = updater:Update(frame_time)
 	if updater:IsCompleted() then
 		self._cur_index = self._cur_index + 1
 		updater:Completed()
 	end
+	if frame_time <= 0 then
+		return 0
+	end
+	return self:Update(frame_time)
 end
 
 end
