@@ -9,13 +9,6 @@ ALittle.LoopGroup = JavaScript.Class(ALittle.LoopObject, {
 		this._complete_count = 0;
 		this._loop_updaters = new Map();
 		this._complete_updaters = new Map();
-		this._complete_callback = undefined;
-	},
-	get complete_callback() {
-		return this._complete_callback;
-	},
-	set complete_callback(value) {
-		this._complete_callback = value;
 	},
 	get total_count() {
 		return this._total_count;
@@ -27,7 +20,12 @@ ALittle.LoopGroup = JavaScript.Class(ALittle.LoopObject, {
 		if (this._complete_updaters.get(value) || this._loop_updaters.get(value)) {
 			return;
 		}
-		this._loop_updaters.set(value, true);
+		if (value.IsCompleted()) {
+			this._complete_updaters.set(value, true);
+			++ this._complete_count;
+		} else {
+			this._loop_updaters.set(value, true);
+		}
 		++ this._total_count;
 	},
 	RemoveUpdater : function(value) {
@@ -89,11 +87,6 @@ ALittle.LoopGroup = JavaScript.Class(ALittle.LoopObject, {
 	IsCompleted : function() {
 		return this._complete_count >= this._total_count;
 	},
-	Completed : function() {
-		if (this._complete_callback !== undefined) {
-			this._complete_callback();
-		}
-	},
 	SetCompleted : function() {
 		this._complete_count = this._total_count;
 		for (let [updater, v] of this._loop_updaters) {
@@ -105,15 +98,17 @@ ALittle.LoopGroup = JavaScript.Class(ALittle.LoopObject, {
 	},
 	Update : function(frame_time) {
 		if (this._complete_count >= this._total_count) {
-			return;
+			return frame_time;
 		}
 		let remove_map = new Map();
 		for (let [updater, v] of this._loop_updaters) {
 			if (v === undefined) continue;
+			let remain_time = updater.Update(frame_time);
+			if (remain_time < frame_time) {
+				frame_time = remain_time;
+			}
 			if (updater.IsCompleted()) {
 				remove_map.set(updater, true);
-			} else {
-				updater.Update(frame_time);
 			}
 		}
 		for (let [updater, v] of remove_map) {
@@ -123,6 +118,7 @@ ALittle.LoopGroup = JavaScript.Class(ALittle.LoopObject, {
 			++ this._complete_count;
 			updater.Completed();
 		}
+		return frame_time;
 	},
 }, "ALittle.LoopGroup");
 

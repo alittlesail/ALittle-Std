@@ -14,7 +14,7 @@ function _G.RequireStd(base_path)
 	Require(base_path, "Loop/LoopObject")
 	Require(base_path, "Loop/ILoopSystem")
 	Require(base_path, "Loop/LoopFrame")
-	Require(base_path, "Loop/LoopFunction")
+	Require(base_path, "Loop/LoopRepeat")
 	Require(base_path, "Loop/LoopGroup")
 	Require(base_path, "Loop/LoopList")
 	Require(base_path, "Loop/LoopTimer")
@@ -889,14 +889,26 @@ local ___ipairs = ipairs
 
 ALittle.LoopObject = Lua.Class(nil, "ALittle.LoopObject")
 
+function ALittle.LoopObject.__getter:complete_callback()
+	return self._complete_callback
+end
+
+function ALittle.LoopObject.__setter:complete_callback(value)
+	self._complete_callback = value
+end
+
 function ALittle.LoopObject:IsCompleted()
 	return true
 end
 
 function ALittle.LoopObject:Completed()
+	if self._complete_callback ~= nil then
+		self._complete_callback()
+	end
 end
 
 function ALittle.LoopObject:Update(frame_time)
+	return frame_time
 end
 
 function ALittle.LoopObject:Reset()
@@ -973,8 +985,8 @@ assert(ALittle.LoopObject, " extends class:ALittle.LoopObject is nil")
 ALittle.LoopFrame = Lua.Class(ALittle.LoopObject, "ALittle.LoopFrame")
 
 function ALittle.LoopFrame:Ctor(func)
-	___rawset(self, "_func", func)
 	___rawset(self, "_force_completed", false)
+	___rawset(self, "_func", func)
 	if self._func == nil then
 		___rawset(self, "_force_completed", true)
 		ALittle.Log("LoopFrame create failed:function is nil or not a function")
@@ -983,9 +995,7 @@ function ALittle.LoopFrame:Ctor(func)
 end
 
 function ALittle.LoopFrame:Reset()
-end
-
-function ALittle.LoopFrame:Completed()
+	self._force_completed = false
 end
 
 function ALittle.LoopFrame:IsCompleted()
@@ -1002,6 +1012,7 @@ end
 
 function ALittle.LoopFrame:Update(frame_time)
 	self._func(frame_time)
+	return 0
 end
 
 end
@@ -1016,53 +1027,30 @@ local ___ipairs = ipairs
 
 
 assert(ALittle.LoopObject, " extends class:ALittle.LoopObject is nil")
-ALittle.LoopFunction = Lua.Class(ALittle.LoopObject, "ALittle.LoopFunction")
+ALittle.LoopRepeat = Lua.Class(ALittle.LoopObject, "ALittle.LoopRepeat")
 
-function ALittle.LoopFunction:Ctor(func, count, interval_time, delay_time)
-	___rawset(self, "_func", func)
-	___rawset(self, "_total_count", count)
+function ALittle.LoopRepeat:Ctor(object, count)
 	___rawset(self, "_force_completed", false)
-	if delay_time == nil or delay_time < 0 then
-		delay_time = 0
-	end
-	if interval_time < 0 then
-		interval_time = 0
-	end
-	___rawset(self, "_total_interval_time", interval_time)
-	___rawset(self, "_total_delay_time", delay_time)
+	___rawset(self, "_object", object)
+	___rawset(self, "_total_count", count)
 	___rawset(self, "_accumulate_count", 0)
-	___rawset(self, "_accumulate_time", 0)
-	___rawset(self, "_accumulate_delay_time", 0)
-	if self._func == nil then
+	if self._object == nil then
 		___rawset(self, "_accumulate_count", 0)
 		___rawset(self, "_total_count", 0)
-		ALittle.Log("LoopFunction create failed:function is nil or not a function")
+		ALittle.Log("LoopRepeat create failed:function is nil or not a function")
 		return
 	end
-	___rawset(self, "_complete_callback", nil)
 end
 
-function ALittle.LoopFunction.__getter:complete_callback()
-	return self._complete_callback
-end
-
-function ALittle.LoopFunction.__setter:complete_callback(value)
-	self._complete_callback = value
-end
-
-function ALittle.LoopFunction:Reset()
+function ALittle.LoopRepeat:Reset()
 	self._accumulate_count = 0
-	self._accumulate_time = 0
-	self._accumulate_delay_time = 0
-end
-
-function ALittle.LoopFunction:Completed()
-	if self._complete_callback ~= nil then
-		self._complete_callback()
+	if self._object ~= nil then
+		self._object:Reset()
 	end
+	self._force_completed = false
 end
 
-function ALittle.LoopFunction:IsCompleted()
+function ALittle.LoopRepeat:IsCompleted()
 	if self._force_completed then
 		return true
 	end
@@ -1072,7 +1060,7 @@ function ALittle.LoopFunction:IsCompleted()
 	return self._total_count <= self._accumulate_count
 end
 
-function ALittle.LoopFunction:SetCompleted()
+function ALittle.LoopRepeat:SetCompleted()
 	if self._total_count < 0 then
 		self._force_completed = true
 		return
@@ -1080,49 +1068,36 @@ function ALittle.LoopFunction:SetCompleted()
 	self._accumulate_count = self._total_count
 end
 
-function ALittle.LoopFunction:SetTime(time)
+function ALittle.LoopRepeat:SetTime(time)
 	self._accumulate_count = 0
-	self._accumulate_delay_time = 0
-	self._accumulate_time = 0
 	if time <= 0 then
 		return 0, false
 	end
 	if self._total_count < 0 then
 		return 0, false
 	end
-	if time <= self._total_delay_time then
-		self._accumulate_delay_time = time
-		return 0, false
+	while self._accumulate_count < self._total_count and time > 0 do
+		local remain_time, competed = self._object:SetTime(time)
+		if competed then
+			self._accumulate_count = self._accumulate_count + 1
+		end
+		time = remain_time
 	end
-	self._accumulate_delay_time = self._total_delay_time
-	time = time - (self._total_delay_time)
-	local total_time = self._total_interval_time * self._total_count
-	if time < total_time then
-		local float_count = total_time / self._total_interval_time
-		local count = ALittle.Math_Floor(float_count)
-		self._accumulate_count = count
-		self._accumulate_time = ALittle.Math_Floor((float_count - count) * self._total_interval_time)
-		return 0, false
-	end
-	self._accumulate_count = self._total_count
-	return time - total_time, true
+	return time, self._accumulate_count >= self._total_count
 end
 
-function ALittle.LoopFunction:Update(frame_time)
-	if self._accumulate_delay_time < self._total_delay_time then
-		self._accumulate_delay_time = self._accumulate_delay_time + (frame_time)
-		if self._accumulate_delay_time < self._total_delay_time then
-			return
+function ALittle.LoopRepeat:Update(frame_time)
+	while (self._total_count <= 0 or self._accumulate_count < self._total_count) and frame_time > 0 do
+		if self._object:IsCompleted() then
+			self._object:Reset()
 		end
-		frame_time = self._accumulate_delay_time - self._total_delay_time
-		self._accumulate_delay_time = self._total_delay_time
+		frame_time = self._object:Update(frame_time)
+		if self._object:IsCompleted() then
+			self._accumulate_count = self._accumulate_count + 1
+			self._object:Completed()
+		end
 	end
-	self._accumulate_time = self._accumulate_time + (frame_time)
-	if self._accumulate_time > self._total_interval_time then
-		self._accumulate_time = 0
-		self._accumulate_count = self._accumulate_count + 1
-		self._func()
-	end
+	return frame_time
 end
 
 end
@@ -1144,15 +1119,6 @@ function ALittle.LoopGroup:Ctor()
 	___rawset(self, "_complete_count", 0)
 	___rawset(self, "_loop_updaters", {})
 	___rawset(self, "_complete_updaters", {})
-	___rawset(self, "_complete_callback", nil)
-end
-
-function ALittle.LoopGroup.__getter:complete_callback()
-	return self._complete_callback
-end
-
-function ALittle.LoopGroup.__setter:complete_callback(value)
-	self._complete_callback = value
 end
 
 function ALittle.LoopGroup.__getter:total_count()
@@ -1166,7 +1132,12 @@ function ALittle.LoopGroup:AddUpdater(value)
 	if self._complete_updaters[value] or self._loop_updaters[value] then
 		return
 	end
-	self._loop_updaters[value] = true
+	if value:IsCompleted() then
+		self._complete_updaters[value] = true
+		self._complete_count = self._complete_count + 1
+	else
+		self._loop_updaters[value] = true
+	end
 	self._total_count = self._total_count + 1
 end
 
@@ -1228,12 +1199,6 @@ function ALittle.LoopGroup:IsCompleted()
 	return self._complete_count >= self._total_count
 end
 
-function ALittle.LoopGroup:Completed()
-	if self._complete_callback ~= nil then
-		self._complete_callback()
-	end
-end
-
 function ALittle.LoopGroup:SetCompleted()
 	self._complete_count = self._total_count
 	for updater, v in ___pairs(self._loop_updaters) do
@@ -1245,14 +1210,16 @@ end
 
 function ALittle.LoopGroup:Update(frame_time)
 	if self._complete_count >= self._total_count then
-		return
+		return frame_time
 	end
 	local remove_map = {}
 	for updater, v in ___pairs(self._loop_updaters) do
+		local remain_time = updater:Update(frame_time)
+		if remain_time < frame_time then
+			frame_time = remain_time
+		end
 		if updater:IsCompleted() then
 			remove_map[updater] = true
-		else
-			updater:Update(frame_time)
 		end
 	end
 	for updater, v in ___pairs(remove_map) do
@@ -1261,6 +1228,7 @@ function ALittle.LoopGroup:Update(frame_time)
 		self._complete_count = self._complete_count + 1
 		updater:Completed()
 	end
+	return frame_time
 end
 
 end
@@ -1282,14 +1250,6 @@ function ALittle.LoopList:Ctor()
 	___rawset(self, "_cur_index", 1)
 	___rawset(self, "_update_list", {})
 	___rawset(self, "_complete_callback", nil)
-end
-
-function ALittle.LoopList.__getter:complete_callback()
-	return self._complete_callback
-end
-
-function ALittle.LoopList.__setter:complete_callback(value)
-	self._complete_callback = value
 end
 
 function ALittle.LoopList.__getter:total_count()
@@ -1351,12 +1311,6 @@ function ALittle.LoopList:IsCompleted()
 	return self._cur_index > self._count
 end
 
-function ALittle.LoopList:Completed()
-	if self._complete_callback ~= nil then
-		self._complete_callback()
-	end
-end
-
 function ALittle.LoopList:SetCompleted()
 	local index = self._cur_index
 	while true do
@@ -1368,15 +1322,26 @@ function ALittle.LoopList:SetCompleted()
 end
 
 function ALittle.LoopList:Update(frame_time)
+	if frame_time <= 0 then
+		return 0
+	end
 	if self._cur_index > self._count then
-		return
+		return frame_time
 	end
 	local updater = self._update_list[self._cur_index]
-	updater:Update(frame_time)
+	if updater:IsCompleted() then
+		self._cur_index = self._cur_index + 1
+		return self:Update(frame_time)
+	end
+	frame_time = updater:Update(frame_time)
 	if updater:IsCompleted() then
 		self._cur_index = self._cur_index + 1
 		updater:Completed()
 	end
+	if frame_time <= 0 then
+		return 0
+	end
+	return self:Update(frame_time)
 end
 
 end
@@ -1410,23 +1375,9 @@ function ALittle.LoopTimer:Ctor(func, delay_time)
 	___rawset(self, "_complete_callback", nil)
 end
 
-function ALittle.LoopTimer.__getter:complete_callback()
-	return self._complete_callback
-end
-
-function ALittle.LoopTimer.__setter:complete_callback(value)
-	self._complete_callback = value
-end
-
 function ALittle.LoopTimer:Reset()
 	self._accumulate_count = 0
 	self._accumulate_delay_time = 0
-end
-
-function ALittle.LoopTimer:Completed()
-	if self._complete_callback ~= nil then
-		self._complete_callback()
-	end
 end
 
 function ALittle.LoopTimer:IsCompleted()
@@ -1462,15 +1413,17 @@ function ALittle.LoopTimer:Update(frame_time)
 	if self._accumulate_delay_time < self._total_delay_time then
 		self._accumulate_delay_time = self._accumulate_delay_time + (frame_time)
 		if self._accumulate_delay_time < self._total_delay_time then
-			return
+			return 0
 		end
+		frame_time = self._total_delay_time - self._accumulate_delay_time
 		self._accumulate_delay_time = self._total_delay_time
 	end
 	if self._accumulate_count >= 1 then
-		return
+		return frame_time
 	end
 	self._accumulate_count = 1
 	self._func()
+	return frame_time
 end
 
 end

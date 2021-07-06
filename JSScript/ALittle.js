@@ -11,7 +11,7 @@ window.RequireStd = function(base_path) {
 		await Require(base_path, "Loop/LoopObject");
 		await Require(base_path, "Loop/ILoopSystem");
 		await Require(base_path, "Loop/LoopFrame");
-		await Require(base_path, "Loop/LoopFunction");
+		await Require(base_path, "Loop/LoopRepeat");
 		await Require(base_path, "Loop/LoopGroup");
 		await Require(base_path, "Loop/LoopList");
 		await Require(base_path, "Loop/LoopTimer");

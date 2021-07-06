@@ -10,12 +10,6 @@ ALittle.LoopList = JavaScript.Class(ALittle.LoopObject, {
 		this._update_list = [];
 		this._complete_callback = undefined;
 	},
-	get complete_callback() {
-		return this._complete_callback;
-	},
-	set complete_callback(value) {
-		this._complete_callback = value;
-	},
 	get total_count() {
 		return this._count;
 	},
@@ -81,11 +75,6 @@ ALittle.LoopList = JavaScript.Class(ALittle.LoopObject, {
 	IsCompleted : function() {
 		return this._cur_index > this._count;
 	},
-	Completed : function() {
-		if (this._complete_callback !== undefined) {
-			this._complete_callback();
-		}
-	},
 	SetCompleted : function() {
 		for (let index = this._cur_index; index <= this._count; index += 1) {
 			this._update_list[index - 1].SetCompleted();
@@ -93,15 +82,26 @@ ALittle.LoopList = JavaScript.Class(ALittle.LoopObject, {
 		this._cur_index = this._count + 1;
 	},
 	Update : function(frame_time) {
+		if (frame_time <= 0) {
+			return 0;
+		}
 		if (this._cur_index > this._count) {
-			return;
+			return frame_time;
 		}
 		let updater = this._update_list[this._cur_index - 1];
-		updater.Update(frame_time);
+		if (updater.IsCompleted()) {
+			++ this._cur_index;
+			return this.Update(frame_time);
+		}
+		frame_time = updater.Update(frame_time);
 		if (updater.IsCompleted()) {
 			++ this._cur_index;
 			updater.Completed();
 		}
+		if (frame_time <= 0) {
+			return 0;
+		}
+		return this.Update(frame_time);
 	},
 }, "ALittle.LoopList");
 

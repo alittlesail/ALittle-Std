@@ -47,6 +47,8 @@ public class LoopSystem<HT : IHeapTimer> : ILoopSystem
         {
             this._loop_updaters[updater] = true;
         }
+
+        // this.Print();
     }
     
     // 移除updater
@@ -63,6 +65,8 @@ public class LoopSystem<HT : IHeapTimer> : ILoopSystem
         {
             this._loop_updaters[updater] = null;
         }
+
+        // this.Print();
     }
     
     // 检查updater是否存在
@@ -121,6 +125,8 @@ public class LoopSystem<HT : IHeapTimer> : ILoopSystem
                 this._loop_updaters[updater] = null;
                 updater.Completed();
             }
+
+            // this.Print();
         }
         
         // 处理更新期间所产生的缓存
