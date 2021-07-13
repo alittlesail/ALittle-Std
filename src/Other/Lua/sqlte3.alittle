@@ -4,6 +4,7 @@ register namespace lua;
 public class sqlite3stmt
 {
     public fun nrows<T>() : Functor<(sqlite3stmt, T)>, sqlite3stmt, T {}
+    public fun step() {}
     public fun reset() {}
     public fun bind_values(...) {}
 }
