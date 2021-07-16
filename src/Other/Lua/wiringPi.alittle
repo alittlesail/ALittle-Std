@@ -18,6 +18,7 @@ public static softPwmWrite(int pin, int value) {}
 
 public static pinMode(int pin, int mode) {}
 public static digitalWrite(int pin, int value) {}
+public static digitalRead(int pin) : int {}
 
 public static delay(int howLong) {}
 public static delayMicroseconds(int howLong) {}
