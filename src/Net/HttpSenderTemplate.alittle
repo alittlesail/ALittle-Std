@@ -7,6 +7,7 @@ public class IHttpSenderNative
     public fun SetURL(string url, string content) {}    // 设置请求数据，url是请求路径，如果content不为null，那么就是post请求
     public fun Start() {}                               // 开始请求
     public fun Stop() {}                                // 停止请求
+    public fun GetHead() : string { return null;}                // 获取请求结果
     public fun GetResponse() : string { return null;}                // 获取请求结果
 }
 
@@ -73,6 +74,9 @@ public class HttpSenderTemplate<NATIVE : IHttpSenderNative> : IHttpSender
     {
         this._interface.Stop();
     }
+
+    public fun GetHead() : string { return this._interface.GetHead(); }
+    public fun GetResponse() : string { return this._interface.GetResponse(); }
     
     protected fun HandleSucceed()
     {

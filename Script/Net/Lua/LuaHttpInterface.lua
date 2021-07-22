@@ -42,6 +42,10 @@ function Lua.LuaHttpInterface:Stop()
 	end
 end
 
+function Lua.LuaHttpInterface:GetHead()
+	return self._head
+end
+
 function Lua.LuaHttpInterface:GetResponse()
 	return self._response
 end

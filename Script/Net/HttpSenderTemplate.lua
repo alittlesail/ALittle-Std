@@ -23,6 +23,10 @@ end
 function ALittle.IHttpSenderNative:Stop()
 end
 
+function ALittle.IHttpSenderNative:GetHead()
+	return nil
+end
+
 function ALittle.IHttpSenderNative:GetResponse()
 	return nil
 end
@@ -61,6 +65,14 @@ end
 
 function ALittle.HttpSenderTemplate:Stop()
 	self._interface:Stop()
+end
+
+function ALittle.HttpSenderTemplate:GetHead()
+	return self._interface:GetHead()
+end
+
+function ALittle.HttpSenderTemplate:GetResponse()
+	return self._interface:GetResponse()
 end
 
 function ALittle.HttpSenderTemplate:HandleSucceed()

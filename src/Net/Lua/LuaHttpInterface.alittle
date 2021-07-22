@@ -10,6 +10,7 @@ public class LuaHttpInterface : ALittle.IHttpSenderNative
     private string _url;
     private string _content;
     private string _response;
+    private string _head;
     
     public ctor()
     {
@@ -36,5 +37,6 @@ public class LuaHttpInterface : ALittle.IHttpSenderNative
         else
             A_LuaSchedule._net.HttpStopPost(this._id);
     }
+    public fun GetHead() : string { return this._head; }
     public fun GetResponse() : string { return this._response; }                // 获取请求结果
 }

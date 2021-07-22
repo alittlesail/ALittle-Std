@@ -42,6 +42,7 @@ public class JHttpWxInterface : ALittle.IHttpSenderNative
         if (this._request != null)
             this._request.abort();
     }
+    public fun GetHead() : string { return null; }
     public fun GetResponse() : string { return this._response.data; }                // 获取请求结果
     
     private fun HandleError()
