@@ -36,6 +36,9 @@ JavaScript.JHttpWxInterface = JavaScript.Class(ALittle.IHttpSenderNative, {
 			this._request.abort();
 		}
 	},
+	GetHead : function() {
+		return undefined;
+	},
 	GetResponse : function() {
 		return this._response.data;
 	},

@@ -12,6 +12,9 @@ ALittle.IHttpSenderNative = JavaScript.Class(undefined, {
 	},
 	Stop : function() {
 	},
+	GetHead : function() {
+		return undefined;
+	},
 	GetResponse : function() {
 		return undefined;
 	},
@@ -56,6 +59,12 @@ ALittle.HttpSenderTemplate = JavaScript.Class(ALittle.IHttpSender, {
 	},
 	Stop : function() {
 		this._interface.Stop();
+	},
+	GetHead : function() {
+		return this._interface.GetHead();
+	},
+	GetResponse : function() {
+		return this._interface.GetResponse();
 	},
 	HandleSucceed : function() {
 		__HttpSenderMap.delete(this._interface.GetID());

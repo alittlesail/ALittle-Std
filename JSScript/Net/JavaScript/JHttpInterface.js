@@ -34,6 +34,9 @@ JavaScript.JHttpInterface = JavaScript.Class(ALittle.IHttpSenderNative, {
 			this._request.abort();
 		}
 	},
+	GetHead : function() {
+		return this._request.responseText;
+	},
 	GetResponse : function() {
 		return this._request.responseText;
 	},
