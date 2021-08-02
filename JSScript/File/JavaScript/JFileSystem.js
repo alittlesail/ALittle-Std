@@ -3,14 +3,15 @@ if (typeof JavaScript === "undefined") window.JavaScript = {};
 
 ALittle.RegStruct(-1393456776, "JavaScript.FileInfo", {
 name : "JavaScript.FileInfo", ns_name : "JavaScript", rl_name : "FileInfo", hash_code : -1393456776,
-name_list : ["parent","name","content","buffer","is_directory","file"],
-type_list : ["JavaScript.FileInfo","string","string","native javascript.ArrayBuffer","bool","Map<string,JavaScript.FileInfo>"],
+name_list : ["parent","name","content","buffer","is_directory","file","create_time"],
+type_list : ["JavaScript.FileInfo","string","string","native javascript.ArrayBuffer","bool","Map<string,JavaScript.FileInfo>","int"],
 option_map : {}
 })
 
 let root = {};
 root.is_directory = true;
 root.name = "";
+root.create_time = ALittle.Time_GetCurTime();
 let cur_dir = "";
 let Path_FilterEmpty = function(list) {
 	let new_list = [];
@@ -160,6 +161,7 @@ JavaScript.File_GetPathAttribute = function(path) {
 	let attr = {};
 	attr.directory = cur_file.is_directory;
 	attr.size = 0;
+	attr.create_time = cur_file.create_time;
 	if (!cur_file.is_directory) {
 		if (cur_file.buffer !== undefined) {
 			attr.size = cur_file.buffer.byteLength;
@@ -206,6 +208,7 @@ JavaScript.File_GetFileAttrByDir = function(path, file_map) {
 			let attr = {};
 			attr.directory = false;
 			attr.size = ALittle.String_Len(value.content);
+			attr.create_time = value.create_time;
 			file_map[file_path] = attr;
 		}
 	}
@@ -285,11 +288,13 @@ JavaScript.File_GetNameListByDir = function(path, file_map) {
 			let attr = {};
 			attr.directory = true;
 			attr.size = 0;
+			attr.create_time = value.create_time;
 			file_map[name] = attr;
 		} else {
 			let attr = {};
 			attr.directory = false;
 			attr.size = ALittle.String_Len(value.content);
+			attr.create_time = value.create_time;
 			file_map[name] = attr;
 		}
 	}
@@ -390,6 +395,7 @@ JavaScript.File_MakeDir = function(path) {
 	file.is_directory = true;
 	file.name = list[list_len - 1];
 	file.parent = cur;
+	file.create_time = ALittle.Time_GetCurTime();
 	cur.file[list[list_len - 1]] = file;
 	return true;
 }
@@ -455,6 +461,7 @@ JavaScript.File_SaveFile = function(path, content, buffer) {
 	file.is_directory = false;
 	file.name = list[list_len - 1];
 	file.parent = cur;
+	file.create_time = ALittle.Time_GetCurTime();
 	cur.file[list[list_len - 1]] = file;
 	return true;
 }
