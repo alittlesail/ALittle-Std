@@ -8,8 +8,8 @@ local ___ipairs = ipairs
 
 ALittle.RegStruct(839664979, "ALittle.PathAttribute", {
 name = "ALittle.PathAttribute", ns_name = "ALittle", rl_name = "PathAttribute", hash_code = 839664979,
-name_list = {"directory","size"},
-type_list = {"bool","int"},
+name_list = {"directory","size","create_time"},
+type_list = {"bool","int","int"},
 option_map = {}
 })
 

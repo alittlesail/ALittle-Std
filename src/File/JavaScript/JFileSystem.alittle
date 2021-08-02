@@ -10,11 +10,13 @@ public struct FileInfo
     javascript.ArrayBuffer buffer;
     bool is_directory;
     Map<string, FileInfo> file;
+    int create_time;
 }
 
 private var root = new FileInfo();
 root.is_directory = true;
 root.name = "";
+root.create_time = ALittle.Time_GetCurTime();
 private var cur_dir = "";
 
 private static Path_FilterEmpty(List<string> list) : List<string>
@@ -127,6 +129,7 @@ public static File_GetPathAttribute(string path) : ALittle.PathAttribute
     var attr = new ALittle.PathAttribute();
     attr.directory = cur_file.is_directory;
     attr.size = 0;
+    attr.create_time = cur_file.create_time;
     if (!cur_file.is_directory)
     {
         if (cur_file.buffer != null)
@@ -168,6 +171,7 @@ public static File_GetFileAttrByDir(string path, [Nullable] Map<string, ALittle.
             var attr = new ALittle.PathAttribute();
             attr.directory = false;
             attr.size = ALittle.String_Len(value.content);
+            attr.create_time = value.create_time;
             file_map[file_path] = attr;
         }
     }
@@ -236,6 +240,7 @@ public static File_GetNameListByDir(string path, [Nullable] Map<string, ALittle.
             var attr = new ALittle.PathAttribute();
             attr.directory = true;
             attr.size = 0;
+            attr.create_time = value.create_time;
             file_map[name] = attr;
         }
         // 如果是文件，那么就直接获取属性
@@ -244,6 +249,7 @@ public static File_GetNameListByDir(string path, [Nullable] Map<string, ALittle.
             var attr = new ALittle.PathAttribute();
             attr.directory = false;
             attr.size = ALittle.String_Len(value.content);
+            attr.create_time = value.create_time;
             file_map[name] = attr;
         }
     }
@@ -327,6 +333,7 @@ public static File_MakeDir(string path) : bool
     file.is_directory = true;
     file.name = list[list_len];
     file.parent = cur;
+    file.create_time = ALittle.Time_GetCurTime();
     cur.file[list[list_len]] = file;
     return true;
 }
@@ -378,6 +385,7 @@ public static File_SaveFile(string path, string content, javascript.ArrayBuffer 
     file.is_directory = false;
     file.name = list[list_len];
     file.parent = cur;
+    file.create_time = ALittle.Time_GetCurTime();
     cur.file[list[list_len]] = file;
     return true;    
 }

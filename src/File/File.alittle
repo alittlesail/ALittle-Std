@@ -114,6 +114,7 @@ public struct PathAttribute
 {
     bool directory;        // 文件类型
     int size;           // 文件大小
+    int create_time;	// 创建时间
 }
 
 // 获取文件属性
