@@ -38,7 +38,7 @@ public class JsonConfig<FL : IFileLoader, FS : IFileSaver> : IJsonConfig
         var error, json_content = tcall(String_JsonDecode, content);
         if (error != null)
         {
-            Log("Json Decode failed." .. file_path .. ", " .. error);
+            Error("Json Decode failed." .. file_path .. ", " .. error);
             return;
         }
 
