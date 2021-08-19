@@ -256,7 +256,7 @@ public static File_DeleteDeepDir(string path, [Nullable] bool log_path)
 public static File_CopyFile(string src_path, string dst_path) : bool
 {
     [Language(Lua)]
-    return carp.CopyFile(src_path, dst_path, false);
+    return carp.CopyFile(src_path, dst_path);
     [Language(JavaScript)]
     return JavaScript.File_CopyFile(src_path, dst_path);
 }

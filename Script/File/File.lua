@@ -162,7 +162,7 @@ function ALittle.File_DeleteDeepDir(path, log_path)
 end
 
 function ALittle.File_CopyFile(src_path, dst_path)
-	return carp.CopyFile(src_path, dst_path, false)
+	return carp.CopyFile(src_path, dst_path)
 end
 
 function ALittle.File_CopyDeepDir(src_path, dest_path, ext, log)

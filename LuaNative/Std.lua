@@ -1847,7 +1847,7 @@ function ALittle.JsonConfig:Ctor(file_path, print_error)
 	end
 	local error, json_content = Lua.TCall(ALittle.String_JsonDecode, content)
 	if error ~= nil then
-		ALittle.Log("Json Decode failed." .. file_path .. ", " .. error)
+		ALittle.Error("Json Decode failed." .. file_path .. ", " .. error)
 		return
 	end
 	___rawset(self, "_config_map", json_content)
@@ -2442,7 +2442,7 @@ function ALittle.File_DeleteDeepDir(path, log_path)
 end
 
 function ALittle.File_CopyFile(src_path, dst_path)
-	return carp.CopyFile(src_path, dst_path, false)
+	return carp.CopyFile(src_path, dst_path)
 end
 
 function ALittle.File_CopyDeepDir(src_path, dest_path, ext, log)

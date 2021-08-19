@@ -41,7 +41,7 @@ ALittle.JsonConfig = JavaScript.Class(ALittle.IJsonConfig, {
 		}
 		let [error, json_content] = (function() { try { let ___VALUE = ALittle.String_JsonDecode.call(undefined, content); return [undefined, ___VALUE]; } catch (___ERROR) { return [___ERROR.message]; } }).call(this);
 		if (error !== undefined) {
-			ALittle.Log("Json Decode failed." + file_path + ", " + error);
+			ALittle.Error("Json Decode failed." + file_path + ", " + error);
 			return;
 		}
 		this._config_map = json_content;
