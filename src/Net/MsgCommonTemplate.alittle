@@ -122,7 +122,10 @@ public class IMsgCommonTemplate : IMsgCommon
         var info = this._id_map_rpc[rpc_id];
         if (info == null)
         {
-            Log("MsgSystem.HandleMessage can't find rpc info by id:"..id);
+            var name = "unknow";
+            var rflt = FindStructById(id);
+            if (rflt != null) name = rflt.name;
+            Log("MsgSystem.HandleMessage can't find rpc info by id:"..id.." name:"..name);
             return;
         }
         this._id_map_rpc[rpc_id] = null;
@@ -200,16 +203,24 @@ public class IMsgCommonTemplate : IMsgCommon
         var callback, return_id = FindMsgRpcCallback(id);
         if (callback == null)
         {
-            this.SendRpcError(rpc_id, "没有注册消息RPC回调函数");
-            Log("MsgSystem.HandleMessage can't find callback by id:"..id);
+            var name = "unknow";
+            var rflt = FindStructById(id);
+            if (rflt != null) name = rflt.name;
+            var reason = "MsgSystem.HandleMessage can't find callback by id:"..id.." name:"..name;
+            this.SendRpcError(rpc_id, reason);
+            Log(reason);
             return;
         }
         
         var msg = this.MessageRead(factory, id);
         if (msg == null)
         {
-            this.SendRpcError(rpc_id, "MsgSystem.HandleMessage MessageRead failed by id:"..id);
-            Log("MsgSystem.HandleMessage MessageRead failed by id:"..id);
+            var name = "unknow";
+            var rflt = FindStructById(id);
+            if (rflt != null) name = rflt.name;
+            var reason = "MsgSystem.HandleMessage MessageRead failed by id:"..id.." name:"..name;
+            this.SendRpcError(rpc_id, reason);
+            Log(reason);
             return;
         }
         
@@ -218,13 +229,20 @@ public class IMsgCommonTemplate : IMsgCommon
         if (error != null)
         {
             this.SendRpcError(rpc_id, error);
-            Log("MsgSystem.HandleMessage callback invoke failed! by id:"..id..", reason:"..error);
+            var name = "unknow";
+            var rflt = FindStructById(id);
+            if (rflt != null) name = rflt.name;
+            Log("MsgSystem.HandleMessage callback invoke failed! by id:"..id.." name:"..name..", reason:"..error);
             return;
         }
         if (return_body == null)
         {
-            this.SendRpcError(rpc_id, "MsgSystem.HandleMessage callback have not return! by id:"..id);
-            Log("MsgSystem.HandleMessage callback have not return! by id:"..id);
+            var name = "unknow";
+            var rflt = FindStructById(id);
+            if (rflt != null) name = rflt.name;
+            var reason = "MsgSystem.HandleMessage callback have not return! by id:"..id.." name:"..name;
+            this.SendRpcError(rpc_id, reason);
+            Log(reason);
             return;
         }
         this.Send(return_id, return_body, -rpc_id);

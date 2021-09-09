@@ -74,7 +74,12 @@ ALittle.IWorkerCommon = JavaScript.Class(ALittle.IWorker, {
 		this._id_creator.ReleaseID(rpc_id);
 		let info = this._id_map_rpc.get(rpc_id);
 		if (info === undefined) {
-			ALittle.Log("WorkerCommon can't find rpc info by id:" + id);
+			let name = "unknow";
+			let rflt = ALittle.FindStructById(id);
+			if (rflt !== undefined) {
+				name = rflt.name;
+			}
+			ALittle.Log("WorkerCommon can't find rpc info by id:" + id + ", name:" + name);
 			return;
 		}
 		this._id_map_rpc.delete(rpc_id);
@@ -112,19 +117,36 @@ ALittle.IWorkerCommon = JavaScript.Class(ALittle.IWorker, {
 	HandleRPCRequest : async function(id, rpc_id, msg) {
 		let [callback, return_id] = ALittle.FindWorkerRpcCallback(id);
 		if (callback === undefined) {
-			this.SendRpcError(rpc_id, "没有注册消息RPC回调函数");
-			ALittle.Log("WorkerCommon.HandleMessage can't find callback by id:" + id);
+			let name = "unknow";
+			let rflt = ALittle.FindStructById(id);
+			if (rflt !== undefined) {
+				name = rflt.name;
+			}
+			let reason = "WorkerCommon.HandleMessage can't find callback by id:" + id + " name:" + name;
+			this.SendRpcError(rpc_id, reason);
+			ALittle.Log(reason);
 			return;
 		}
 		let [error, return_body] = await (async function() { try { let ___VALUE = await callback.call(this, msg); return [undefined, ___VALUE]; } catch (___ERROR) { return [___ERROR.message]; } }).call(this);
 		if (error !== undefined) {
 			this.SendRpcError(rpc_id, error);
-			ALittle.Log("WorkerCommon.HandleMessage callback invoke failed! by id:" + id + ", reason:" + error);
+			let name = "unknow";
+			let rflt = ALittle.FindStructById(id);
+			if (rflt !== undefined) {
+				name = rflt.name;
+			}
+			ALittle.Log("WorkerCommon.HandleMessage callback invoke failed! by id:" + id + " name:" + name + ", reason:" + error);
 			return;
 		}
 		if (return_body === undefined) {
-			this.SendRpcError(rpc_id, "WorkerCommon.HandleMessage callback have not return! by id:" + id);
-			ALittle.Log("WorkerCommon.HandleMessage callback have not return! by id:" + id);
+			let name = "unknow";
+			let rflt = ALittle.FindStructById(id);
+			if (rflt !== undefined) {
+				name = rflt.name;
+			}
+			let reason = "WorkerCommon.HandleMessage callback have not return! by id:" + id + " name:" + name;
+			this.SendRpcError(rpc_id, reason);
+			ALittle.Log(reason);
 			return;
 		}
 		let worker_msg = {};

@@ -85,7 +85,10 @@ public class IWorkerCommon : IWorker
         var info = this._id_map_rpc[rpc_id];
         if (info == null)
         {
-            Log("WorkerCommon can't find rpc info by id:"..id);
+            var name = "unknow";
+            var rflt = FindStructById(id);
+            if (rflt != null) name = rflt.name;
+            Log("WorkerCommon can't find rpc info by id:"..id..", name:"..name);
             return;
         }
         this._id_map_rpc[rpc_id] = null;
@@ -134,8 +137,12 @@ public class IWorkerCommon : IWorker
         var callback, return_id = FindWorkerRpcCallback(id);
         if (callback == null)
         {
-            this.SendRpcError(rpc_id, "没有注册消息RPC回调函数");
-            Log("WorkerCommon.HandleMessage can't find callback by id:"..id);
+            var name = "unknow";
+            var rflt = FindStructById(id);
+            if (rflt != null) name = rflt.name;
+            var reason = "WorkerCommon.HandleMessage can't find callback by id:"..id.." name:"..name;
+            this.SendRpcError(rpc_id, reason);
+            Log(reason);
             return;
         }
         
@@ -144,13 +151,20 @@ public class IWorkerCommon : IWorker
         if (error != null)
         {
             this.SendRpcError(rpc_id, error);
-            Log("WorkerCommon.HandleMessage callback invoke failed! by id:"..id..", reason:"..error);
+            var name = "unknow";
+            var rflt = FindStructById(id);
+            if (rflt != null) name = rflt.name;
+            Log("WorkerCommon.HandleMessage callback invoke failed! by id:"..id.." name:"..name..", reason:"..error);
             return;
         }
         if (return_body == null)
         {
-            this.SendRpcError(rpc_id, "WorkerCommon.HandleMessage callback have not return! by id:"..id);
-            Log("WorkerCommon.HandleMessage callback have not return! by id:"..id);
+            var name = "unknow";
+            var rflt = FindStructById(id);
+            if (rflt != null) name = rflt.name;
+            var reason = "WorkerCommon.HandleMessage callback have not return! by id:"..id.." name:"..name;
+            this.SendRpcError(rpc_id, reason);
+            Log(reason);
             return;
         }
 
