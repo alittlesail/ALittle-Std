@@ -55,8 +55,20 @@ function ALittle.JsonConfig:Ctor(file_path, print_error)
 	end
 	local error, json_content = Lua.TCall(ALittle.String_JsonDecode, content)
 	if error ~= nil then
-		ALittle.Error("Json Decode failed." .. file_path .. ", " .. error)
-		return
+		local byte_1 = ALittle.String_Byte(content, 1) == 0xef
+		local byte_2 = ALittle.String_Byte(content, 2) == 0xbb
+		local byte_3 = ALittle.String_Byte(content, 3) == 0xbf
+		if byte_1 and byte_2 and byte_3 then
+			content = ALittle.String_Sub(content, 4)
+			error, json_content = Lua.TCall(ALittle.String_JsonDecode, content)
+			if error ~= nil then
+				ALittle.Error("Json Decode failed(delete bom)." .. file_path .. ", " .. error)
+				return
+			end
+		else
+			ALittle.Error("Json Decode failed." .. file_path .. ", " .. error)
+			return
+		end
 	end
 	___rawset(self, "_config_map", json_content)
 end

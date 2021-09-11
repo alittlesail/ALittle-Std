@@ -38,8 +38,26 @@ public class JsonConfig<FL : IFileLoader, FS : IFileSaver> : IJsonConfig
         var error, json_content = tcall(String_JsonDecode, content);
         if (error != null)
         {
-            Error("Json Decode failed." .. file_path .. ", " .. error);
-            return;
+            // 检查文件是否带了BOM，如果是那么就重新解析一次
+            // utf8:0xef 0xbb 0xbf
+            var byte_1 = String_Byte(content, 1) == 0xef;
+            var byte_2 = String_Byte(content, 2) == 0xbb;
+            var byte_3 = String_Byte(content, 3) == 0xbf;
+            if (byte_1 && byte_2 && byte_3)
+            {
+                content = String_Sub(content, 4);
+                error, json_content = tcall(String_JsonDecode, content);
+                if (error != null)
+                {
+                    Error("Json Decode failed(delete bom)." .. file_path .. ", " .. error);
+                    return;
+                }
+            }
+            else
+            {
+                Error("Json Decode failed." .. file_path .. ", " .. error);
+                return;
+            }
         }
 
         // 保存解析内容

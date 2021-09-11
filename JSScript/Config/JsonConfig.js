@@ -41,8 +41,20 @@ ALittle.JsonConfig = JavaScript.Class(ALittle.IJsonConfig, {
 		}
 		let [error, json_content] = (function() { try { let ___VALUE = ALittle.String_JsonDecode.call(undefined, content); return [undefined, ___VALUE]; } catch (___ERROR) { return [___ERROR.message]; } }).call(this);
 		if (error !== undefined) {
-			ALittle.Error("Json Decode failed." + file_path + ", " + error);
-			return;
+			let byte_1 = ALittle.String_Byte(content, 1) === 0xef;
+			let byte_2 = ALittle.String_Byte(content, 2) === 0xbb;
+			let byte_3 = ALittle.String_Byte(content, 3) === 0xbf;
+			if (byte_1 && byte_2 && byte_3) {
+				content = ALittle.String_Sub(content, 4);
+				[error, json_content] = (function() { try { let ___VALUE = ALittle.String_JsonDecode.call(undefined, content); return [undefined, ___VALUE]; } catch (___ERROR) { return [___ERROR.message]; } }).call(this);
+				if (error !== undefined) {
+					ALittle.Error("Json Decode failed(delete bom)." + file_path + ", " + error);
+					return;
+				}
+			} else {
+				ALittle.Error("Json Decode failed." + file_path + ", " + error);
+				return;
+			}
 		}
 		this._config_map = json_content;
 	},

@@ -1847,8 +1847,20 @@ function ALittle.JsonConfig:Ctor(file_path, print_error)
 	end
 	local error, json_content = Lua.TCall(ALittle.String_JsonDecode, content)
 	if error ~= nil then
-		ALittle.Error("Json Decode failed." .. file_path .. ", " .. error)
-		return
+		local byte_1 = ALittle.String_Byte(content, 1) == 0xef
+		local byte_2 = ALittle.String_Byte(content, 2) == 0xbb
+		local byte_3 = ALittle.String_Byte(content, 3) == 0xbf
+		if byte_1 and byte_2 and byte_3 then
+			content = ALittle.String_Sub(content, 4)
+			error, json_content = Lua.TCall(ALittle.String_JsonDecode, content)
+			if error ~= nil then
+				ALittle.Error("Json Decode failed(delete bom)." .. file_path .. ", " .. error)
+				return
+			end
+		else
+			ALittle.Error("Json Decode failed." .. file_path .. ", " .. error)
+			return
+		end
 	end
 	___rawset(self, "_config_map", json_content)
 end
@@ -2688,7 +2700,12 @@ function ALittle.IWorkerCommon:HandleMessage(worker_msg)
 	self._id_creator:ReleaseID(rpc_id)
 	local info = self._id_map_rpc[rpc_id]
 	if info == nil then
-		ALittle.Log("WorkerCommon can't find rpc info by id:" .. id)
+		local name = "unknow"
+		local rflt = ALittle.FindStructById(id)
+		if rflt ~= nil then
+			name = rflt.name
+		end
+		ALittle.Log("WorkerCommon can't find rpc info by id:" .. id .. ", name:" .. name)
 		return
 	end
 	self._id_map_rpc[rpc_id] = nil
@@ -2729,19 +2746,36 @@ end
 function ALittle.IWorkerCommon:HandleRPCRequest(id, rpc_id, msg)
 	local callback, return_id = ALittle.FindWorkerRpcCallback(id)
 	if callback == nil then
-		self:SendRpcError(rpc_id, "没有注册消息RPC回调函数")
-		ALittle.Log("WorkerCommon.HandleMessage can't find callback by id:" .. id)
+		local name = "unknow"
+		local rflt = ALittle.FindStructById(id)
+		if rflt ~= nil then
+			name = rflt.name
+		end
+		local reason = "WorkerCommon.HandleMessage can't find callback by id:" .. id .. " name:" .. name
+		self:SendRpcError(rpc_id, reason)
+		ALittle.Log(reason)
 		return
 	end
 	local error, return_body = Lua.TCall(callback, self, msg)
 	if error ~= nil then
 		self:SendRpcError(rpc_id, error)
-		ALittle.Log("WorkerCommon.HandleMessage callback invoke failed! by id:" .. id .. ", reason:" .. error)
+		local name = "unknow"
+		local rflt = ALittle.FindStructById(id)
+		if rflt ~= nil then
+			name = rflt.name
+		end
+		ALittle.Log("WorkerCommon.HandleMessage callback invoke failed! by id:" .. id .. " name:" .. name .. ", reason:" .. error)
 		return
 	end
 	if return_body == nil then
-		self:SendRpcError(rpc_id, "WorkerCommon.HandleMessage callback have not return! by id:" .. id)
-		ALittle.Log("WorkerCommon.HandleMessage callback have not return! by id:" .. id)
+		local name = "unknow"
+		local rflt = ALittle.FindStructById(id)
+		if rflt ~= nil then
+			name = rflt.name
+		end
+		local reason = "WorkerCommon.HandleMessage callback have not return! by id:" .. id .. " name:" .. name
+		self:SendRpcError(rpc_id, reason)
+		ALittle.Log(reason)
 		return
 	end
 	local worker_msg = {}
@@ -3358,7 +3392,12 @@ function ALittle.IMsgCommonTemplate:HandleMessage(id, rpc_id, factory)
 	self._id_creator:ReleaseID(rpc_id)
 	local info = self._id_map_rpc[rpc_id]
 	if info == nil then
-		ALittle.Log("MsgSystem.HandleMessage can't find rpc info by id:" .. id)
+		local name = "unknow"
+		local rflt = ALittle.FindStructById(id)
+		if rflt ~= nil then
+			name = rflt.name
+		end
+		ALittle.Log("MsgSystem.HandleMessage can't find rpc info by id:" .. id .. " name:" .. name)
 		return
 	end
 	self._id_map_rpc[rpc_id] = nil
@@ -3423,25 +3462,48 @@ end
 function ALittle.IMsgCommonTemplate:HandleRPCRequest(id, rpc_id, factory)
 	local callback, return_id = ALittle.FindMsgRpcCallback(id)
 	if callback == nil then
-		self:SendRpcError(rpc_id, "没有注册消息RPC回调函数")
-		ALittle.Log("MsgSystem.HandleMessage can't find callback by id:" .. id)
+		local name = "unknow"
+		local rflt = ALittle.FindStructById(id)
+		if rflt ~= nil then
+			name = rflt.name
+		end
+		local reason = "MsgSystem.HandleMessage can't find callback by id:" .. id .. " name:" .. name
+		self:SendRpcError(rpc_id, reason)
+		ALittle.Log(reason)
 		return
 	end
 	local msg = self:MessageRead(factory, id)
 	if msg == nil then
-		self:SendRpcError(rpc_id, "MsgSystem.HandleMessage MessageRead failed by id:" .. id)
-		ALittle.Log("MsgSystem.HandleMessage MessageRead failed by id:" .. id)
+		local name = "unknow"
+		local rflt = ALittle.FindStructById(id)
+		if rflt ~= nil then
+			name = rflt.name
+		end
+		local reason = "MsgSystem.HandleMessage MessageRead failed by id:" .. id .. " name:" .. name
+		self:SendRpcError(rpc_id, reason)
+		ALittle.Log(reason)
 		return
 	end
 	local error, return_body = Lua.TCall(callback, self, msg)
 	if error ~= nil then
 		self:SendRpcError(rpc_id, error)
-		ALittle.Log("MsgSystem.HandleMessage callback invoke failed! by id:" .. id .. ", reason:" .. error)
+		local name = "unknow"
+		local rflt = ALittle.FindStructById(id)
+		if rflt ~= nil then
+			name = rflt.name
+		end
+		ALittle.Log("MsgSystem.HandleMessage callback invoke failed! by id:" .. id .. " name:" .. name .. ", reason:" .. error)
 		return
 	end
 	if return_body == nil then
-		self:SendRpcError(rpc_id, "MsgSystem.HandleMessage callback have not return! by id:" .. id)
-		ALittle.Log("MsgSystem.HandleMessage callback have not return! by id:" .. id)
+		local name = "unknow"
+		local rflt = ALittle.FindStructById(id)
+		if rflt ~= nil then
+			name = rflt.name
+		end
+		local reason = "MsgSystem.HandleMessage callback have not return! by id:" .. id .. " name:" .. name
+		self:SendRpcError(rpc_id, reason)
+		ALittle.Log(reason)
 		return
 	end
 	self:Send(return_id, return_body, -rpc_id)
